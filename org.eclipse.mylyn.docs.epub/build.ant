@@ -13,20 +13,20 @@
 
 	<target name="build">
 		<delete failonerror="false">
-			<fileset dir="${basedir}/src/org/eclipse/mylyn/docs/epub/model">
+			<fileset dir="${basedir}/src-gen/org/eclipse/mylyn/docs/epub/model">
 				<include name="*/**" />
 			</fileset>
 		</delete>
 
-		<eclipse.refreshLocal resource="${basedir}/src" depth="infinite" />
+		<eclipse.refreshLocal resource="${basedir}/src-gen" depth="infinite" />
 
-		<emf.Ecore2Java copyright="Copyright (c) 2011 Torkild U. Resheim" 
+		<emf.Ecore2Java copyright="Copyright © 2011 Torkild U. Resheim" 
 			reconcileGenModel="reload" 
 			generateJavaCode="true" 
 			model="${basedir}/model/epub.ecore" 
 			genmodel="${basedir}/model/epub.genmodel" 
 			modelproject="org.eclipse.mylyn.docs.epub" 
-			modelprojectfragmentpath="src" />
+			modelprojectfragmentpath="src-gen" />
 	</target>
 
 </project>
