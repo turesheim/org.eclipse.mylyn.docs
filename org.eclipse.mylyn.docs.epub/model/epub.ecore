@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model"
+    nsURI="http://eclipse.org/mylyn/models/epub" nsPrefix="model">
+  <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+    <details key="documentation" value="This model is an approximation of the OPS/OPF/OPx structure. Attempts were made to convert to the relaxng schemas."/>
+  </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="ePUB">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Container" lowerBound="1"
+        eType="#//Container" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Container">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Publication" lowerBound="1"
+        eType="#//Publication" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Publication">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Package" lowerBound="1"
+        eType="#//Package" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Package">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Manifest" lowerBound="1"
+        eType="#//Manifest" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Metadata" eType="#//Metadata"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Spine" lowerBound="1" eType="#//Spine"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Guide" eType="#//Guide"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Metadata">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="titles" lowerBound="1"
+        upperBound="-1" eType="#//Title" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="creators" lowerBound="1"
+        upperBound="-1" eType="#//Creator" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subjects" upperBound="-1"
+        eType="#//Subject" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="descriptions" eType="#//Description"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="publisher" eType="#//Publisher"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contributors" eType="#//Contributor"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dates" eType="#//Date"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="types" eType="#//Type"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="EReference0" eType="#//Metadata"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="formats" eType="#//Format"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="identifiers" lowerBound="1"
+        upperBound="-1" eType="#//Identifier" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sources" eType="#//Source"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="languages" lowerBound="1"
+        upperBound="-1" eType="#//Language" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="relations" eType="#//Relation"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverages" eType="#//Coverage"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rights" eType="#//Rights"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Manifest">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="EReference0" upperBound="-1"
+        eType="#//Item"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="items" upperBound="-1"
+        eType="#//Item" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Item">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="href" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mediaType" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fallback" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fallbackStyle" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="requiredNamespace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="requiredModules" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="EReference0" eType="#//Item"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contains" upperBound="-1"
+        eType="#//Manifest" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Spine">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="spineItems" upperBound="-1"
+        eType="#//ItemRef" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ItemRef">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="idref" lowerBound="1" eType="#//EUUID"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linear" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NavMap">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="NavPoints" upperBound="-1"
+        eType="#//NavPoint" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NavPoint"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="EUUID" instanceClassName="java.util.UUID"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Guide">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guideItems" upperBound="-1"
+        eType="#//Reference" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Reference">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="href" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Title" eSuperTypes="#//StringData"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Creator" eSuperTypes="#//RoleData"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Subject" eSuperTypes="#//StringData"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Description" eSuperTypes="#//StringData"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Publisher" eSuperTypes="#//StringData"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Contributor" eSuperTypes="#//RoleData"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Date">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="event" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Type" eSuperTypes="#//StringData"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Format" eSuperTypes="#//StringData"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Identifier" eSuperTypes="#//StringData">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="scheme" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Source" eSuperTypes="#//StringData"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Language" eSuperTypes="#//StringData"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Relation" eSuperTypes="#//StringData"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Coverage" eSuperTypes="#//StringData"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Rights" eSuperTypes="#//StringData"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StringData" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RoleData" abstract="true" eSuperTypes="#//StringData">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileAs" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>
