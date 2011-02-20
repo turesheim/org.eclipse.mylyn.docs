@@ -23,8 +23,8 @@
 		<emf.Ecore2Java copyright="Copyright © 2011 Torkild U. Resheim" 
 			reconcileGenModel="reload" 
 			generateJavaCode="true" 
-			model="${basedir}/model/epub.ecore" 
-			genmodel="${basedir}/model/epub.genmodel" 
+			model="${basedir}/model/epub2.ecore" 
+			genmodel="${basedir}/model/epub2.genmodel" 
 			modelproject="org.eclipse.mylyn.docs.epub" 
 			modelprojectfragmentpath="src-gen" />
 	</target>
