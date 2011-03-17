@@ -2,95 +2,326 @@
 <genmodel:GenModel xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright © 2011 Torkild U. Resheim"
-    modelDirectory="/Users/torkild/Development/Repositories/org.eclipse.mylyn.docs/org.eclipse.mylyn.docs.epub/org.eclipse.mylyn.docs.epub/./src-gen/."
-    modelPluginID="org.eclipse.mylyn.docs.epub" modelName="ePUB" importerID="org.eclipse.emf.importer.ecore"
-    copyrightFields="false" editPluginID="org.eclipse.mylyn.docs.epub.edit" editorPluginID="org.eclipse.mylyn.docs.epub.editor">
+    modelDirectory="/org.eclipse.mylyn.docs.epub/src-gen/" modelPluginID="org.eclipse.mylyn.docs.epub"
+    modelName="EPUB" generateSchema="true" testsDirectory="/org.eclipse.mylyn.docs.epub/src-test/"
+    testSuiteClass="org.eclipse.mylyn.docs.epub.model.tests.EPUBAllTests" importerID="org.eclipse.emf.importer.ecore"
+    copyrightFields="false" editPluginID="org.eclipse.mylyn.docs.epub.edit" editorPluginID="org.eclipse.mylyn.docs.epub.editor"
+    interfaceNamePattern="">
   <foreignModel>epub2.ecore</foreignModel>
   <genPackages prefix="Model" disposableProviderFactory="true" ecorePackage="epub2.ecore#/">
-    <nestedGenPackages prefix="Dc" basePackage="model" disposableProviderFactory="true"
-        ecorePackage="epub2.ecore#//dc">
-      <genClasses ecoreClass="epub2.ecore#//dc/Language"/>
+    <nestedGenPackages prefix="Dc" basePackage="org.eclipse.mylyn.docs.epub.model"
+        disposableProviderFactory="true" ecorePackage="epub2.ecore#//dc">
       <genClasses ecoreClass="epub2.ecore#//dc/Title"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Creator">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Creator/role"/>
+      </genClasses>
+      <genClasses ecoreClass="epub2.ecore#//dc/Subject"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Description"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Publisher"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Contributor">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Contributor/role"/>
+      </genClasses>
+      <genClasses ecoreClass="epub2.ecore#//dc/Date">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Date/value"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Date/event"/>
+      </genClasses>
+      <genClasses ecoreClass="epub2.ecore#//dc/Type"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Format"/>
       <genClasses ecoreClass="epub2.ecore#//dc/Identifier">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Identifier/id"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Identifier/scheme"/>
       </genClasses>
-      <genClasses ecoreClass="epub2.ecore#//dc/creator">
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/creator/role"/>
-      </genClasses>
-      <genClasses ecoreClass="epub2.ecore#//dc/subject"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/description"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/rights"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/publisher"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/contributor"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/date">
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/date/value"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/date/event"/>
-      </genClasses>
-      <genClasses ecoreClass="epub2.ecore#//dc/type"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/format"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/source"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/relation"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/coverage"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Source"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Language"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Relation"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Coverage"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Rights"/>
     </nestedGenPackages>
-    <nestedGenPackages prefix="Opf" basePackage="model" disposableProviderFactory="true"
-        ecorePackage="epub2.ecore#//opf">
-      <genDataTypes ecoreDataType="epub2.ecore#//opf/scheme"/>
-      <genDataTypes ecoreDataType="epub2.ecore#//opf/role"/>
-      <genClasses ecoreClass="epub2.ecore#//opf/package">
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/package/manifest"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/package/metadata"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/package/spine"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/package/guide"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/package/version"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/package/unique_identifier"/>
+    <nestedGenPackages prefix="Opf" basePackage="org.eclipse.mylyn.docs.epub.model"
+        disposableProviderFactory="true" ecorePackage="epub2.ecore#//opf">
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="epub2.ecore#//opf/Role">
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Art_copyist"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Actor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Adapter"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Author_of_afterword_colophon_etc"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Analyst"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Animator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Annotator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Bibliographic_antecedent"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Applicant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Author_in_quotations_or_text_abstracts"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Architect"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Artistic_director"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Arranger"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Artist"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Assignee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Associated_name"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Attributed_name"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Auctioneer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Author_of_dialog"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Author_of_introduction"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Author_of_screenplay"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Author"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Binding_designer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Bookjacket_designer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Book_designer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Book_producer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Blurb_writer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Binder"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Bookplate_designer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Bookseller"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Conceptor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Choreographer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Collaborator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Client"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Calligrapher"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Colorist"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Collotyper"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Commentator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Composer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Compositor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Cinematographer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Conductor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Censor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Contestant_appellee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Collector"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Compiler"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Conservator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Contestant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Contestant_appellant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Cover_designer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Copyright_claimant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Complainant_appellee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Copyright_holder"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Complainant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Complainant_appellant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Creator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Correspondent"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Corrector"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Consultant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Consultant_to_a_project"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Costume_designer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Contributor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Contestee_appellee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Cartographer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Contractor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Contestee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Contestee_appellant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Curator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Commentator_for_written_text"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Defendant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Defendant_appellee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Defendant_appellant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Degree_grantor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Dissertant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Delineator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Dancer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Donor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Distribution_place"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Depicted"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Depositor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Draftsman"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Director"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Designer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Distributor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Data_contributor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Dedicatee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Data_manager"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Dedicator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Dubious_author"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Editor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Engraver"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Electrician"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Electrotyper"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Engineer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Etcher"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Event_place"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Expert"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Facsimilist"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Field_director"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Film_editor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Former_owner"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/First_party"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Funder"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Forger"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Geographic_information_specialist"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Graphic_technician"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Honoree"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Host"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Illustrator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Illuminator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Inscriber"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Inventor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Instrumentalist"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Interviewee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Interviewer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Laboratory"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Librettist"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Laboratory_director"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Lead"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Libelee_appellee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Libelee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Lender"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Libelee_appellant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Lighting_designer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Libelant_appellee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Libelant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Libelant_appellant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Landscape_architect"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Licensee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Licensor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Lithographer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Lyricist"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Music_copyist"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Manufacture_place"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Manufacturer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Metadata_contact"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Moderator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Monitor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Marbler"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Markup_editor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Musical_director"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Metal_engraver"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Musician"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Narrator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Opponent"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Originator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Organizer_of_meeting"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Other"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Owner"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Patron"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Publishing_director"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Publisher"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Project_director"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Proofreader"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Photographer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Platemaker"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Permitting_agency"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Production_manager"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Printer_of_plates"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Papermaker"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Puppeteer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Process_contact"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Production_personnel"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Performer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Programmer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Printmaker"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Producer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Production_place"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Printer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Patent_applicant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Plaintiff_appellee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Plaintiff"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Patent_holder"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Plaintiff_appellant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Publication_place"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Rubricator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Recording_engineer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Recipient"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Redactor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Renderer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Researcher"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Reviewer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Repository"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Reporter"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Responsible_party"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Respondent_appellee"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Restager"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Respondent"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Respondent_appellant"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Research_team_head"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Research_team_member"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Scientific_advisor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Scenarist"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Sculptor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Scribe"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Sound_designer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Secretary"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Signer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Supporting_host"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Singer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Speaker"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Sponsor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Second_party"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Surveyor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Set_designer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Storyteller"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Stage_manager"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Standards_body"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Stereotyper"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Technical_director"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Teacher"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Thesis_advisor"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Transcriber"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Translator"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Type_designer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Typographer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/University_place"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Videographer"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Vocalist"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Writer_of_accompanying_material"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Woodcutter"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Wood_engraver"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Role/Witness"/>
+      </genEnums>
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="epub2.ecore#//opf/Scheme">
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Scheme/ISBN"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Scheme/URI"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Scheme/URL"/>
+        <genEnumLiterals ecoreEnumLiteral="epub2.ecore#//opf/Scheme/UUID"/>
+      </genEnums>
+      <genClasses ecoreClass="epub2.ecore#//opf/Package">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Package/manifest"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Package/metadata"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Package/Spine"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Package/Guide"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Package/version"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Package/unique_identifier"/>
       </genClasses>
-      <genClasses ecoreClass="epub2.ecore#//opf/metadata">
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/titles"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/creators"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/subjects"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/descriptions"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/publisher"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/contributors"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/dates"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/types"/>
-        <genFeatures notify="false" createChild="false" propertySortChoices="true"
-            ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/metadata"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/formats"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/identifiers"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/sources"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/languages"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/relations"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/coverages"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/metadata/rights"/>
+      <genClasses ecoreClass="epub2.ecore#//opf/Metadata">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/titles"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/creators"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/subjects"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/descriptions"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/publisher"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/contributors"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/dates"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/types"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/formats"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/identifiers"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/sources"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/languages"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/relations"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/coverages"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/rights"/>
       </genClasses>
-      <genClasses ecoreClass="epub2.ecore#//opf/manifest">
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/manifest/items"/>
+      <genClasses ecoreClass="epub2.ecore#//opf/Manifest">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Manifest/items"/>
       </genClasses>
-      <genClasses ecoreClass="epub2.ecore#//opf/item">
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/item/id"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/item/href"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/item/mediaType"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/item/fallback"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/item/fallbackStyle"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/item/requiredNamespace"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/item/requiredModules"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/item/manifest"/>
+      <genClasses ecoreClass="epub2.ecore#//opf/Item">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Item/id"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Item/href"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Item/media_type"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Item/fallback"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Item/fallback_style"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Item/required_namespace"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Item/required_modules"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Item/Manifest"/>
       </genClasses>
-      <genClasses ecoreClass="epub2.ecore#//opf/spine">
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/spine/spineItems"/>
+      <genClasses ecoreClass="epub2.ecore#//opf/Spine">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Spine/spineItems"/>
       </genClasses>
-      <genClasses ecoreClass="epub2.ecore#//opf/guide">
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/guide/guideItems"/>
+      <genClasses ecoreClass="epub2.ecore#//opf/Guide">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Guide/guideItems"/>
       </genClasses>
-      <genClasses ecoreClass="epub2.ecore#//opf/reference">
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/reference/type"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/reference/title"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/reference/href"/>
+      <genClasses ecoreClass="epub2.ecore#//opf/Reference">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Reference/type"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Reference/title"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Reference/href"/>
       </genClasses>
-      <genClasses ecoreClass="epub2.ecore#//opf/itemref">
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/itemref/idref"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/itemref/linear"/>
+      <genClasses ecoreClass="epub2.ecore#//opf/Itemref">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Itemref/idref"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Itemref/linear"/>
       </genClasses>
     </nestedGenPackages>
   </genPackages>

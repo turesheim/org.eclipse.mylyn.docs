@@ -4,36 +4,36 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model"
     nsURI="http://eclipse.org/mylyn/models/epub" nsPrefix="model">
   <eSubpackages name="dc" nsURI="http://purl.org/dc/elements/1.1/" nsPrefix="dc">
-    <eClassifiers xsi:type="ecore:EClass" name="Title" instanceTypeName="title"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Creator" instanceTypeName="creator">
+    <eClassifiers xsi:type="ecore:EClass" name="Title"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Creator">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="#//opf/Role"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="Subject" instanceTypeName="subject"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Description" instanceTypeName="description"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Publisher" instanceTypeName="publisher"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Contributor" instanceTypeName="contributor">
+    <eClassifiers xsi:type="ecore:EClass" name="Subject"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Description"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Publisher"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Contributor">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="#//opf/Role"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="Date" instanceTypeName="date">
+    <eClassifiers xsi:type="ecore:EClass" name="Date">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1"
           eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="event" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="Type" instanceTypeName="type"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Format" instanceTypeName="format"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Identifier" instanceTypeName="identifier">
+    <eClassifiers xsi:type="ecore:EClass" name="Type"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Format"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Identifier">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
           defaultValueLiteral="BookId"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="scheme" eType="#//opf/Scheme"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="Source" instanceTypeName="source"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Language" instanceTypeName="language"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Relation" instanceTypeName="relation"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Coverage" instanceTypeName="coverage"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Rights" instanceTypeName="rights"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Source"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Language"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Relation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Coverage"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Rights"/>
   </eSubpackages>
   <eSubpackages name="opf" nsURI="http://www.idpf.org/2007/opf" nsPrefix="opf">
-    <eClassifiers xsi:type="ecore:EClass" name="Package" instanceTypeName="package">
+    <eClassifiers xsi:type="ecore:EClass" name="Package">
       <eStructuralFeatures xsi:type="ecore:EReference" name="manifest" lowerBound="1"
           eType="#//opf/Manifest" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="metadata" eType="#//opf/Metadata"
@@ -48,7 +48,7 @@
         <eAnnotations source="http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm#Section2.1"/>
       </eStructuralFeatures>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="Metadata" instanceTypeName="metadata">
+    <eClassifiers xsi:type="ecore:EClass" name="Metadata">
       <eStructuralFeatures xsi:type="ecore:EReference" name="titles" lowerBound="1"
           upperBound="-1" eType="#//dc/Title" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="creators" lowerBound="1"
@@ -65,7 +65,6 @@
           containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="types" eType="#//dc/Type"
           containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="metadata" eType="#//opf/Metadata"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="formats" eType="#//dc/Format"
           containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="identifiers" lowerBound="1"
@@ -81,16 +80,15 @@
       <eStructuralFeatures xsi:type="ecore:EReference" name="rights" eType="#//dc/Rights"
           containment="true"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="Manifest" instanceTypeName="manifest">
+    <eClassifiers xsi:type="ecore:EClass" name="Manifest">
       <eStructuralFeatures xsi:type="ecore:EReference" name="items" lowerBound="1"
           upperBound="-1" eType="#//opf/Item" containment="true"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="Item" instanceTypeName="item">
+    <eClassifiers xsi:type="ecore:EClass" name="Item">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
           iD="true"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="href" lowerBound="1"
-          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
-          iD="true"/>
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="media_type" lowerBound="1"
           eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="fallback" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -100,16 +98,15 @@
       <eStructuralFeatures xsi:type="ecore:EReference" name="Manifest" lowerBound="1"
           eType="#//opf/Manifest" containment="true"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="Spine" instanceTypeName="spine">
+    <eClassifiers xsi:type="ecore:EClass" name="Spine">
       <eStructuralFeatures xsi:type="ecore:EReference" name="spineItems" upperBound="-1"
           eType="#//opf/Itemref" containment="true"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EDataType" name="Scheme" instanceTypeName="scheme"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Guide" instanceTypeName="guide">
+    <eClassifiers xsi:type="ecore:EClass" name="Guide">
       <eStructuralFeatures xsi:type="ecore:EReference" name="guideItems" upperBound="-1"
           eType="#//opf/Reference" containment="true"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="Reference" instanceTypeName="reference">
+    <eClassifiers xsi:type="ecore:EClass" name="Reference">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1"
           eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" lowerBound="1"
@@ -117,41 +114,41 @@
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="href" lowerBound="1"
           eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="Itemref" instanceTypeName="itemref">
+    <eClassifiers xsi:type="ecore:EClass" name="Itemref">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="idref" lowerBound="1"
           eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="linear" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EEnum" name="Role" instanceTypeName="role">
-      <eLiterals name="Art copyist" literal="acp"/>
+      <eLiterals name="Art_copyist" literal="acp"/>
       <eLiterals name="Actor" literal="act"/>
       <eLiterals name="Adapter" literal="adp"/>
-      <eLiterals name="Author of afterword, colophon, etc." literal="aft"/>
+      <eLiterals name="Author_of_afterword_colophon_etc" literal="aft"/>
       <eLiterals name="Analyst" literal="anl"/>
       <eLiterals name="Animator" literal="anm"/>
       <eLiterals name="Annotator" literal="ann"/>
-      <eLiterals name="Bibliographic antecedent" literal="ant"/>
+      <eLiterals name="Bibliographic_antecedent" literal="ant"/>
       <eLiterals name="Applicant" literal="app"/>
-      <eLiterals name="Author in quotations or text abstracts" literal="aqt"/>
+      <eLiterals name="Author_in_quotations_or_text_abstracts" literal="aqt"/>
       <eLiterals name="Architect" literal="arc"/>
-      <eLiterals name="Artistic director" literal="ard"/>
+      <eLiterals name="Artistic_director" literal="ard"/>
       <eLiterals name="Arranger" literal="arr"/>
       <eLiterals name="Artist" literal="art"/>
       <eLiterals name="Assignee" literal="asg"/>
-      <eLiterals name="Associated name" literal="asn"/>
-      <eLiterals name="Attributed name" literal="att"/>
+      <eLiterals name="Associated_name" literal="asn"/>
+      <eLiterals name="Attributed_name" literal="att"/>
       <eLiterals name="Auctioneer" literal="auc"/>
-      <eLiterals name="Author of dialog" literal="aud"/>
-      <eLiterals name="Author of introduction" literal="aui"/>
-      <eLiterals name="Author of screenplay" literal="aus"/>
+      <eLiterals name="Author_of_dialog" literal="aud"/>
+      <eLiterals name="Author_of_introduction" literal="aui"/>
+      <eLiterals name="Author_of_screenplay" literal="aus"/>
       <eLiterals name="Author" literal="aut"/>
-      <eLiterals name="Binding designer" literal="bdd"/>
-      <eLiterals name="Bookjacket designer" literal="bjd"/>
-      <eLiterals name="Book designer" literal="bkd"/>
-      <eLiterals name="Book producer" literal="bkp"/>
-      <eLiterals name="Blurb writer" literal="blw"/>
+      <eLiterals name="Binding_designer" literal="bdd"/>
+      <eLiterals name="Bookjacket_designer" literal="bjd"/>
+      <eLiterals name="Book_designer" literal="bkd"/>
+      <eLiterals name="Book_producer" literal="bkp"/>
+      <eLiterals name="Blurb_writer" literal="blw"/>
       <eLiterals name="Binder" literal="bnd"/>
-      <eLiterals name="Bookplate designer" literal="bpd"/>
+      <eLiterals name="Bookplate_designer" literal="bpd"/>
       <eLiterals name="Bookseller" literal="bsl"/>
       <eLiterals name="Conceptor" literal="ccp"/>
       <eLiterals name="Choreographer" literal="chr"/>
@@ -166,69 +163,69 @@
       <eLiterals name="Cinematographer" literal="cng"/>
       <eLiterals name="Conductor" literal="cnd"/>
       <eLiterals name="Censor" literal="cns"/>
-      <eLiterals name="Contestant -appellee" literal="coe"/>
+      <eLiterals name="Contestant_appellee" literal="coe"/>
       <eLiterals name="Collector" literal="col"/>
       <eLiterals name="Compiler" literal="com"/>
       <eLiterals name="Conservator" literal="con"/>
       <eLiterals name="Contestant" literal="cos"/>
-      <eLiterals name="Contestant -appellant" literal="cot"/>
-      <eLiterals name="Cover designer" literal="cov"/>
-      <eLiterals name="Copyright claimant" literal="cpc"/>
-      <eLiterals name="Complainant-appellee" literal="cpe"/>
-      <eLiterals name="Copyright holder" literal="cph"/>
+      <eLiterals name="Contestant_appellant" literal="cot"/>
+      <eLiterals name="Cover_designer" literal="cov"/>
+      <eLiterals name="Copyright_claimant" literal="cpc"/>
+      <eLiterals name="Complainant_appellee" literal="cpe"/>
+      <eLiterals name="Copyright_holder" literal="cph"/>
       <eLiterals name="Complainant" literal="cpl"/>
-      <eLiterals name="Complainant-appellant" literal="cpt"/>
+      <eLiterals name="Complainant_appellant" literal="cpt"/>
       <eLiterals name="Creator" literal="cre"/>
       <eLiterals name="Correspondent" literal="crp"/>
       <eLiterals name="Corrector" literal="crr"/>
       <eLiterals name="Consultant" literal="csl"/>
-      <eLiterals name="Consultant to a project" literal="csp"/>
-      <eLiterals name="Costume designer" literal="cst"/>
+      <eLiterals name="Consultant_to_a_project" literal="csp"/>
+      <eLiterals name="Costume_designer" literal="cst"/>
       <eLiterals name="Contributor" literal="ctb"/>
-      <eLiterals name="Contestee-appellee" literal="cte"/>
+      <eLiterals name="Contestee_appellee" literal="cte"/>
       <eLiterals name="Cartographer" literal="ctg"/>
       <eLiterals name="Contractor" literal="ctr"/>
       <eLiterals name="Contestee" literal="cts"/>
-      <eLiterals name="Contestee-appellant" literal="ctt"/>
+      <eLiterals name="Contestee_appellant" literal="ctt"/>
       <eLiterals name="Curator" literal="cur"/>
-      <eLiterals name="Commentator for written text" literal="cwt"/>
+      <eLiterals name="Commentator_for_written_text" literal="cwt"/>
       <eLiterals name="Defendant" literal="dfd"/>
-      <eLiterals name="Defendant-appellee" literal="dfe"/>
-      <eLiterals name="Defendant-appellant" literal="dft"/>
-      <eLiterals name="Degree grantor" literal="dgg"/>
+      <eLiterals name="Defendant_appellee" literal="dfe"/>
+      <eLiterals name="Defendant_appellant" literal="dft"/>
+      <eLiterals name="Degree_grantor" literal="dgg"/>
       <eLiterals name="Dissertant" literal="dis"/>
       <eLiterals name="Delineator" literal="dln"/>
       <eLiterals name="Dancer" literal="dnc"/>
       <eLiterals name="Donor" literal="dnr"/>
-      <eLiterals name="Distribution place" literal="dpb"/>
+      <eLiterals name="Distribution_place" literal="dpb"/>
       <eLiterals name="Depicted" literal="dpc"/>
       <eLiterals name="Depositor" literal="dpt"/>
       <eLiterals name="Draftsman" literal="drm"/>
       <eLiterals name="Director" literal="drt"/>
       <eLiterals name="Designer" literal="dsr"/>
       <eLiterals name="Distributor" literal="dst"/>
-      <eLiterals name="Data contributor" literal="dtc"/>
+      <eLiterals name="Data_contributor" literal="dtc"/>
       <eLiterals name="Dedicatee" literal="dte"/>
-      <eLiterals name="Data manager" literal="dtm"/>
+      <eLiterals name="Data_manager" literal="dtm"/>
       <eLiterals name="Dedicator" literal="dto"/>
-      <eLiterals name="Dubious author" literal="dub"/>
+      <eLiterals name="Dubious_author" literal="dub"/>
       <eLiterals name="Editor" literal="edt"/>
       <eLiterals name="Engraver" literal="egr"/>
       <eLiterals name="Electrician" literal="elg"/>
       <eLiterals name="Electrotyper" literal="elt"/>
       <eLiterals name="Engineer" literal="eng"/>
       <eLiterals name="Etcher" literal="etr"/>
-      <eLiterals name="Event place" literal="evp"/>
+      <eLiterals name="Event_place" literal="evp"/>
       <eLiterals name="Expert" literal="exp"/>
       <eLiterals name="Facsimilist" literal="fac"/>
-      <eLiterals name="Field director" literal="fld"/>
-      <eLiterals name="Film editor" literal="flm"/>
-      <eLiterals name="Former owner" literal="fmo"/>
-      <eLiterals name="First party" literal="fpy"/>
+      <eLiterals name="Field_director" literal="fld"/>
+      <eLiterals name="Film_editor" literal="flm"/>
+      <eLiterals name="Former_owner" literal="fmo"/>
+      <eLiterals name="First_party" literal="fpy"/>
       <eLiterals name="Funder" literal="fnd"/>
       <eLiterals name="Forger" literal="frg"/>
-      <eLiterals name="Geographic information specialist" literal="gis"/>
-      <eLiterals name="Graphic technician" literal="-grt"/>
+      <eLiterals name="Geographic_information_specialist" literal="gis"/>
+      <eLiterals name="Graphic_technician" literal="_grt"/>
       <eLiterals name="Honoree" literal="hnr"/>
       <eLiterals name="Host" literal="hst"/>
       <eLiterals name="Illustrator" literal="ill"/>
@@ -240,66 +237,66 @@
       <eLiterals name="Interviewer" literal="ivr"/>
       <eLiterals name="Laboratory" literal="lbr"/>
       <eLiterals name="Librettist" literal="lbt"/>
-      <eLiterals name="Laboratory director" literal="ldr"/>
+      <eLiterals name="Laboratory_director" literal="ldr"/>
       <eLiterals name="Lead" literal="led"/>
-      <eLiterals name="Libelee-appellee" literal="lee"/>
+      <eLiterals name="Libelee_appellee" literal="lee"/>
       <eLiterals name="Libelee" literal="lel"/>
       <eLiterals name="Lender" literal="len"/>
-      <eLiterals name="Libelee-appellant" literal="let"/>
-      <eLiterals name="Lighting designer" literal="lgd"/>
-      <eLiterals name="Libelant-appellee" literal="lie"/>
+      <eLiterals name="Libelee_appellant" literal="let"/>
+      <eLiterals name="Lighting_designer" literal="lgd"/>
+      <eLiterals name="Libelant_appellee" literal="lie"/>
       <eLiterals name="Libelant" literal="lil"/>
-      <eLiterals name="Libelant-appellant" literal="lit"/>
-      <eLiterals name="Landscape architect" literal="lsa"/>
+      <eLiterals name="Libelant_appellant" literal="lit"/>
+      <eLiterals name="Landscape_architect" literal="lsa"/>
       <eLiterals name="Licensee" literal="lse"/>
       <eLiterals name="Licensor" literal="lso"/>
       <eLiterals name="Lithographer" literal="ltg"/>
       <eLiterals name="Lyricist" literal="lyr"/>
-      <eLiterals name="Music copyist" literal="mcp"/>
-      <eLiterals name="Manufacture place" literal="mfp"/>
+      <eLiterals name="Music_copyist" literal="mcp"/>
+      <eLiterals name="Manufacture_place" literal="mfp"/>
       <eLiterals name="Manufacturer" literal="mfr"/>
-      <eLiterals name="Metadata contact" literal="mdc"/>
+      <eLiterals name="Metadata_contact" literal="mdc"/>
       <eLiterals name="Moderator" literal="mod"/>
       <eLiterals name="Monitor" literal="mon"/>
       <eLiterals name="Marbler" literal="mrb"/>
-      <eLiterals name="Markup editor" literal="mrk"/>
-      <eLiterals name="Musical director" literal="msd"/>
-      <eLiterals name="Metal-engraver" literal="mte"/>
+      <eLiterals name="Markup_editor" literal="mrk"/>
+      <eLiterals name="Musical_director" literal="msd"/>
+      <eLiterals name="Metal_engraver" literal="mte"/>
       <eLiterals name="Musician" literal="mus"/>
       <eLiterals name="Narrator" literal="nrt"/>
       <eLiterals name="Opponent" literal="opn"/>
       <eLiterals name="Originator" literal="org"/>
-      <eLiterals name="Organizer of meeting" literal="orm"/>
+      <eLiterals name="Organizer_of_meeting" literal="orm"/>
       <eLiterals name="Other" literal="oth"/>
       <eLiterals name="Owner" literal="own"/>
       <eLiterals name="Patron" literal="pat"/>
-      <eLiterals name="Publishing director" literal="pbd"/>
+      <eLiterals name="Publishing_director" literal="pbd"/>
       <eLiterals name="Publisher" literal="pbl"/>
-      <eLiterals name="Project director" literal="pdr"/>
+      <eLiterals name="Project_director" literal="pdr"/>
       <eLiterals name="Proofreader" literal="pfr"/>
       <eLiterals name="Photographer" literal="pht"/>
       <eLiterals name="Platemaker" literal="plt"/>
-      <eLiterals name="Permitting agency" literal="pma"/>
-      <eLiterals name="Production manager" literal="pmn"/>
-      <eLiterals name="Printer of plates" literal="pop"/>
+      <eLiterals name="Permitting_agency" literal="pma"/>
+      <eLiterals name="Production_manager" literal="pmn"/>
+      <eLiterals name="Printer_of_plates" literal="pop"/>
       <eLiterals name="Papermaker" literal="ppm"/>
       <eLiterals name="Puppeteer" literal="ppt"/>
-      <eLiterals name="Process contact" literal="prc"/>
-      <eLiterals name="Production personnel" literal="prd"/>
+      <eLiterals name="Process_contact" literal="prc"/>
+      <eLiterals name="Production_personnel" literal="prd"/>
       <eLiterals name="Performer" literal="prf"/>
       <eLiterals name="Programmer" literal="prg"/>
       <eLiterals name="Printmaker" literal="prm"/>
       <eLiterals name="Producer" literal="pro"/>
-      <eLiterals name="Production place" literal="prp"/>
+      <eLiterals name="Production_place" literal="prp"/>
       <eLiterals name="Printer" literal="prt"/>
-      <eLiterals name="Patent applicant" literal="pta"/>
-      <eLiterals name="Plaintiff -appellee" literal="pte"/>
+      <eLiterals name="Patent_applicant" literal="pta"/>
+      <eLiterals name="Plaintiff_appellee" literal="pte"/>
       <eLiterals name="Plaintiff" literal="ptf"/>
-      <eLiterals name="Patent holder" literal="pth"/>
-      <eLiterals name="Plaintiff-appellant" literal="ptt"/>
-      <eLiterals name="Publication place" literal="pup"/>
+      <eLiterals name="Patent_holder" literal="pth"/>
+      <eLiterals name="Plaintiff_appellant" literal="ptt"/>
+      <eLiterals name="Publication_place" literal="pup"/>
       <eLiterals name="Rubricator" literal="rbr"/>
-      <eLiterals name="Recording engineer" literal="rce"/>
+      <eLiterals name="Recording_engineer" literal="rce"/>
       <eLiterals name="Recipient" literal="rcp"/>
       <eLiterals name="Redactor" literal="red"/>
       <eLiterals name="Renderer" literal="ren"/>
@@ -307,45 +304,51 @@
       <eLiterals name="Reviewer" literal="rev"/>
       <eLiterals name="Repository" literal="rps"/>
       <eLiterals name="Reporter" literal="rpt"/>
-      <eLiterals name="Responsible party" literal="rpy"/>
-      <eLiterals name="Respondent-appellee" literal="rse"/>
+      <eLiterals name="Responsible_party" literal="rpy"/>
+      <eLiterals name="Respondent_appellee" literal="rse"/>
       <eLiterals name="Restager" literal="rsg"/>
       <eLiterals name="Respondent" literal="rsp"/>
-      <eLiterals name="Respondent-appellant" literal="rst"/>
-      <eLiterals name="Research team head" literal="rth"/>
-      <eLiterals name="Research team member" literal="rtm"/>
-      <eLiterals name="Scientific advisor" literal="sad"/>
+      <eLiterals name="Respondent_appellant" literal="rst"/>
+      <eLiterals name="Research_team_head" literal="rth"/>
+      <eLiterals name="Research_team_member" literal="rtm"/>
+      <eLiterals name="Scientific_advisor" literal="sad"/>
       <eLiterals name="Scenarist" literal="sce"/>
       <eLiterals name="Sculptor" literal="scl"/>
       <eLiterals name="Scribe" literal="scr"/>
-      <eLiterals name="Sound designer" literal="sds"/>
+      <eLiterals name="Sound_designer" literal="sds"/>
       <eLiterals name="Secretary" literal="sec"/>
       <eLiterals name="Signer" literal="sgn"/>
-      <eLiterals name="Supporting host" literal="sht"/>
+      <eLiterals name="Supporting_host" literal="sht"/>
       <eLiterals name="Singer" literal="sng"/>
       <eLiterals name="Speaker" literal="spk"/>
       <eLiterals name="Sponsor" literal="spn"/>
-      <eLiterals name="Second party" literal="spy"/>
+      <eLiterals name="Second_party" literal="spy"/>
       <eLiterals name="Surveyor" literal="srv"/>
-      <eLiterals name="Set designer" literal="std"/>
+      <eLiterals name="Set_designer" literal="std"/>
       <eLiterals name="Storyteller" literal="stl"/>
-      <eLiterals name="Stage manager" literal="stm"/>
-      <eLiterals name="Standards body" literal="stn"/>
+      <eLiterals name="Stage_manager" literal="stm"/>
+      <eLiterals name="Standards_body" literal="stn"/>
       <eLiterals name="Stereotyper" literal="str"/>
-      <eLiterals name="Technical director" literal="tcd"/>
+      <eLiterals name="Technical_director" literal="tcd"/>
       <eLiterals name="Teacher" literal="tch"/>
-      <eLiterals name="Thesis advisor" literal="ths"/>
+      <eLiterals name="Thesis_advisor" literal="ths"/>
       <eLiterals name="Transcriber" literal="trc"/>
       <eLiterals name="Translator" literal="trl"/>
-      <eLiterals name="Type designer" literal="tyd"/>
+      <eLiterals name="Type_designer" literal="tyd"/>
       <eLiterals name="Typographer" literal="tyg"/>
-      <eLiterals name="University place" literal="uvp"/>
+      <eLiterals name="University_place" literal="uvp"/>
       <eLiterals name="Videographer" literal="vdg"/>
       <eLiterals name="Vocalist" literal="voc"/>
-      <eLiterals name="Writer of accompanying material" literal="wam"/>
+      <eLiterals name="Writer_of_accompanying_material" literal="wam"/>
       <eLiterals name="Woodcutter" literal="wdc"/>
-      <eLiterals name="Wood-engraver" literal="wde"/>
+      <eLiterals name="Wood_engraver" literal="wde"/>
       <eLiterals name="Witness" literal="wit"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="Scheme">
+      <eLiterals name="ISBN" value="1" literal="ISBN"/>
+      <eLiterals name="URI" value="2" literal="URI"/>
+      <eLiterals name="URL" value="3" literal="URL"/>
+      <eLiterals name="UUID" value="4" literal="UUID"/>
     </eClassifiers>
   </eSubpackages>
 </ecore:EPackage>
