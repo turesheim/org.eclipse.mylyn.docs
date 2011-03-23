@@ -3,39 +3,64 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="Copyright © 2011 Torkild U. Resheim"
     modelDirectory="/org.eclipse.mylyn.docs.epub/src-gen/" modelPluginID="org.eclipse.mylyn.docs.epub"
-    modelName="EPUB" generateSchema="true" testsDirectory="/org.eclipse.mylyn.docs.epub/src-test/"
-    testSuiteClass="org.eclipse.mylyn.docs.epub.model.tests.EPUBAllTests" importerID="org.eclipse.emf.importer.ecore"
-    copyrightFields="false" editPluginID="org.eclipse.mylyn.docs.epub.edit" editorPluginID="org.eclipse.mylyn.docs.epub.editor"
+    modelName="EPUB" testsDirectory="/org.eclipse.mylyn.docs.epub/src-test/" testSuiteClass="org.eclipse.mylyn.docs.epub.model.tests.EPUBAllTests"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
+    editPluginID="org.eclipse.mylyn.docs.epub.edit" editorPluginID="org.eclipse.mylyn.docs.epub.editor"
     interfaceNamePattern="">
   <foreignModel>epub2.ecore</foreignModel>
-  <genPackages prefix="Model" disposableProviderFactory="true" ecorePackage="epub2.ecore#/">
+  <genPackages prefix="Model" basePackage="org.eclipse.mylyn.docs.epub.model" disposableProviderFactory="true"
+      ecorePackage="epub2.ecore#/">
     <nestedGenPackages prefix="Dc" basePackage="org.eclipse.mylyn.docs.epub.model"
         disposableProviderFactory="true" ecorePackage="epub2.ecore#//dc">
-      <genClasses ecoreClass="epub2.ecore#//dc/Title"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Title">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Title/mixed"/>
+      </genClasses>
       <genClasses ecoreClass="epub2.ecore#//dc/Creator">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Creator/role"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Creator/mixed"/>
       </genClasses>
-      <genClasses ecoreClass="epub2.ecore#//dc/Subject"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/Description"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/Publisher"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Subject">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Subject/mixed"/>
+      </genClasses>
+      <genClasses ecoreClass="epub2.ecore#//dc/Description">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Description/mixed"/>
+      </genClasses>
+      <genClasses ecoreClass="epub2.ecore#//dc/Publisher">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Publisher/mixed"/>
+      </genClasses>
       <genClasses ecoreClass="epub2.ecore#//dc/Contributor">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Contributor/role"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Contributor/mixed"/>
       </genClasses>
       <genClasses ecoreClass="epub2.ecore#//dc/Date">
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Date/value"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Date/event"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Date/mixed"/>
       </genClasses>
-      <genClasses ecoreClass="epub2.ecore#//dc/Type"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/Format"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Type">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Type/mixed"/>
+      </genClasses>
+      <genClasses ecoreClass="epub2.ecore#//dc/Format">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Format/mixed"/>
+      </genClasses>
       <genClasses ecoreClass="epub2.ecore#//dc/Identifier">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Identifier/id"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Identifier/scheme"/>
       </genClasses>
-      <genClasses ecoreClass="epub2.ecore#//dc/Source"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/Language"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/Relation"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/Coverage"/>
-      <genClasses ecoreClass="epub2.ecore#//dc/Rights"/>
+      <genClasses ecoreClass="epub2.ecore#//dc/Source">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Source/mixed"/>
+      </genClasses>
+      <genClasses ecoreClass="epub2.ecore#//dc/Language">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Language/mixed"/>
+      </genClasses>
+      <genClasses ecoreClass="epub2.ecore#//dc/Relation">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Relation/mixed"/>
+      </genClasses>
+      <genClasses ecoreClass="epub2.ecore#//dc/Coverage">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Coverage/mixed"/>
+      </genClasses>
+      <genClasses ecoreClass="epub2.ecore#//dc/Rights">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute epub2.ecore#//dc/Rights/mixed"/>
+      </genClasses>
     </nestedGenPackages>
     <nestedGenPackages prefix="Opf" basePackage="org.eclipse.mylyn.docs.epub.model"
         disposableProviderFactory="true" ecorePackage="epub2.ecore#//opf">
@@ -279,21 +304,21 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute epub2.ecore#//opf/Package/unique_identifier"/>
       </genClasses>
       <genClasses ecoreClass="epub2.ecore#//opf/Metadata">
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/titles"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/creators"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/subjects"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/descriptions"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/title"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/creator"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/subject"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/description"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/publisher"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/contributors"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/dates"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/types"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/formats"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/identifiers"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/sources"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/languages"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/relations"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/coverages"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/rights"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/contributor"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/date"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/type"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/format"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/identifier"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/source"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/language"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/relation"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/coverage"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Metadata/right"/>
       </genClasses>
       <genClasses ecoreClass="epub2.ecore#//opf/Manifest">
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference epub2.ecore#//opf/Manifest/items"/>

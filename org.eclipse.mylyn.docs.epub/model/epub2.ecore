@@ -4,33 +4,197 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model"
     nsURI="http://eclipse.org/mylyn/models/epub" nsPrefix="model">
   <eSubpackages name="dc" nsURI="http://purl.org/dc/elements/1.1/" nsPrefix="dc">
-    <eClassifiers xsi:type="ecore:EClass" name="Title"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Creator">
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="#//opf/Role"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Title">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="Subject"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Description"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Publisher"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Contributor">
+    <eClassifiers xsi:type="ecore:EClass" name="Creator">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="#//opf/Role"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Subject">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Description">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Publisher">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Contributor">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="#//opf/Role"
+          volatile="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="Date">
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1"
-          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="event" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="Type"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Format"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Type">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Format">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
+    </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="Identifier">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
           defaultValueLiteral="BookId"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="scheme" eType="#//opf/Scheme"/>
     </eClassifiers>
-    <eClassifiers xsi:type="ecore:EClass" name="Source"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Language"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Relation"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Coverage"/>
-    <eClassifiers xsi:type="ecore:EClass" name="Rights"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Source">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Language">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Relation">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Coverage">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Rights">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="MixedType"/>
+        <details key="kind" value="mixed"/>
+      </eAnnotations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1"
+          upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+        <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+          <details key="kind" value="elementWildcard"/>
+          <details key="name" value=":mixed"/>
+        </eAnnotations>
+      </eStructuralFeatures>
+    </eClassifiers>
   </eSubpackages>
   <eSubpackages name="opf" nsURI="http://www.idpf.org/2007/opf" nsPrefix="opf">
     <eClassifiers xsi:type="ecore:EClass" name="Package">
@@ -49,35 +213,35 @@
       </eStructuralFeatures>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="Metadata">
-      <eStructuralFeatures xsi:type="ecore:EReference" name="titles" lowerBound="1"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="title" lowerBound="1"
           upperBound="-1" eType="#//dc/Title" containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="creators" lowerBound="1"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="creator" lowerBound="1"
           upperBound="-1" eType="#//dc/Creator" containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="subjects" upperBound="-1"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subject" upperBound="-1"
           eType="#//dc/Subject" containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="descriptions" eType="#//dc/Description"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="description" eType="#//dc/Description"
           containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="publisher" eType="#//dc/Publisher"
           containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="contributors" eType="#//dc/Contributor"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contributor" eType="#//dc/Contributor"
           containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="dates" eType="#//dc/Date"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="date" eType="#//dc/Date"
           containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="types" eType="#//dc/Type"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//dc/Type"
           containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="formats" eType="#//dc/Format"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="format" eType="#//dc/Format"
           containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="identifiers" lowerBound="1"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="identifier" lowerBound="1"
           upperBound="-1" eType="#//dc/Identifier" containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="sources" eType="#//dc/Source"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//dc/Source"
           containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="languages" lowerBound="1"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="language" lowerBound="1"
           upperBound="-1" eType="#//dc/Language" containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="relations" eType="#//dc/Relation"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="relation" eType="#//dc/Relation"
           containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="coverages" eType="#//dc/Coverage"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="coverage" eType="#//dc/Coverage"
           containment="true"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="rights" eType="#//dc/Rights"
+      <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//dc/Rights"
           containment="true"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="Manifest">
