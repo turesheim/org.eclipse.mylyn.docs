@@ -37,8 +37,8 @@
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="creators" lowerBound="1"
-        upperBound="-1" eType="ecore:EClass dc.ecore#//Creator" containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="creators" upperBound="-1"
+        eType="ecore:EClass dc.ecore#//Creator" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="name" value="creator"/>
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
