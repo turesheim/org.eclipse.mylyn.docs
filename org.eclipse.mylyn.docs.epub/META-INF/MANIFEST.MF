@@ -4,7 +4,16 @@ Bundle-Name: ePUB Support
 Bundle-SymbolicName: org.eclipse.mylyn.docs.epub;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Torkild U. Resheim
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.emf;bundle-version="2.6.0",
- org.eclipse.emf.ecore;bundle-version="2.6.1"
+ org.eclipse.emf.ecore;bundle-version="2.6.1",
+ org.eclipse.emf.ecore.xmi;bundle-version="2.5.0",
+ org.junit
 Import-Package: org.eclipse.emf.ecore
+Export-Package: org.eclipse.mylyn.docs.epub,
+ org.eclipse.mylyn.docs.epub.dc,
+ org.eclipse.mylyn.docs.epub.dc.impl,
+ org.eclipse.mylyn.docs.epub.dc.util,
+ org.eclipse.mylyn.docs.epub.opf,
+ org.eclipse.mylyn.docs.epub.opf.impl,
+ org.eclipse.mylyn.docs.epub.opf.util

@@ -6,11 +6,18 @@
 -->
 
 <plugin>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://eclipse.org/mylyn/models/epub"
-            class="org.eclipse.mylyn.docs.epub.model.ePUBPackage"/>
+            class="org.eclipse.mylyn.docs.epub.opf.OpfPackage"
+            genModel="model/opf.genmodel"
+            uri="http://eclipse.org/mylyn/docs/epub/opf">
+      </package>
+      <package
+            class="org.eclipse.mylyn.docs.epub.dc.DcPackage"
+            uri="http://eclipse.org/mylyn/docs/epub/dc">
+      </package>
    </extension>
+
 
 </plugin>
