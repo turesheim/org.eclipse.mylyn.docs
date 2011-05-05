@@ -1,20 +1,14 @@
 package org.eclipse.mylyn.docs.epub.tests;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-
-import junit.framework.Assert;
 
 import org.eclipse.mylyn.docs.epub.EPUB;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.adobe.epubcheck.api.EpubCheck;
 
 public class TestEPUB {
 
@@ -26,13 +20,13 @@ public class TestEPUB {
 	public void setUp() throws IOException {
 		opfFile = new File("/tmp/test.opf");
 		EPUB epub = new EPUB(opfFile);
-		epub.addTitle("My Title");
+		epub.addTitle("My Title", null);
 		// epub.addTitle("My Second Title");
-		epub.addCreator("My Name", Role.AUTHOR);
-		epub.addDescription(PARAGRAPH);
-		epub.addPublisher("Eclipse.Org");
-		epub.addSubject("My first subject");
-		epub.addSubject("My second subject");
+		epub.addCreator("My Name", Role.AUTHOR, null, null);
+		epub.addDescription(PARAGRAPH, null);
+		epub.addPublisher("Eclipse.Org", null);
+		epub.addSubject("My first subject", null);
+		epub.addSubject("My second subject", null);
 		epub.assemble();
 		// epub.saveOPF(opfFile);
 	}
@@ -44,11 +38,11 @@ public class TestEPUB {
 
 	@Test
 	public void testContents() throws FileNotFoundException, IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(opfFile));
-		String in = null;
-		while ((in = reader.readLine()) != null) {
-			System.out.println(in);
-		}
+		// BufferedReader reader = new BufferedReader(new FileReader(opfFile));
+		// String in = null;
+		// while ((in = reader.readLine()) != null) {
+		// System.out.println(in);
+		// }
 	}
 
 	// @Test
