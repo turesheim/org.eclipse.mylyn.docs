@@ -8,7 +8,7 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub;
+package org.eclipse.mylyn.docs.epub.internal;
 
 import org.eclipse.emf.ecore.xmi.impl.XMLHelperImpl;
 

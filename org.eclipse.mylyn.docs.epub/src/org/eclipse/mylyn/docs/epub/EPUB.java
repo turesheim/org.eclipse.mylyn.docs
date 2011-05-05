@@ -16,8 +16,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.ZipException;
-import java.util.zip.ZipOutputStream;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -32,6 +30,8 @@ import org.eclipse.mylyn.docs.epub.dc.Description;
 import org.eclipse.mylyn.docs.epub.dc.Publisher;
 import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
+import org.eclipse.mylyn.docs.epub.internal.EPUBXMLHelperImp;
+import org.eclipse.mylyn.docs.epub.internal.FileUtil;
 import org.eclipse.mylyn.docs.epub.opf.Guide;
 import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.eclipse.mylyn.docs.epub.opf.Manifest;
@@ -66,20 +66,16 @@ public class EPUB {
 	private final Package opfPackage;
 	private final Spine opfSpine;
 
-	private final File epubFile;
+	private final String path;
 
 	/**
-	 * Creates a new instance of a EPUB document using the specified file. If
-	 * the file already exists one can use {@link #disassemble()} to take it
-	 * apart and read it's information. Otherwise one can use
-	 * {@link #assemble()} to create a new EPUB file after first populating it
-	 * with data.
+	 * Creates a new EPUB file using the specified path.
 	 * 
 	 * @param file
 	 *            the EPUB file
 	 */
-	public EPUB(File file) {
-		epubFile = file;
+	public EPUB(String path) {
+		this.path = path;
 		// Start with the root of the OPF structure
 		opfPackage = OPFFactory.eINSTANCE.createPackage();
 		// Add required features
@@ -113,10 +109,14 @@ public class EPUB {
 				writeOPF(oepbsFolder);
 				writeTOC(oepbsFolder);
 				copyContent(oepbsFolder);
-				compress(oepbsFolder);
+				File test = new File(oepbsFolder.getAbsolutePath()
+						+ File.separator + "Test");
+				test.mkdir();
+				writeOPF(test);
 			} else {
 				throw new IOException("Could not create OEBPS folder");
 			}
+			FileUtil.zip(new File(path), workingFolder);
 		} else {
 			throw new IOException("Could not create working folder");
 		}
@@ -144,14 +144,6 @@ public class EPUB {
 				}
 			}
 		}
-	}
-
-	private void compress(File root, ZipOutputStream zos) {
-		// TODO Auto-generated method stub
-	}
-
-	private void compress(File oepbsFolder) throws ZipException, IOException {
-		// TODO Auto-generated method stub
 	}
 
 	private void copyContent(File oepbsFolder) {

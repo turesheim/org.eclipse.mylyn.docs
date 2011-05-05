@@ -1,6 +1,5 @@
 package org.eclipse.mylyn.docs.epub.tests;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -12,14 +11,11 @@ import org.junit.Test;
 
 public class TestEPUB {
 
-	private File opfFile;
-
 	private final static String PARAGRAPH = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus consectetur diam quis lacus venenatis et elementum est scelerisque. Fusce tincidunt semper lacinia. Nulla aliquet, libero et iaculis volutpat, diam massa dapibus nisi, id eleifend lectus sapien id lacus. Aliquam volutpat malesuada tortor, ac fringilla justo luctus eu. Donec dolor orci, auctor sit amet faucibus nec, blandit ut magna. Suspendisse volutpat aliquet nunc id dictum. Nam lectus libero, blandit in condimentum vitae, ultrices quis massa. Donec mi lorem, elementum id imperdiet sit amet, auctor et diam. Sed gravida adipiscing tortor, eget mollis arcu commodo et. Curabitur dapibus lorem sit amet lectus faucibus lobortis.";
 
 	@Before
 	public void setUp() throws IOException {
-		opfFile = new File("/tmp/test.opf");
-		EPUB epub = new EPUB(opfFile);
+		EPUB epub = new EPUB("/tmp/epub/test.epub");
 		epub.addTitle("My Title", null);
 		// epub.addTitle("My Second Title");
 		epub.addCreator("My Name", Role.AUTHOR, null, null);
