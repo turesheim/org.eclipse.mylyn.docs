@@ -180,6 +180,9 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Identifier">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="kind" value="mixed"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral="BookId"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="scheme" eType="ecore:EEnum opf.ecore#//Scheme">
@@ -187,9 +190,11 @@
         <details key="namespace" value="http://www.idpf.org/2007/opf"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mixed" lowerBound="1" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="namespace" value="http://www.w3.org/2001/XMLSchema-instance"/>
+        <details key="kind" value="elementWildcard"/>
+        <details key="name" value=":mixed"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>

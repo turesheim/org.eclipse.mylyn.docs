@@ -10,18 +10,18 @@
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="package"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="manifest" lowerBound="1"
-        eType="#//Manifest" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="metadata" lowerBound="1"
         eType="#//Metadata" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="manifest" lowerBound="1"
+        eType="#//Manifest" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="spine" lowerBound="1" eType="#//Spine"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="guide" eType="#//Guide"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tours" eType="#//Tours"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" changeable="false"
-        defaultValueLiteral="2.0" unsettable="true"/>
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral="2.0"
+        unsettable="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="uniqueIdentifier" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
@@ -153,13 +153,31 @@
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="href" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="media_type" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="media-type"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fallback" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fallback_style" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="required_namespace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="required_modules" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fallback_style" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="fallback-style"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="required_namespace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="required-namespace"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="required_modules" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="required-modules"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="Manifest" lowerBound="1"
         eType="#//Manifest" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        transient="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Spine">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
@@ -167,7 +185,11 @@
       <details key="namespace" value="##targetNamespace"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="spineItems" upperBound="-1"
-        eType="#//Itemref" containment="true"/>
+        eType="#//Itemref" containment="true">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="itemref"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Guide">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">

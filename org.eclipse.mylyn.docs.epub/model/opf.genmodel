@@ -279,6 +279,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/required_namespace"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/required_modules"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Item/Manifest"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/file"/>
     </genClasses>
     <genClasses ecoreClass="opf.ecore#//Spine">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Spine/spineItems"/>
@@ -342,7 +343,6 @@
     <genClasses ecoreClass="dc.ecore#//Identifier">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Identifier/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Identifier/scheme"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Identifier/type"/>
     </genClasses>
     <genClasses ecoreClass="dc.ecore#//Source">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Source/lang"/>
