@@ -1,0 +1,122 @@
+body {
+  font-size : 1em;
+  font-family : Garamond, serif;
+  text-align : left;
+  }
+
+
+
+body-title {
+  color : #443300;
+  font-family : Baskerville, New Baskerville Roman, Georgia, serif;
+  font-size : medium;
+  font-style : normal;
+  font-weight : normal
+}
+
+body P {
+ text-indent : 1em;
+}
+
+body P.noindent {
+ text-indent : 0px;
+}
+
+body P.poem {
+  text-indent : 0%;
+  margin-left : 10%;
+  font-size : 1em;
+  font-style: italic;
+}
+.speaker {
+  font-size:1em;
+  font-style:normal;
+  font-weight:normal;
+  }
+
+body P.letter {
+  font-size : 1em;
+  margin-left : 10%;
+  margin-right : 20%;
+}
+.para-start-phrase{
+ margin-left: -2em;
+ font-size: 1.2em;
+ font-style: italic;
+ }
+
+body P.closing {
+  font-size : 1em;
+  text-indent : 0%;
+  margin-left : 50%;
+  margin-right : 20%
+}
+
+body blockquote {
+
+ font-size:1.5em;
+font-style:italic;
+margin-left:50%;
+text-indent:0px; 
+}
+
+.attribution {
+font-size: 0.75em;
+display:block;
+}
+
+body h1 {
+  
+  margin-left:35%;
+  margin-right:35%;
+  font-size: 3em;
+  text-align:center;
+  border-bottom: 1px black solid;
+  text-transform: uppercase;
+  font-family:titel;
+}
+
+body h2 {
+ 
+ text-transform:uppercase;
+ font-family:titel;
+ font-size:5em;
+ font-weight: lighter;
+ text-align:center;
+ font-family:titel;
+}
+
+body h3.c2 {
+ padding-top: 1em;
+  font-size : 4em;
+  text-transform : uppercase;
+  font-style: italic;
+  font-weight : lighter;
+  margin-left:-0.5 em;
+  font-family:titel;
+  }
+
+.chapter-number {
+	margin-top:-1em;
+	font-size: 1.5em;
+	}
+body h1.c1 {
+  text-align : center
+}
+
+body .firstletter {
+  vertical-align:top;
+  float : left;
+  font-size : 3em;
+  padding-top: 0px;
+  line-height:0.7em;
+  height: 0.7em;
+  padding-right: 0.1em;
+  }
+
+@font-face {
+  font-family: "titel";
+  font-style: normal;
+  font-weight: bold;
+  src:url(static/fonts/titel.TTF);
+  }
