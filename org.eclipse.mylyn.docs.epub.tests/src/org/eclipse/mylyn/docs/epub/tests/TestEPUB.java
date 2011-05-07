@@ -1,13 +1,20 @@
 package org.eclipse.mylyn.docs.epub.tests;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.UUID;
+
+import junit.framework.Assert;
 
 import org.eclipse.mylyn.docs.epub.EPUB;
 import org.eclipse.mylyn.docs.epub.opf.Role;
+import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.adobe.epubcheck.api.EpubCheck;
 
 public class TestEPUB {
 
@@ -15,14 +22,29 @@ public class TestEPUB {
 
 	@Before
 	public void setUp() throws IOException {
-		EPUB epub = new EPUB("/tmp/epub/test.epub");
-		epub.addTitle("My Title", null);
-		// epub.addTitle("My Second Title");
+		File file = new File("/Users/torkild/Temp/test.epub");
+		file.delete();
+		EPUB epub = new EPUB("/Users/torkild/Temp/test.epub", "uuid");
+		epub.addTitle("Eclipse Development Conventions and Guidelines", null);
 		epub.addCreator("My Name", Role.AUTHOR, null, null);
 		epub.addDescription(PARAGRAPH, null);
 		epub.addPublisher("Eclipse.Org", null);
 		epub.addSubject("My first subject", null);
 		epub.addSubject("My second subject", null);
+		epub.addItem(new File("testdata/style.css"), null, "text/css", false);
+		epub.addItem(new File(
+				"testdata/Development_Conventions_And_Guidelines.html"), null,
+				null, true);
+		epub.addItem(new File("testdata/Naming_Conventions.html"), null, null,
+				true);
+		epub.addItem(new File("testdata/Coding_Conventions.html"), null, null,
+				true);
+		epub.addItem(new File("testdata/Javadoc.html"), null, null, true);
+		epub.addItem(new File("testdata/User_Interface_Guidelines.html"), null,
+				null, true);
+		epub.addItem(new File("testdata/Version_Numbering.html"), null, null,
+				true);
+		epub.addIdentifier("uuid", Scheme.UUID, UUID.randomUUID().toString());
 		epub.assemble();
 		// epub.saveOPF(opfFile);
 	}
@@ -41,10 +63,11 @@ public class TestEPUB {
 		// }
 	}
 
-	// @Test
-	// public void testEPUB() {
-	// EpubCheck checker = new EpubCheck(opfFile);
-	// Assert.assertTrue(checker.validate());
-	// }
+	@Test
+	public void testEPUB() {
+		EpubCheck checker = new EpubCheck(new File(
+				"/Users/torkild/Temp/test.epub"));
+		Assert.assertTrue(checker.validate());
+	}
 
 }
