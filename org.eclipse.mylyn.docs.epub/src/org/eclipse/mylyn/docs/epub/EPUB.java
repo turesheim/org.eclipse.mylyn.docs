@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -27,19 +28,21 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.mylyn.docs.epub.dc.Creator;
 import org.eclipse.mylyn.docs.epub.dc.DCFactory;
 import org.eclipse.mylyn.docs.epub.dc.Description;
+import org.eclipse.mylyn.docs.epub.dc.Identifier;
 import org.eclipse.mylyn.docs.epub.dc.Publisher;
 import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
 import org.eclipse.mylyn.docs.epub.internal.EPUBXMLHelperImp;
 import org.eclipse.mylyn.docs.epub.internal.FileUtil;
-import org.eclipse.mylyn.docs.epub.opf.Guide;
 import org.eclipse.mylyn.docs.epub.opf.Item;
+import org.eclipse.mylyn.docs.epub.opf.Itemref;
 import org.eclipse.mylyn.docs.epub.opf.Manifest;
 import org.eclipse.mylyn.docs.epub.opf.Metadata;
 import org.eclipse.mylyn.docs.epub.opf.OPFFactory;
 import org.eclipse.mylyn.docs.epub.opf.OPFPackage;
 import org.eclipse.mylyn.docs.epub.opf.Package;
 import org.eclipse.mylyn.docs.epub.opf.Role;
+import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.eclipse.mylyn.docs.epub.opf.Spine;
 import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceFactoryImpl;
 import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceImpl;
@@ -61,7 +64,7 @@ import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceImpl;
 public class EPUB {
 
 	private final Metadata opfMetadata;
-	private final Guide opfGuide;
+	// private final Guide opfGuide;
 	private final Manifest opfManifest;
 	private final Package opfPackage;
 	private final Spine opfSpine;
@@ -74,15 +77,17 @@ public class EPUB {
 	 * @param file
 	 *            the EPUB file
 	 */
-	public EPUB(String path) {
+	public EPUB(String path, String identifier_id) {
 		this.path = path;
 		// Start with the root of the OPF structure
 		opfPackage = OPFFactory.eINSTANCE.createPackage();
+		opfPackage.setUniqueIdentifier(identifier_id);
+		opfPackage.setVersion("2.0");
 		// Add required features
 		opfMetadata = OPFFactory.eINSTANCE.createMetadata();
 		opfPackage.setMetadata(opfMetadata);
-		opfGuide = OPFFactory.eINSTANCE.createGuide();
-		opfPackage.setGuide(opfGuide);
+		// opfGuide = OPFFactory.eINSTANCE.createGuide();
+		// opfPackage.setGuide(opfGuide);
 		opfManifest = OPFFactory.eINSTANCE.createManifest();
 		opfPackage.setManifest(opfManifest);
 		opfSpine = OPFFactory.eINSTANCE.createSpine();
@@ -106,9 +111,9 @@ public class EPUB {
 			File oepbsFolder = new File(workingFolder.getAbsolutePath()
 					+ File.separator + "OEBPS");
 			if (oepbsFolder.mkdir()) {
+				copyContent(oepbsFolder);
 				writeOPF(oepbsFolder);
 				writeTOC(oepbsFolder);
-				copyContent(oepbsFolder);
 				File test = new File(oepbsFolder.getAbsolutePath()
 						+ File.separator + "Test");
 				test.mkdir();
@@ -146,7 +151,22 @@ public class EPUB {
 		}
 	}
 
-	private void copyContent(File oepbsFolder) {
+	/**
+	 * Copies all items part of the publication into the OEPBS folder.
+	 * 
+	 * @param oepbsFolder
+	 *            the folder to copy into.
+	 * @throws IOException
+	 */
+	private void copyContent(File oepbsFolder) throws IOException {
+		EList<Item> items = opfManifest.getItems();
+		for (Item item : items) {
+			File source = new File(item.getFile());
+			File destination = new File(oepbsFolder.getAbsolutePath()
+					+ File.separator + source.getName());
+			item.setHref(source.getName());
+			FileUtil.copy(source, destination);
+		}
 		// TODO Auto-generated method stub
 
 	}
@@ -291,6 +311,15 @@ public class EPUB {
 		return dc;
 	}
 
+	public Identifier addIdentifier(String id, Scheme scheme, String value) {
+		Identifier dc = DCFactory.eINSTANCE.createIdentifier();
+		dc.setId(id);
+		dc.setScheme(scheme);
+		FeatureMapUtil.addText(dc.getMixed(), value);
+		opfMetadata.getIdentifiers().add(dc);
+		return dc;
+	}
+
 	/**
 	 * Adds a new description to the publication.
 	 * 
@@ -333,27 +362,43 @@ public class EPUB {
 	 * Adds a new item to the manifest. If an identifier is not specified it
 	 * will automatically be assigned.
 	 * 
+	 * <p>
+	 * The
+	 * <q>spine</q> defines the reading order, so the order items are added and
+	 * whether or not <i>spine</i> is <code>true</code> does matter.
+	 * </p>
+	 * 
 	 * @param file
 	 *            the file to add
 	 * @param id
 	 *            identifier or <code>null</code>
 	 * @param type
 	 *            MIME file type
+	 * @param spine
+	 *            whether or not to add the item to the spine
 	 * @return the new item
 	 */
-	public Item addItem(File file, String id, String type) {
+	public Item addItem(File file, String id, String type, boolean spine) {
 		if (file == null || !file.exists()) {
-			throw new IllegalArgumentException("\"file\" must exist.");
-		}
-		if (type == null) {
-			throw new IllegalArgumentException("MIME-type must be specified");
+			throw new IllegalArgumentException("\"file\" "
+					+ file.getAbsolutePath() + " must exist.");
 		}
 		Item item = OPFFactory.eINSTANCE.createItem();
-		item.setMedia_type(type);
-		opfManifest.getItems().add(item);
+		if (type == null) {
+			type = "application/xhtml+xml";
+		}
 		if (id == null) {
-			id = "item-" + opfManifest.getItems().size();
+			id = file.getName().substring(0, file.getName().lastIndexOf('.'));
 			item.setId(id);
+		}
+		item.setHref(file.getName());
+		item.setMedia_type(type);
+		item.setFile(file.getAbsolutePath());
+		opfManifest.getItems().add(item);
+		if (spine) {
+			Itemref ref = OPFFactory.eINSTANCE.createItemref();
+			ref.setIdref(id);
+			opfSpine.getSpineItems().add(ref);
 		}
 		return item;
 	}

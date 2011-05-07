@@ -26,6 +26,32 @@ import java.util.zip.ZipOutputStream;
  */
 public class FileUtil {
 
+	public static void copy(File source, File destination) throws IOException {
+		FileInputStream from = null;
+		FileOutputStream to = null;
+		try {
+			from = new FileInputStream(source);
+			to = new FileOutputStream(destination);
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+
+			while ((bytesRead = from.read(buffer)) != -1) {
+				to.write(buffer, 0, bytesRead);
+			}
+		} finally {
+			if (from != null)
+				try {
+					from.close();
+				} catch (IOException e) {
+				}
+			if (to != null)
+				try {
+					to.close();
+				} catch (IOException e) {
+				}
+		}
+	}
+
 	/**
 	 * Determines the <i>root</i> relative path of <i>file</i> in a platform
 	 * independent manner. The returned string is a path starting from but
