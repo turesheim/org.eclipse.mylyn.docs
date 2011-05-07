@@ -2,7 +2,7 @@
 <genmodel:GenModel xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.mylyn.docs.epub/src-gen"
-    modelPluginID="org.eclipse.mylyn.docs.epub" modelName="OPF" nonNLSMarkers="true"
+    modelPluginID="org.eclipse.mylyn.docs.epub" modelName="OPF-2.0.1" nonNLSMarkers="true"
     runtimeCompatibility="true" testsDirectory="/org.eclipse.mylyn.docs.epub.tests/src-gen"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
     publicConstructors="true" language="en" interfaceNamePattern="">
@@ -242,8 +242,8 @@
       <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Scheme/URN"/>
     </genEnums>
     <genClasses ecoreClass="opf.ecore#//Package">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Package/manifest"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Package/metadata"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Package/manifest"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Package/spine"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Package/guide"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference opf.ecore#//Package/tours"/>
@@ -343,6 +343,7 @@
     <genClasses ecoreClass="dc.ecore#//Identifier">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Identifier/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Identifier/scheme"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Identifier/mixed"/>
     </genClasses>
     <genClasses ecoreClass="dc.ecore#//Source">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Source/lang"/>
