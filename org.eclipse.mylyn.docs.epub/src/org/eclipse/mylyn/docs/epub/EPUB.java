@@ -39,6 +39,7 @@ import org.eclipse.mylyn.docs.epub.ncx.NCXPackage;
 import org.eclipse.mylyn.docs.epub.ncx.Ncx;
 import org.eclipse.mylyn.docs.epub.ncx.util.NCXResourceFactoryImpl;
 import org.eclipse.mylyn.docs.epub.ncx.util.NCXResourceImpl;
+import org.eclipse.mylyn.docs.epub.opf.Guide;
 import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.eclipse.mylyn.docs.epub.opf.Itemref;
 import org.eclipse.mylyn.docs.epub.opf.Manifest;
@@ -46,6 +47,7 @@ import org.eclipse.mylyn.docs.epub.opf.Metadata;
 import org.eclipse.mylyn.docs.epub.opf.OPFFactory;
 import org.eclipse.mylyn.docs.epub.opf.OPFPackage;
 import org.eclipse.mylyn.docs.epub.opf.Package;
+import org.eclipse.mylyn.docs.epub.opf.Reference;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.eclipse.mylyn.docs.epub.opf.Spine;
@@ -70,7 +72,7 @@ public class EPUB {
 
 	private static final String TABLE_OF_CONTENTS_ID = "ncx";
 	private final Ncx ncxTOC;
-	// private final Guide opfGuide;
+	private final Guide opfGuide;
 	private final Manifest opfManifest;
 	private final Metadata opfMetadata;
 	private final Package opfPackage;
@@ -93,8 +95,8 @@ public class EPUB {
 		// Add required features
 		opfMetadata = OPFFactory.eINSTANCE.createMetadata();
 		opfPackage.setMetadata(opfMetadata);
-		// opfGuide = OPFFactory.eINSTANCE.createGuide();
-		// opfPackage.setGuide(opfGuide);
+		opfGuide = OPFFactory.eINSTANCE.createGuide();
+		opfPackage.setGuide(opfGuide);
 		opfManifest = OPFFactory.eINSTANCE.createManifest();
 		opfPackage.setManifest(opfManifest);
 		opfSpine = OPFFactory.eINSTANCE.createSpine();
@@ -203,6 +205,30 @@ public class EPUB {
 			opfSpine.getSpineItems().add(ref);
 		}
 		return item;
+	}
+
+	/**
+	 * The structural components of the books are listed in reference elements
+	 * contained within the guide element. These components could refer to the
+	 * table of contents, list of illustrations, foreword, bibliography, and
+	 * many other standard parts of the book. Reading Systems are not required
+	 * to use the guide element in any way.
+	 * 
+	 * @param item
+	 *            the item referenced
+	 * @param title
+	 *            title of the reference
+	 * @param type
+	 *            type of the reference
+	 * @return the reference
+	 */
+	public Reference addReference(Item item, String title, String type) {
+		Reference reference = OPFFactory.eINSTANCE.createReference();
+		reference.setHref(item.getHref());
+		reference.setTitle(title);
+		reference.setType(type);
+		opfGuide.getGuideItems().add(reference);
+		return reference;
 	}
 
 	/**
