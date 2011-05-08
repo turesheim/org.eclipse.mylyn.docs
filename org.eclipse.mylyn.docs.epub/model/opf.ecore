@@ -190,13 +190,18 @@
         <details key="name" value="itemref"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="toc" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Guide">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="guide"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="guideItems" upperBound="-1"
-        eType="#//Reference" containment="true"/>
+        eType="#//Reference" containment="true">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="reference"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Reference">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
