@@ -110,15 +110,17 @@ public class FileUtil {
 	 */
 	private static void zip(File root, File folder, ZipOutputStream out)
 			throws IOException {
-		File[] files = folder.listFiles();
+		// Files first in order to make sure "metadata" is placed first in the
+		// zip file. We need that in order to support EPUB properly.
+		File[] files = folder.listFiles(new java.io.FileFilter() {
+
+			public boolean accept(File pathname) {
+				return !pathname.isDirectory();
+			}
+		});
 		byte[] tmpBuf = new byte[1024];
 
 		for (int i = 0; i < files.length; i++) {
-			if (files[i].isDirectory()) {
-				out.putNextEntry(new ZipEntry(getRelativePath(root, files[i])));
-				zip(root, files[i], out);
-				continue;
-			}
 			FileInputStream in = new FileInputStream(files[i].getAbsolutePath());
 			out.putNextEntry(new ZipEntry(getRelativePath(root, files[i])));
 			int len;
@@ -127,6 +129,16 @@ public class FileUtil {
 			}
 			out.closeEntry();
 			in.close();
+		}
+		File[] dirs = folder.listFiles(new java.io.FileFilter() {
+
+			public boolean accept(File pathname) {
+				return pathname.isDirectory();
+			}
+		});
+		for (int i = 0; i < dirs.length; i++) {
+			out.putNextEntry(new ZipEntry(getRelativePath(root, dirs[i])));
+			zip(root, dirs[i], out);
 		}
 	}
 
