@@ -54,10 +54,10 @@ public class TestAntTask extends BuildFileTest {
 	 * Creates a an empty EPUB file and tests whether it's structure can be
 	 * validated.
 	 */
-	public void testEmpty() {
-		executeTarget("test.empty");
-		assertEpub();
-	}
+	// public void testEmpty() {
+	// executeTarget("test.empty");
+	// assertEpub();
+	// }
 
 	/**
 	 * Creates a an empty EPUB file and tests whether it's structure can be

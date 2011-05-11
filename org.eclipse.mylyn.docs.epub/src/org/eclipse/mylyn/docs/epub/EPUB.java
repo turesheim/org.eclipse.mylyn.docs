@@ -34,6 +34,7 @@ import org.eclipse.mylyn.docs.epub.dc.Creator;
 import org.eclipse.mylyn.docs.epub.dc.DCFactory;
 import org.eclipse.mylyn.docs.epub.dc.Description;
 import org.eclipse.mylyn.docs.epub.dc.Identifier;
+import org.eclipse.mylyn.docs.epub.dc.Language;
 import org.eclipse.mylyn.docs.epub.dc.Publisher;
 import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
@@ -288,6 +289,20 @@ public class EPUB {
 			dc.setLang(lang);
 		}
 		opfMetadata.setPublisher(dc);
+		return dc;
+	}
+
+	/**
+	 * Adds a new language specification to the publication
+	 * 
+	 * @param lang
+	 *            the RFC-3066 format of the language code
+	 * @return the language instance
+	 */
+	public Language addLanguage(String lang) {
+		Language dc = DCFactory.eINSTANCE.createLanguage();
+		FeatureMapUtil.addText(dc.getMixed(), lang);
+		opfMetadata.getLanguages().add(dc);
 		return dc;
 	}
 

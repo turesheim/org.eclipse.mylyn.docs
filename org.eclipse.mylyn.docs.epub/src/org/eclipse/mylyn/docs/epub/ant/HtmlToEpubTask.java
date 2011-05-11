@@ -48,6 +48,10 @@ public class HtmlToEpubTask extends Task {
 		}
 	}
 
+	public void addConfiguredLanguage(Language language) {
+		epub.addLanguage(language.code);
+	}
+
 	/**
 	 * Adds a new identifier.
 	 * 
