@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Test markup-to-epub" basedir="." default="test.item">
+
+	<property name="wikitext.standalone" value="/Applications/Eclipse_3.7/plugins/" />
+	<property name="testdir" location="${basedir}/test" />
+	<property name="srcdir" location="${basedir}/test/src" />
+	<property name="datadir" location="${basedir}/testdata" />
+
+	<path id="epub.classpath">
+		<fileset dir="${wikitext.standalone}">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub/bin/" />
+	</path>
+
+	<taskdef classpathref="epub.classpath" resource="org/eclipse/mylyn/docs/epub/ant/tasks.properties" />
+	<taskdef classpathref="epub.classpath" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" />
+	<taskdef classpathref="epub.classpath" resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties" />
+	
+	<!-- Prepare source files that we need for the tests -->
+	<target name="init">
+		<delete dir="${testdir}" failonerror="false">
+			<fileset dir="${testdir}">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<wikitext-to-html markupLanguage="MediaWiki">			
+			<fileset dir="${datadir}">
+				<include name="*.mediawiki" />
+			</fileset>
+			<stylesheet url="style.css" />
+		</wikitext-to-html>
+		<move todir="${srcdir}">
+			<fileset dir="${datadir}">
+				<include name="*.html" />
+				<exclude name="Cover.html" />
+			</fileset>
+		</move>
+		<mediawiki-fetch-images dest="${srcdir}" url="http://wiki.eclipse.org/" pageName="Mylyn/User_Guide"/>
+	</target>
+
+	<target name="test.empty" depends="init">
+		<markup-to-epub identifierId="id" file="${testdir}/test.epub" workingFolder="${testdir}/work">
+		</markup-to-epub>
+	</target>
+
+	<target name="test.item" depends="init">		
+		<html-to-epub identifierId="url" file="${testdir}/test.epub" workingFolder="${testdir}/work">
+			<title text="Mylyn User Guide"/>
+			<identifier id="url" scheme="URL" value="http://wiki.eclipse.org/Mylyn/User_Guide"/>
+			<subject text="Computing, Eclipse, Mylyn"/>
+			<creator name="Eclipse Committers and Contributors" role="aut"/>
+			<publisher text="Eclipse.Org"/>
+			<item file="${srcdir}/Mylyn_User_Guide.html"/>
+			<item file="${datadir}/Cover.html" spine="false"/>
+			<item file="${datadir}/Cover.jpg" spine="false"/>
+			<item file="${datadir}/style.css" type="text/css" spine="false"/>
+			<itemreference href="Cover.html" title="Cover" type="cover"/>
+			<itemreference href="Cover.html" title="Title Page" type="title-page"/>
+			<fileset dir="${srcdir}">
+				<include name="*.gif"/>
+				<include name="*.png"/>
+			</fileset>
+		</html-to-epub>
+	</target>
+
+</project>

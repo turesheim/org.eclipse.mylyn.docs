@@ -11,9 +11,14 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,7 +82,7 @@ public class EPUB {
 	private final Metadata opfMetadata;
 	private final Package opfPackage;
 	private final Spine opfSpine;
-	private final String path;
+	private String path;
 
 	/**
 	 * Creates a new EPUB file using the specified path.
@@ -85,11 +90,9 @@ public class EPUB {
 	 * @param file
 	 *            the EPUB file
 	 */
-	public EPUB(String path, String identifier_id) {
-		this.path = path;
+	public EPUB() {
 		// Start with the root of the OPF structure
 		opfPackage = OPFFactory.eINSTANCE.createPackage();
-		opfPackage.setUniqueIdentifier(identifier_id);
 		opfPackage.setVersion("2.0");
 		ncxTOC = NCXFactory.eINSTANCE.createNcx();
 		// Add required features
@@ -103,6 +106,14 @@ public class EPUB {
 		opfPackage.setSpine(opfSpine);
 		registerOPFResourceFactory();
 		registerNCXResourceFactory();
+	}
+
+	public void setFile(String file) {
+		this.path = file;
+	}
+
+	public void setIdentifierId(String identifier_id) {
+		opfPackage.setUniqueIdentifier(identifier_id);
 	}
 
 	/**
@@ -189,7 +200,12 @@ public class EPUB {
 		}
 		Item item = OPFFactory.eINSTANCE.createItem();
 		if (type == null) {
-			type = "application/xhtml+xml";
+			type = getMimeType(file);
+			if (type == null) {
+				throw new IllegalArgumentException(
+						"Could not automatically determine MIME type for file "
+								+ file + ". Please specify the correct value");
+			}
 		}
 		if (id == null) {
 			id = file.getName().substring(0, file.getName().lastIndexOf('.'));
@@ -208,13 +224,38 @@ public class EPUB {
 	}
 
 	/**
+	 * Attempts to figure out the MIME-type for the file.
+	 * 
+	 * @param file
+	 *            the file to determine MIME-type for
+	 * @return the MIME-type or <code>null</code>
+	 */
+	private String getMimeType(File file) {
+		String mimeType = URLConnection
+				.guessContentTypeFromName(file.getName());
+		if (mimeType == null) {
+
+			try {
+				InputStream is = new BufferedInputStream(new FileInputStream(
+						file));
+				mimeType = URLConnection.guessContentTypeFromStream(is);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return mimeType;
+	}
+
+	/**
 	 * The structural components of the books are listed in reference elements
 	 * contained within the guide element. These components could refer to the
 	 * table of contents, list of illustrations, foreword, bibliography, and
 	 * many other standard parts of the book. Reading Systems are not required
 	 * to use the guide element in any way.
 	 * 
-	 * @param item
+	 * @param href
 	 *            the item referenced
 	 * @param title
 	 *            title of the reference
@@ -222,9 +263,9 @@ public class EPUB {
 	 *            type of the reference
 	 * @return the reference
 	 */
-	public Reference addReference(Item item, String title, String type) {
+	public Reference addReference(String href, String title, String type) {
 		Reference reference = OPFFactory.eINSTANCE.createReference();
-		reference.setHref(item.getHref());
+		reference.setHref(href);
 		reference.setTitle(title);
 		reference.setType(type);
 		opfGuide.getGuideItems().add(reference);
@@ -287,15 +328,11 @@ public class EPUB {
 		return dc;
 	}
 
-	/**
-	 * Creates the final EPUB file.
-	 */
-	public void assemble() throws IOException {
-		File workingFolder = File.createTempFile("epub_", null);
+	public void assemble(File workingFolder) throws IOException {
 		System.out.println("Assembling EPUB file in " + workingFolder);
 		// Note that order is important here. Some methods may insert data into
 		// the EPUB structure. Hence the OPF must be written last.
-		if (workingFolder.delete() && workingFolder.mkdir()) {
+		if (workingFolder.isDirectory() || workingFolder.mkdirs()) {
 			writeMimetype(workingFolder);
 			writeContainer(workingFolder);
 			File oepbsFolder = new File(workingFolder.getAbsolutePath()
@@ -311,7 +348,16 @@ public class EPUB {
 		} else {
 			throw new IOException("Could not create working folder");
 		}
+	}
 
+	/**
+	 * Creates the final EPUB file.
+	 */
+	public void assemble() throws IOException {
+		File workingFolder = File.createTempFile("epub_", null);
+		if (workingFolder.delete() && workingFolder.mkdirs()) {
+			assemble(workingFolder);
+		}
 	}
 
 	/**
