@@ -4,7 +4,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.mylyn.docs.epub/src-gen"
     modelPluginID="org.eclipse.mylyn.docs.epub" modelName="OPF-2.0.1" nonNLSMarkers="true"
     runtimeCompatibility="true" testsDirectory="/org.eclipse.mylyn.docs.epub.tests/src-gen"
-    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0" copyrightFields="false"
     publicConstructors="true" language="en" interfaceNamePattern="">
   <foreignModel>opf.ecore</foreignModel>
   <genPackages prefix="OPF" basePackage="org.eclipse.mylyn.docs.epub" resource="XML"
@@ -283,6 +283,7 @@
     </genClasses>
     <genClasses ecoreClass="opf.ecore#//Spine">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Spine/spineItems"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Spine/toc"/>
     </genClasses>
     <genClasses ecoreClass="opf.ecore#//Guide">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Guide/guideItems"/>

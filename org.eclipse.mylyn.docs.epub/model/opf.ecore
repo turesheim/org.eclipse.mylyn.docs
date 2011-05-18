@@ -3,22 +3,40 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="opf"
     nsURI="http://www.idpf.org/2007/opf" nsPrefix="opf">
-  <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-    <details key="qualified" value="true"/>
-  </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Package">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="package"/>
+      <details key="namespace" value="http://www.idpf.org/2007/opf"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="metadata" lowerBound="1"
-        eType="#//Metadata" containment="true"/>
+        eType="#//Metadata" containment="true">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="namespace" value="http://www.idpf.org/2007/opf"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="manifest" lowerBound="1"
-        eType="#//Manifest" containment="true"/>
+        eType="#//Manifest" containment="true">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="namespace" value="http://www.idpf.org/2007/opf"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="spine" lowerBound="1" eType="#//Spine"
-        containment="true"/>
+        containment="true">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="namespace" value="http://www.idpf.org/2007/opf"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="guide" eType="#//Guide"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="tours" eType="#//Tours"/>
+        containment="true">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="namespace" value="http://www.idpf.org/2007/opf"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tours" eType="#//Tours">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="namespace" value="http://www.idpf.org/2007/opf"/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" defaultValueLiteral="2.0"
         unsettable="true"/>
@@ -122,33 +140,28 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="coverage" eType="ecore:EClass dc.ecore#//Coverage"
         containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="name" value="type"/>
+        <details key="name" value="coverage"/>
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rights" eType="ecore:EClass dc.ecore#//Rights"
         containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="name" value="type"/>
+        <details key="name" value="rights"/>
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Manifest">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="namespace" value="##targetNamespace"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="items" lowerBound="1" upperBound="-1"
         eType="#//Item" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="name" value="item"/>
+        <details key="namespace" value="http://www.idpf.org/2007/opf"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Item">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="namespace" value="##targetNamespace"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="href" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -180,41 +193,30 @@
         transient="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Spine">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="spine"/>
-      <details key="namespace" value="##targetNamespace"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="spineItems" upperBound="-1"
         eType="#//Itemref" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="name" value="itemref"/>
+        <details key="namespace" value="http://www.idpf.org/2007/opf"/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="toc" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Guide">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="guide"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="guideItems" upperBound="-1"
         eType="#//Reference" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="name" value="reference"/>
+        <details key="namespace" value="http://www.idpf.org/2007/opf"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Reference">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="namespace" value="##targetNamespace"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="href" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Itemref">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="namespace" value="##targetNamespace"/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="idref" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="linear" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
