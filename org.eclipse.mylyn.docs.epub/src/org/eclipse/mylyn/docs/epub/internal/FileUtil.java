@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
@@ -113,7 +114,6 @@ public class FileUtil {
 		// Files first in order to make sure "metadata" is placed first in the
 		// zip file. We need that in order to support EPUB properly.
 		File[] files = folder.listFiles(new java.io.FileFilter() {
-
 			public boolean accept(File pathname) {
 				return !pathname.isDirectory();
 			}
@@ -122,7 +122,8 @@ public class FileUtil {
 
 		for (int i = 0; i < files.length; i++) {
 			FileInputStream in = new FileInputStream(files[i].getAbsolutePath());
-			out.putNextEntry(new ZipEntry(getRelativePath(root, files[i])));
+			ZipEntry zipEntry = new ZipEntry(getRelativePath(root, files[i]));
+			out.putNextEntry(zipEntry);
 			int len;
 			while ((len = in.read(tmpBuf)) > 0) {
 				out.write(tmpBuf, 0, len);
@@ -131,7 +132,6 @@ public class FileUtil {
 			in.close();
 		}
 		File[] dirs = folder.listFiles(new java.io.FileFilter() {
-
 			public boolean accept(File pathname) {
 				return pathname.isDirectory();
 			}
@@ -142,6 +142,8 @@ public class FileUtil {
 		}
 	}
 
+	private static final String MIMETYPE = "application/epub+zip";
+
 	/**
 	 * Recursively compresses contents of the given folder into a zip-file. If a
 	 * file already exists in the given location an exception will be thrown.
@@ -150,6 +152,8 @@ public class FileUtil {
 	 *            the destination file
 	 * @param folder
 	 *            the source folder
+	 * @param uncompressed
+	 *            a list of files to keep uncompressed
 	 * @throws ZipException
 	 * @throws IOException
 	 */
@@ -160,8 +164,33 @@ public class FileUtil {
 		}
 		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(
 				destination));
+		writeEPUBHeader(out);
 		zip(folder, folder, out);
 		out.close();
+	}
+
+	/**
+	 * A correctly formatted EPUB file must contain an uncompressed entry named
+	 * "mimetype" that is placed at the beginning. This method will create this
+	 * file.
+	 * 
+	 * @param zos
+	 *            the zip output stream to write to.
+	 * @throws IOException
+	 */
+	public static void writeEPUBHeader(ZipOutputStream zos) throws IOException {
+		byte[] bytes = MIMETYPE.getBytes("ASCII");
+		ZipEntry mimetype = new ZipEntry("mimetype");
+		mimetype.setMethod(ZipOutputStream.STORED);
+		mimetype.setSize(bytes.length);
+		mimetype.setCompressedSize(bytes.length);
+		CRC32 crc = new CRC32();
+		crc.update(bytes);
+		mimetype.setCrc(crc.getValue());
+		zos.putNextEntry(mimetype);
+		zos.write(bytes);
+		zos.closeEntry();
+
 	}
 
 }

@@ -348,7 +348,6 @@ public class EPUB {
 		// Note that order is important here. Some methods may insert data into
 		// the EPUB structure. Hence the OPF must be written last.
 		if (workingFolder.isDirectory() || workingFolder.mkdirs()) {
-			writeMimetype(workingFolder);
 			writeContainer(workingFolder);
 			File oepbsFolder = new File(workingFolder.getAbsolutePath()
 					+ File.separator + "OEBPS");
@@ -473,27 +472,6 @@ public class EPUB {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}
-		}
-	}
-
-	/**
-	 * Creates a new file containing the EPUB MIME-type in the working folder.
-	 * If such a file already exists, it will not be changed.
-	 * 
-	 * @param workingFolder
-	 *            the folder to create the file in
-	 */
-	private void writeMimetype(File workingFolder) {
-		File mimeFile = new File(workingFolder.getAbsolutePath()
-				+ File.separator + "mimetype");
-		if (!mimeFile.exists()) {
-			try {
-				FileWriter fw = new FileWriter(mimeFile);
-				fw.append("application/epub+zip");
-				fw.close();
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}
