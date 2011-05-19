@@ -24,7 +24,7 @@
 				<include name="**/*" />
 			</fileset>
 		</delete>
-		<wikitext-to-html markupLanguage="MediaWiki">
+		<wikitext-to-html markupLanguage="MediaWiki" xhtmlstrict="true">
 			<fileset dir="${datadir}">
 				<include name="*.mediawiki" />
 			</fileset>
@@ -39,11 +39,6 @@
 		<mediawiki-fetch-images dest="${srcdir}" url="http://wiki.eclipse.org/" pageName="Mylyn/User_Guide" />
 	</target>
 
-	<target name="test.empty" depends="init">
-		<markup-to-epub identifierId="id" file="${testdir}/test.epub" workingFolder="${testdir}/work">
-		</markup-to-epub>
-	</target>
-
 	<target name="test.item" depends="init">
 		<html-to-epub identifierId="url" file="${testdir}/test.epub" workingFolder="${testdir}/work">
 			<title text="Mylyn User Guide" />
@@ -53,13 +48,16 @@
 			<creator name="Eclipse Committers and Contributors" role="aut" />
 			<publisher text="Eclipse.Org" />
 			<item file="${srcdir}/Mylyn_User_Guide.html" />
+			<item file="${srcdir}/Bugzilla_Connector.html" />
 			<item file="${datadir}/Cover.html" spine="false" />
 			<item file="${datadir}/CoverImage.jpg" spine="false" />
 			<item file="${datadir}/style.css" type="text/css" spine="false" />
 			<itemreference href="Cover.html" title="Cover" type="cover" />
+			<toc generate="true"/>
 			<fileset dir="${srcdir}">
 				<include name="*.gif" />
 				<include name="*.png" />
+				<include name="*.TTF" />
 			</fileset>
 		</html-to-epub>
 	</target>

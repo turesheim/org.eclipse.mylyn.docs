@@ -41,6 +41,12 @@ public class TestAntTask extends BuildFileTest {
 		Assert.assertTrue(checker.validate());
 	}
 
+	private void assertRef() {
+		EpubCheck checker = new EpubCheck(new File(getProjectDir()
+				.getAbsolutePath() + File.separator + "ref/Bash_Cookbook.epub"));
+		Assert.assertTrue(checker.validate());
+	}
+
 	@Override
 	public void setUp() {
 		configureProject("ant-test.xml");
@@ -66,5 +72,7 @@ public class TestAntTask extends BuildFileTest {
 	public void testItem() {
 		executeTarget("test.item");
 		assertEpub();
+		System.out.println(getOutput());
+		// assertRef();
 	}
 }
