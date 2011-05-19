@@ -13,6 +13,8 @@ package org.eclipse.mylyn.docs.epub.ant;
 import java.io.File;
 import java.io.IOException;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
@@ -20,14 +22,25 @@ import org.apache.tools.ant.types.FileSet;
 import org.eclipse.mylyn.docs.epub.EPUB;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Scheme;
+import org.xml.sax.SAXException;
 
 public class HtmlToEpubTask extends Task {
 
 	EPUB epub = new EPUB();
-
+	Toc toc = null;
+	
 	private File workingFolder;
 
 	public HtmlToEpubTask() {
+	}
+
+	public void addConfiguredCreator(Creator creator) {
+		if (creator.role != null) {
+			epub.addCreator(creator.name, null, creator.fileAs, creator.lang);
+		} else {
+			epub.addCreator(creator.name, Role.get(creator.role),
+					creator.fileAs, creator.lang);
+		}
 	}
 
 	/**
@@ -48,10 +61,6 @@ public class HtmlToEpubTask extends Task {
 		}
 	}
 
-	public void addConfiguredLanguage(Language language) {
-		epub.addLanguage(language.code);
-	}
-
 	/**
 	 * Adds a new identifier.
 	 * 
@@ -66,6 +75,17 @@ public class HtmlToEpubTask extends Task {
 		epub.addItem(item.file, item.id, item.type, item.spine);
 	}
 
+	public void addConfiguredItemReference(ItemReference reference) {
+		epub.addReference(reference.href, reference.title, reference.type);
+	}
+	public void addConfiguredLanguage(Language language) {
+		epub.addLanguage(language.code);
+	}
+
+	public void addConfiguredPublisher(Publisher publisher) {
+		epub.addPublisher(publisher.text, publisher.lang);
+	}
+
 	public void addConfiguredSubject(Subject subject) {
 		epub.addSubject(subject.text, subject.lang);
 	}
@@ -74,25 +94,21 @@ public class HtmlToEpubTask extends Task {
 		epub.addTitle(title.text, title.lang);
 	}
 
-	public void addConfiguredPublisher(Publisher publisher) {
-		epub.addPublisher(publisher.text, publisher.lang);
-	}
-
-	public void addConfiguredCreator(Creator creator) {
-		if (creator.role != null) {
-			epub.addCreator(creator.name, null, creator.fileAs, creator.lang);
-		} else {
-			epub.addCreator(creator.name, Role.get(creator.role),
-					creator.fileAs, creator.lang);
+	public void addConfiguredToc(Toc toc) {
+		if (this.toc!=null){
+			throw new BuildException("Only one table of contents (toc) declaration is allowed.");
 		}
-	}
-
-	public void addConfiguredItemReference(ItemReference reference) {
-		epub.addReference(reference.href, reference.title, reference.type);
+		this.toc =toc;
 	}
 
 	@Override
 	public void execute() throws BuildException {
+		validate();
+		if (toc.isGenerate()){
+			epub.setGenerateToc(true);
+		} else if (toc.getFile()!=null){
+			epub.setTocFile(toc.getFile());
+		}
 		try {
 			if (workingFolder == null) {
 				epub.assemble();
@@ -102,9 +118,13 @@ public class HtmlToEpubTask extends Task {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * 
 	 * 
@@ -121,6 +141,16 @@ public class HtmlToEpubTask extends Task {
 
 	public void setWorkingFolder(File workingFolder) {
 		this.workingFolder = workingFolder;
+	}
+
+	private void validate(){
+		// Validate the table of contents
+		if (toc==null){
+			throw new BuildException("A table of contents (toc) must be declared.");
+		}
+		if (toc.getFile()==null && !toc.isGenerate()){
+			throw new BuildException("Missing 'file' or 'generate' attribute");
+		}
 	}
 
 }

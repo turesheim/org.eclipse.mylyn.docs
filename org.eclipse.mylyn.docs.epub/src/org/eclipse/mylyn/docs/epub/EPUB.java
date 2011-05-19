@@ -15,12 +15,15 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -40,9 +43,15 @@ import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
 import org.eclipse.mylyn.docs.epub.internal.EPUBXMLHelperImp;
 import org.eclipse.mylyn.docs.epub.internal.FileUtil;
+import org.eclipse.mylyn.docs.epub.internal.TOCGenerator;
+import org.eclipse.mylyn.docs.epub.ncx.DocTitle;
+import org.eclipse.mylyn.docs.epub.ncx.Head;
+import org.eclipse.mylyn.docs.epub.ncx.Meta;
 import org.eclipse.mylyn.docs.epub.ncx.NCXFactory;
 import org.eclipse.mylyn.docs.epub.ncx.NCXPackage;
+import org.eclipse.mylyn.docs.epub.ncx.NavMap;
 import org.eclipse.mylyn.docs.epub.ncx.Ncx;
+import org.eclipse.mylyn.docs.epub.ncx.Text;
 import org.eclipse.mylyn.docs.epub.ncx.util.NCXResourceFactoryImpl;
 import org.eclipse.mylyn.docs.epub.ncx.util.NCXResourceImpl;
 import org.eclipse.mylyn.docs.epub.opf.Guide;
@@ -59,6 +68,8 @@ import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.eclipse.mylyn.docs.epub.opf.Spine;
 import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceFactoryImpl;
 import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceImpl;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * <q>EPUB</q> is a standard from the International Digital Publishing Forum. It
@@ -72,18 +83,33 @@ import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceImpl;
  * </p>
  * 
  * @author Torkild U. Resheim
- * 
  */
 public class EPUB {
 
 	private static final String TABLE_OF_CONTENTS_ID = "ncx";
-	private final Ncx ncxTOC;
+	final Ncx ncxTOC;
 	private final Guide opfGuide;
 	private final Manifest opfManifest;
 	private final Metadata opfMetadata;
 	private final Package opfPackage;
 	private final Spine opfSpine;
+	/** Whether or not a table of contents should be automatically generated */
+	private boolean generateToc;
+	private File tocFile;
+
+	public File getTocPath() {
+		return tocFile;
+	}
+
+	public void setTocFile(File tocFile) {
+		this.tocFile = tocFile;
+	}
+
 	private String path;
+
+	public void setGenerateToc(boolean generateToc) {
+		this.generateToc = generateToc;
+	}
 
 	/**
 	 * Creates a new EPUB file using the specified path.
@@ -107,14 +133,8 @@ public class EPUB {
 		opfPackage.setSpine(opfSpine);
 		registerOPFResourceFactory();
 		registerNCXResourceFactory();
-	}
 
-	public void setFile(String file) {
-		this.path = file;
-	}
-
-	public void setIdentifierId(String identifier_id) {
-		opfPackage.setUniqueIdentifier(identifier_id);
+		generateToc = false;
 	}
 
 	/**
@@ -225,28 +245,36 @@ public class EPUB {
 	}
 
 	/**
-	 * Attempts to figure out the MIME-type for the file.
+	 * Adds a new language specification to the publication
 	 * 
-	 * @param file
-	 *            the file to determine MIME-type for
-	 * @return the MIME-type or <code>null</code>
+	 * @param lang
+	 *            the RFC-3066 format of the language code
+	 * @return the language instance
 	 */
-	private String getMimeType(File file) {
-		String mimeType = URLConnection
-				.guessContentTypeFromName(file.getName());
-		if (mimeType == null) {
+	public Language addLanguage(String lang) {
+		Language dc = DCFactory.eINSTANCE.createLanguage();
+		FeatureMapUtil.addText(dc.getMixed(), lang);
+		opfMetadata.getLanguages().add(dc);
+		return dc;
+	}
 
-			try {
-				InputStream is = new BufferedInputStream(new FileInputStream(
-						file));
-				mimeType = URLConnection.guessContentTypeFromStream(is);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	/**
+	 * Adds a new publisher to the publication.
+	 * 
+	 * @param publisher
+	 *            name of the publisher
+	 * @param lang
+	 *            the language code or <code>null</code>
+	 * @return the new publisher
+	 */
+	public Publisher addPublisher(String publisher, String lang) {
+		Publisher dc = DCFactory.eINSTANCE.createPublisher();
+		FeatureMapUtil.addText(dc.getMixed(), publisher);
+		if (lang != null) {
+			dc.setLang(lang);
 		}
-		return mimeType;
+		opfMetadata.setPublisher(dc);
+		return dc;
 	}
 
 	/**
@@ -271,39 +299,6 @@ public class EPUB {
 		reference.setType(type);
 		opfGuide.getGuideItems().add(reference);
 		return reference;
-	}
-
-	/**
-	 * Adds a new publisher to the publication.
-	 * 
-	 * @param publisher
-	 *            name of the publisher
-	 * @param lang
-	 *            the language code or <code>null</code>
-	 * @return the new publisher
-	 */
-	public Publisher addPublisher(String publisher, String lang) {
-		Publisher dc = DCFactory.eINSTANCE.createPublisher();
-		FeatureMapUtil.addText(dc.getMixed(), publisher);
-		if (lang != null) {
-			dc.setLang(lang);
-		}
-		opfMetadata.setPublisher(dc);
-		return dc;
-	}
-
-	/**
-	 * Adds a new language specification to the publication
-	 * 
-	 * @param lang
-	 *            the RFC-3066 format of the language code
-	 * @return the language instance
-	 */
-	public Language addLanguage(String lang) {
-		Language dc = DCFactory.eINSTANCE.createLanguage();
-		FeatureMapUtil.addText(dc.getMixed(), lang);
-		opfMetadata.getLanguages().add(dc);
-		return dc;
 	}
 
 	/**
@@ -343,7 +338,22 @@ public class EPUB {
 		return dc;
 	}
 
-	public void assemble(File workingFolder) throws IOException {
+	/**
+	 * Creates the final EPUB file.
+	 * 
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 */
+	public void assemble() throws IOException, SAXException,
+			ParserConfigurationException {
+		File workingFolder = File.createTempFile("epub_", null);
+		if (workingFolder.delete() && workingFolder.mkdirs()) {
+			assemble(workingFolder);
+		}
+	}
+
+	public void assemble(File workingFolder) throws IOException, SAXException,
+			ParserConfigurationException {
 		System.out.println("Assembling EPUB file in " + workingFolder);
 		// Note that order is important here. Some methods may insert data into
 		// the EPUB structure. Hence the OPF must be written last.
@@ -361,16 +371,6 @@ public class EPUB {
 			FileUtil.zip(new File(path), workingFolder);
 		} else {
 			throw new IOException("Could not create working folder");
-		}
-	}
-
-	/**
-	 * Creates the final EPUB file.
-	 */
-	public void assemble() throws IOException {
-		File workingFolder = File.createTempFile("epub_", null);
-		if (workingFolder.delete() && workingFolder.mkdirs()) {
-			assemble(workingFolder);
 		}
 	}
 
@@ -394,6 +394,93 @@ public class EPUB {
 
 	public void disassemble() {
 
+	}
+
+	/**
+	 * Returns the main identifier of the publication or <code>null</code> if it
+	 * could not be determined.
+	 * 
+	 * @return the main identifier or <code>null</code>
+	 */
+	private Identifier getIdentifier() {
+		EList<Identifier> identifiers = opfMetadata.getIdentifiers();
+		for (Identifier identifier : identifiers) {
+			if (identifier.getId().equals(opfPackage.getUniqueIdentifier())) {
+				return identifier;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * This mechanism will traverse the spine of the publication (which is
+	 * representing the reading order) and parse each file for headers that can
+	 * be used to assemble a table of contents.
+	 * 
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 */
+	private void generateNCX() throws SAXException, IOException,
+			ParserConfigurationException {
+		NavMap navMap = NCXFactory.eINSTANCE.createNavMap();
+		ncxTOC.setNavMap(navMap);
+		ncxTOC.setVersion("2005-1");
+		// Create the required head element
+		Head head = NCXFactory.eINSTANCE.createHead();
+		ncxTOC.setHead(head);
+		Meta meta = NCXFactory.eINSTANCE.createMeta();
+		meta.setName("dtb:uid");		
+		meta.setContent(getIdentifier().getMixed().getValue(0).toString());
+		head.getMeta().add(meta);
+		DocTitle docTitle = NCXFactory.eINSTANCE.createDocTitle();
+		Text text = NCXFactory.eINSTANCE.createText();
+		FeatureMapUtil.addText(text.getMixed(), "Table of contents");
+		docTitle.setText(text);
+		ncxTOC.setDocTitle(docTitle);
+
+		EList<Itemref> items = opfSpine.getSpineItems();
+		for (Itemref itemref : items) {
+			Item referencedItem = null;
+			String id = itemref.getIdref();
+			EList<Item> manifestItems = opfManifest.getItems();
+			for (Item item : manifestItems) {
+				if (item.getId().equals(id)) {
+					referencedItem = item;
+					break;
+				}
+			}
+			if (referencedItem != null) {
+				FileReader fr = new FileReader(referencedItem.getFile());
+				TOCGenerator.parse(new InputSource(fr),
+						referencedItem.getHref(), ncxTOC);
+			}
+		}
+	}
+
+	/**
+	 * Attempts to figure out the MIME-type for the file.
+	 * 
+	 * @param file
+	 *            the file to determine MIME-type for
+	 * @return the MIME-type or <code>null</code>
+	 */
+	private String getMimeType(File file) {
+		String mimeType = URLConnection
+				.guessContentTypeFromName(file.getName());
+		if (mimeType == null) {
+
+			try {
+				InputStream is = new BufferedInputStream(new FileInputStream(
+						file));
+				mimeType = URLConnection.guessContentTypeFromStream(is);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return mimeType;
 	}
 
 	/**
@@ -446,6 +533,14 @@ public class EPUB {
 				});
 	}
 
+	public void setFile(String file) {
+		this.path = file;
+	}
+
+	public void setIdentifierId(String identifier_id) {
+		opfPackage.setUniqueIdentifier(identifier_id);
+	}
+
 	/**
 	 * Creates a new folder named META-INF and writes the required
 	 * <b>container.xml</b> in that folder.
@@ -476,9 +571,47 @@ public class EPUB {
 		}
 	}
 
+	private void writeNCX(File oepbsFolder) throws IOException, SAXException,
+			ParserConfigurationException {
+		File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator
+				+ "toc.ncx");
+		// A path to a table of contents have not been specified, so we will
+		// use data from our model to generate the file.
+		if (tocFile == null) {
+			ResourceSet resourceSet = new ResourceSetImpl();
+			// Register the packages to make it available during loading.
+			resourceSet.getPackageRegistry().put(NCXPackage.eNS_URI,
+					NCXPackage.eINSTANCE);
+			URI fileURI = URI.createFileURI(ncxFile.getAbsolutePath());
+			Resource resource = resourceSet.createResource(fileURI);
+			// We've been asked to generate a table of contents using pages
+			// contained in the spine.
+			if (generateToc) {
+				generateNCX();
+			}
+			resource.getContents().add(ncxTOC);
+			Map<String, Object> options = new HashMap<String, Object>();
+			// NCX requires that we encode using UTF-8
+			options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+			options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
+			resource.save(options);
+		} else {
+			FileUtil.copy(tocFile, ncxFile);
+		}
+		// As we now have written the table of contents we must make sure it is
+		// in the manifest and referenced in the spine. We also want it to be
+		// the first element in the manifest.
+		Item item = addItem(ncxFile, TABLE_OF_CONTENTS_ID,
+				"application/x-dtbncx+xml", false);
+		opfPackage.getManifest().getItems().move(0, item);
+		opfSpine.setToc(TABLE_OF_CONTENTS_ID);
+	}
+
 	/**
+	 * Writes the <b>content.opf</b> file.
 	 * 
-	 * @param opfFile
+	 * @param oebpsFolder
+	 *            the folder where to write the file.
 	 * @throws IOException
 	 */
 	private void writeOPF(File oebpsFolder) throws IOException {
@@ -498,26 +631,7 @@ public class EPUB {
 		resource.save(options);
 	}
 
-	private void writeNCX(File oepbsFolder) throws IOException {
-		File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator
-				+ "toc.ncx");
-		ResourceSet resourceSet = new ResourceSetImpl();
-		// Register the packages to make it available during loading.
-		resourceSet.getPackageRegistry().put(NCXPackage.eNS_URI,
-				NCXPackage.eINSTANCE);
-		URI fileURI = URI.createFileURI(ncxFile.getAbsolutePath());
-		Resource resource = resourceSet.createResource(fileURI);
-		resource.getContents().add(ncxTOC);
-		Map<String, Object> options = new HashMap<String, Object>();
-		// NCX requires that we encode using UTF-8
-		options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-		options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
-		resource.save(options);
-		// As we now have written the table of contents we must make sure it is
-		// in the manifest and referenced in the spine.
-		Item item = addItem(ncxFile, TABLE_OF_CONTENTS_ID,
-				"application/x-dtbncx+xml", false);
-		opfPackage.getManifest().getItems().move(0, item);
-		opfSpine.setToc(TABLE_OF_CONTENTS_ID);
+	public boolean isGenerateToc() {
+		return generateToc;
 	}
 }
