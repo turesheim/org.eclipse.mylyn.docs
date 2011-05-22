@@ -212,7 +212,7 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Reference">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//Type"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="href" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
@@ -458,5 +458,24 @@
     <eLiterals name="URL" value="3" literal="URL"/>
     <eLiterals name="UUID" value="4" literal="UUID"/>
     <eLiterals name="URN" value="5" literal="URN"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Type">
+    <eLiterals name="Cover" value="1" literal="cover"/>
+    <eLiterals name="Title" value="2" literal="title-page"/>
+    <eLiterals name="TOC" value="3" literal="toc"/>
+    <eLiterals name="Index" value="4" literal="index"/>
+    <eLiterals name="Glossary" value="5" literal="glossary"/>
+    <eLiterals name="Acknowledgements" value="6" literal="acknowledgements"/>
+    <eLiterals name="Bibliography" value="7" literal="bibliography"/>
+    <eLiterals name="Colophon" value="8" literal="colophon"/>
+    <eLiterals name="Copyright" value="9" literal="copyright-page"/>
+    <eLiterals name="Dedication" value="10" literal="dedication"/>
+    <eLiterals name="Epigraph" value="11" literal="epigraph"/>
+    <eLiterals name="Foreword" value="12" literal="foreword"/>
+    <eLiterals name="Illustrations" value="13" literal="loi"/>
+    <eLiterals name="Tables" value="14" literal="lot"/>
+    <eLiterals name="Notes" value="15" literal="notes"/>
+    <eLiterals name="Preface" value="16" literal="preface"/>
+    <eLiterals name="Text" value="17" literal="text"/>
   </eClassifiers>
 </ecore:EPackage>
