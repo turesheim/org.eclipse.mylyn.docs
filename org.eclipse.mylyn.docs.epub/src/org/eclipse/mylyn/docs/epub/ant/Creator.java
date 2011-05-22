@@ -11,17 +11,10 @@
 package org.eclipse.mylyn.docs.epub.ant;
 
 public class Creator {
+	String fileAs;
+	String lang;
 	String name;
 	String role;
-	String fileAs;
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
 
 	public void setFileAs(String fileAs) {
 		this.fileAs = fileAs;
@@ -31,5 +24,11 @@ public class Creator {
 		this.lang = lang;
 	}
 
-	String lang;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 }

@@ -22,6 +22,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.eclipse.mylyn.docs.epub.EPUB;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Scheme;
+import org.eclipse.mylyn.docs.epub.opf.Type;
 import org.xml.sax.SAXException;
 
 public class HtmlToEpubTask extends Task {
@@ -35,9 +36,10 @@ public class HtmlToEpubTask extends Task {
 	}
 
 	public void addConfiguredCreator(Creator creator) {
-		if (creator.role != null) {
+		if (creator.role == null) {
 			epub.addCreator(creator.name, null, creator.fileAs, creator.lang);
 		} else {
+			System.out.println(creator.role);
 			epub.addCreator(creator.name, Role.get(creator.role),
 					creator.fileAs, creator.lang);
 		}
@@ -75,8 +77,8 @@ public class HtmlToEpubTask extends Task {
 		epub.addItem(item.file, item.id, item.type, item.spine);
 	}
 
-	public void addConfiguredItemReference(ItemReference reference) {
-		epub.addReference(reference.href, reference.title, reference.type);
+	public void addConfiguredReference(Reference reference) {
+		epub.addReference(reference.href, reference.title, Type.get(reference.type));
 	}
 	public void addConfiguredLanguage(Language language) {
 		epub.addLanguage(language.code);

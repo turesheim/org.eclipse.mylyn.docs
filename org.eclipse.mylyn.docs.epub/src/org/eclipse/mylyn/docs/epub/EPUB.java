@@ -66,6 +66,7 @@ import org.eclipse.mylyn.docs.epub.opf.Reference;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.eclipse.mylyn.docs.epub.opf.Spine;
+import org.eclipse.mylyn.docs.epub.opf.Type;
 import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceFactoryImpl;
 import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceImpl;
 import org.xml.sax.InputSource;
@@ -86,6 +87,7 @@ import org.xml.sax.SAXException;
  */
 public class EPUB {
 
+	private static final String DEFAULT_MIMETYPE = "application/xhtml+xml";
 	private static final String TABLE_OF_CONTENTS_ID = "ncx";
 	final Ncx ncxTOC;
 	private final Guide opfGuide;
@@ -220,13 +222,15 @@ public class EPUB {
 					+ file.getAbsolutePath() + " must exist.");
 		}
 		Item item = OPFFactory.eINSTANCE.createItem();
-		if (type == null) {
+		if (type == null && !spine) {
 			type = getMimeType(file);
 			if (type == null) {
 				throw new IllegalArgumentException(
 						"Could not automatically determine MIME type for file "
 								+ file + ". Please specify the correct value");
 			}
+		} else {
+			type = DEFAULT_MIMETYPE;
 		}
 		if (id == null) {
 			id = file.getName().substring(0, file.getName().lastIndexOf('.'));
@@ -281,8 +285,8 @@ public class EPUB {
 	 * The structural components of the books are listed in reference elements
 	 * contained within the guide element. These components could refer to the
 	 * table of contents, list of illustrations, foreword, bibliography, and
-	 * many other standard parts of the book. Reading Systems are not required
-	 * to use the guide element in any way.
+	 * many other standard parts of the book. Reading systems are not required
+	 * to use the guide element but it is a good idea to use it.
 	 * 
 	 * @param href
 	 *            the item referenced
@@ -292,7 +296,7 @@ public class EPUB {
 	 *            type of the reference
 	 * @return the reference
 	 */
-	public Reference addReference(String href, String title, String type) {
+	public Reference addReference(String href, String title, Type type) {
 		Reference reference = OPFFactory.eINSTANCE.createReference();
 		reference.setHref(href);
 		reference.setTitle(title);

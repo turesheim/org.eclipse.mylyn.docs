@@ -1,6 +1,6 @@
 package org.eclipse.mylyn.docs.epub.ant;
 
-public class ItemReference {
+public class Reference {
 	String href;
 	String title;
 	String type;
