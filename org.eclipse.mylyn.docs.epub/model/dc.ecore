@@ -104,9 +104,14 @@
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="kind" value="mixed"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="ecore:EEnum opf.ecore#//Role"
-        volatile="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="ecore:EEnum opf.ecore#//Role">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="namespace" value="http://www.idpf.org/2007/opf"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileAs" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="file-as"/>
         <details key="namespace" value="http://www.idpf.org/2007/opf"/>
       </eAnnotations>
     </eStructuralFeatures>

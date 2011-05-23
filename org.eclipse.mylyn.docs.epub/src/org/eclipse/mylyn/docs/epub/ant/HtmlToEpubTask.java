@@ -39,12 +39,19 @@ public class HtmlToEpubTask extends Task {
 		if (creator.role == null) {
 			epub.addCreator(creator.name, null, creator.fileAs, creator.lang);
 		} else {
-			System.out.println(creator.role);
 			epub.addCreator(creator.name, Role.get(creator.role),
 					creator.fileAs, creator.lang);
 		}
 	}
 
+	public void addConfiguredContributor(Contributor contributor) {
+		if (contributor.role == null) {
+			epub.addContributor(contributor.name, null, contributor.fileAs, contributor.lang);
+		} else {
+			epub.addContributor(contributor.name, Role.get(contributor.role),
+					contributor.fileAs, contributor.lang);
+		}
+	}
 	/**
 	 * The FileSet sub-element is used to add EPUB artifacts that are not a part
 	 * of the main text. This can be graphical items and styling (CSS).

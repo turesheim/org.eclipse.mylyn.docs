@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.mylyn.docs.epub.dc.Contributor;
 import org.eclipse.mylyn.docs.epub.dc.Creator;
 import org.eclipse.mylyn.docs.epub.dc.DCFactory;
 import org.eclipse.mylyn.docs.epub.dc.Description;
@@ -147,7 +148,7 @@ public class EPUB {
 	 * @param role
 	 *            the role or <code>null</code>
 	 * @param fileAs
-	 *            name to file the creator under
+	 *            name to file the creator under or <code>null</code>
 	 * @param lang
 	 *            the language code or <code>null</code>
 	 * @return the new creator
@@ -168,6 +169,34 @@ public class EPUB {
 		return dc;
 	}
 
+	/**
+	 * Specifies a new contributor for the publication.
+	 * 
+	 * @param name
+	 *            name of the creator
+	 * @param role
+	 *            the role or <code>null</code>
+	 * @param fileAs
+	 *            name to file the creator under or <code>null</code>
+	 * @param lang
+	 *            the language code or <code>null</code>
+	 * @return the new creator
+	 */
+	public Contributor addContributor(String name, Role role, String fileAs, String lang) {
+		Contributor dc = DCFactory.eINSTANCE.createContributor();
+		FeatureMapUtil.addText(dc.getMixed(), name);
+		opfMetadata.getContributors().add(dc);
+		if (role != null) {
+			dc.setRole(role);
+		}
+		if (fileAs != null) {
+			dc.setFileAs(fileAs);
+		}
+		if (lang != null) {
+			dc.setLang(lang);
+		}
+		return dc;
+	}
 	/**
 	 * Adds a new description to the publication.
 	 * 
@@ -354,6 +383,7 @@ public class EPUB {
 		if (workingFolder.delete() && workingFolder.mkdirs()) {
 			assemble(workingFolder);
 		}
+		workingFolder.deleteOnExit();
 	}
 
 	public void assemble(File workingFolder) throws IOException, SAXException,
@@ -370,11 +400,11 @@ public class EPUB {
 				writeNCX(oepbsFolder);
 				writeOPF(oepbsFolder);
 			} else {
-				throw new IOException("Could not create OEBPS folder");
+				throw new IOException("Could not create OEBPS folder in "+oepbsFolder.getAbsolutePath());
 			}
 			FileUtil.zip(new File(path), workingFolder);
 		} else {
-			throw new IOException("Could not create working folder");
+			throw new IOException("Could not create working folder in "+workingFolder.getAbsolutePath());
 		}
 	}
 
@@ -473,11 +503,17 @@ public class EPUB {
 		String mimeType = URLConnection
 				.guessContentTypeFromName(file.getName());
 		if (mimeType == null) {
-
 			try {
 				InputStream is = new BufferedInputStream(new FileInputStream(
 						file));
 				mimeType = URLConnection.guessContentTypeFromStream(is);
+				is.close();
+				// TODO: Improve upon this
+				if (mimeType==null){
+					if (file.getName().endsWith(".otf")){
+						return "font/opentype";
+					}
+				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
