@@ -29,50 +29,34 @@ public class TestAntTask extends BuildFileTest {
 
 	public TestAntTask(String s) {
 		super(s);
+		classLoader = getClass().getClassLoader();
 	}
 
 	private File getFile() {
 		return new File(getProjectDir().getAbsolutePath() + File.separator
-				+ EPUB_FILE_PATH);
+				+ EPUB_FILE_PATH); 
 	}
 
 	private void assertEpub() {
 		EpubCheck checker = new EpubCheck(getFile());
 		Assert.assertTrue(checker.validate());
 	}
-
-	private void assertRef() {
-		EpubCheck checker = new EpubCheck(new File(getProjectDir()
-				.getAbsolutePath() + File.separator + "ref/Bash_Cookbook.epub"));
-		Assert.assertTrue(checker.validate());
-	}
-
+	
+ static ClassLoader classLoader;
+		
 	@Override
 	public void setUp() {
 		configureProject("ant-test.xml");
-		File epub = getFile();
-		if (epub.exists()) {
-			epub.delete();
-		}
+		project.setCoreLoader(this.getClass().getClassLoader());
 	}
-
-	/**
-	 * Creates a an empty EPUB file and tests whether it's structure can be
-	 * validated.
-	 */
-	// public void testEmpty() {
-	// executeTarget("test.empty");
-	// assertEpub();
-	// }
 
 	/**
 	 * Creates a an empty EPUB file and tests whether it's structure can be
 	 * validated.
 	 */
 	public void testItem() {
+		executeTarget("init");
 		executeTarget("test.item");
 		assertEpub();
-		System.out.println(getOutput());
-		// assertRef();
 	}
 }

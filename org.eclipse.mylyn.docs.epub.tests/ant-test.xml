@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Test markup-to-epub" basedir="." default="test.item">
-
-	<property name="wikitext.standalone" value="/Applications/Eclipse_3.7/plugins/" />
+	<echoproperties>
+	</echoproperties>
 	<property name="testdir" location="${basedir}/test" />
 	<property name="srcdir" location="${basedir}/test/src" />
 	<property name="datadir" location="${basedir}/testdata" />
 
-	<path id="epub.classpath">
-		<fileset dir="${wikitext.standalone}">
-			<include name="*.jar" />
-		</fileset>
+	<path id="java.class.path">
+		<pathelement path="${java.class.path}" />
+	</path>
+
+	<taskdef classpathref="java.class.path" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" />
+	<taskdef classpathref="java.class.path" resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties" />
+
+	<path id="epub-classpath">
 		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub/bin/" />
 	</path>
 
-	<taskdef classpathref="epub.classpath" resource="org/eclipse/mylyn/docs/epub/ant/tasks.properties" />
-	<taskdef classpathref="epub.classpath" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" />
-	<taskdef classpathref="epub.classpath" resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties" />
+	<taskdef classpathref="epub-classpath" resource="org/eclipse/mylyn/docs/epub/ant/tasks.properties" />
 
 	<!-- Prepare source files that we need for the tests -->
 	<target name="init">
@@ -24,7 +26,9 @@
 				<include name="**/*" />
 			</fileset>
 		</delete>
-		<wikitext-to-html markupLanguage="MediaWiki" xhtmlstrict="true">
+		<mkdir dir="${testdir}" />
+		<wikitext-to-html xhtmlstrict="true" internalLinkPattern="{0}"
+			markupLanguage="org.eclipse.mylyn.wikitext.mediawiki.core.MediaWikiLanguage">
 			<fileset dir="${datadir}">
 				<include name="*.mediawiki" />
 			</fileset>
@@ -36,28 +40,25 @@
 				<exclude name="Cover.html" />
 			</fileset>
 		</move>
-		<mediawiki-fetch-images dest="${srcdir}" url="http://wiki.eclipse.org/" pageName="Mylyn/User_Guide" />
+		<mediawiki-fetch-images dest="${srcdir}" url="http://wiki.eclipse.org/" pageName="Development_Resources/New_Commmitter_Handbook" />
 	</target>
 
-	<target name="test.item" depends="init">
+	<target name="test.item">
 		<html-to-epub identifierId="url" file="${testdir}/test.epub" workingFolder="${testdir}/work">
 			<title text="Mylyn User Guide" />
 			<language code="en" />
-			<identifier id="url" scheme="URL" value="http://wiki.eclipse.org/Mylyn/User_Guide" />
+			<identifier id="url" scheme="URL" value="http://wiki.eclipse.org/Development_Resources/New_Commmitter_Handbook" />
 			<subject text="Computing, Eclipse, Mylyn" />
 			<creator name="Eclipse Committers and Contributors" role="aut" />
+			<contributor name="Eclipse Committers and Contributors" role="aut" />
 			<publisher text="Eclipse.Org" />
-			<item file="${srcdir}/Mylyn_User_Guide.html" />
-			<item file="${srcdir}/Bugzilla_Connector.html" />
-			<item file="${datadir}/Cover.html" spine="false" />
-			<item file="${datadir}/CoverImage.jpg" spine="false" />
+			<item file="${srcdir}/New_Committer_Handbook.html" />
+			<item file="${srcdir}/Eclipse_Quality.html" />
 			<item file="${datadir}/style.css" type="text/css" spine="false" />
-			<itemreference href="Cover.html" title="Cover" type="cover" />
-			<toc generate="true"/>
+			<toc generate="true" />
 			<fileset dir="${srcdir}">
 				<include name="*.gif" />
 				<include name="*.png" />
-				<include name="*.TTF" />
 			</fileset>
 		</html-to-epub>
 	</target>

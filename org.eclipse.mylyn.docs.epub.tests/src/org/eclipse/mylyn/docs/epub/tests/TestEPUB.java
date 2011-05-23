@@ -31,7 +31,8 @@ public class TestEPUB {
 		EPUB epub = new EPUB();
 		epub.setFile(EPUB_FILE_PATH);
 		epub.setIdentifierId("uuid");
-		epub.addTitle("Eclipse Development Conventions and Guidelines", null);
+		epub.addLanguage("en");
+		epub.addTitle("New Committer Handbook", null);
 		epub.addCreator("Eclipse Committers and Contributors", Role.AUTHOR,
 				null, null);
 		epub.addDescription(PARAGRAPH, null);
@@ -39,12 +40,13 @@ public class TestEPUB {
 		epub.addSubject("My first subject", null);
 		epub.addSubject("My second subject", null);
 		epub.addItem(new File("testdata/style.css"), null, "text/css", false);
-		epub.addItem(new File("test/src/Mylyn_User_Guide.html"), null, null,
+		epub.addItem(new File("test/src/New_Committer_Handbook.html"), null, null,
+				true);
+		epub.addItem(new File("test/src/Eclipse_Quality.html"), null, null,
 				true);
 		epub.addIdentifier("uuid", Scheme.UUID, UUID.randomUUID().toString());
-		epub.assemble(new File(
-				"/Users/torkild/Development/Repositories/org.eclipse.mylyn.docs/org.eclipse.mylyn.docs.epub.tests/test/work"));
-		// epub.saveOPF(opfFile);
+		epub.setGenerateToc(true);
+		epub.assemble();
 	}
 
 	@After
