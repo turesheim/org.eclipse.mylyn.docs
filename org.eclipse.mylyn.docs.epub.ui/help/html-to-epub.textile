@@ -1,0 +1,178 @@
+h1. The html-to-epub ANT task
+
+The **html-to-epub** "Ant":http://www.apache.org task is used to assemble an EPUB file from a number of source items. It is assumes that most of the source material such as HTML-files and illustrations has been prepared beforehand.
+
+h2. Assembling the publication
+
+The following is an example on how to assemble a EPUB file using the **html-to-epub** Ant task. 
+
+bc.. 
+<!ELEMENT html-to-epub (publisher | contributor | creator | toc | reference | language | identifier | fileset | subject | title | item)*>
+<!ATTLIST html-to-epub
+          id ID #IMPLIED
+          taskname CDATA #IMPLIED
+          identifierid CDATA #IMPLIED
+          file CDATA #IMPLIED
+          description CDATA #IMPLIED
+          workingfolder CDATA #IMPLIED>
+
+<!ELEMENT publisher EMPTY>
+<!ATTLIST publisher
+          id ID #IMPLIED
+          lang CDATA #IMPLIED
+          text CDATA #IMPLIED>
+
+<!ELEMENT contributor EMPTY>
+<!ATTLIST contributor
+          id ID #IMPLIED
+          fileas CDATA #IMPLIED
+          name CDATA #IMPLIED
+          lang CDATA #IMPLIED
+          role CDATA #IMPLIED>
+
+<!ELEMENT creator EMPTY>
+<!ATTLIST creator
+          id ID #IMPLIED
+          fileas CDATA #IMPLIED
+          name CDATA #IMPLIED
+          lang CDATA #IMPLIED
+          role CDATA #IMPLIED>
+
+<!ELEMENT toc EMPTY>
+<!ATTLIST toc
+          id ID #IMPLIED
+          generate %boolean; #IMPLIED
+          file CDATA #IMPLIED>
+
+<!ELEMENT reference EMPTY>
+<!ATTLIST reference
+          id ID #IMPLIED
+          href CDATA #IMPLIED
+          type CDATA #IMPLIED
+          title CDATA #IMPLIED>
+
+<!ELEMENT language EMPTY>
+<!ATTLIST language
+          id ID #IMPLIED
+          code CDATA #IMPLIED>
+
+<!ELEMENT identifier EMPTY>
+<!ATTLIST identifier
+          id ID #IMPLIED
+          scheme CDATA #IMPLIED
+          value CDATA #IMPLIED>
+
+<!ELEMENT subject EMPTY>
+<!ATTLIST subject
+          id ID #IMPLIED
+          lang CDATA #IMPLIED
+          text CDATA #IMPLIED>
+
+<!ELEMENT title EMPTY>
+<!ATTLIST title
+          id ID #IMPLIED
+          lang CDATA #IMPLIED
+          text CDATA #IMPLIED>
+
+<!ELEMENT item EMPTY>
+<!ATTLIST item
+          id ID #IMPLIED
+          fetch %boolean; #IMPLIED
+          file CDATA #IMPLIED
+          type CDATA #IMPLIED
+          page CDATA #IMPLIED
+          spine %boolean; #IMPLIED>
+
+
+h3. Adding "header" information
+
+Certain elements are required in the header of the publication. These include the title of the publication, the identifier and the language code as shown in the minimal example above. It is possible to add more than one element of some types.
+
+The following elements can be used:
+|_. id |_. Required |_. Description |
+|title|yes||
+|identifier|yes||
+|language|yes||
+|publisher|no||
+|subject|no||
+|creator|no||
+|contributor|no||
+
+h4. Title
+
+h4. Identifier
+
+h4. Language
+
+h4. Publisher
+
+h4. Subject
+
+h4. Contributors and Creators
+
+If there is for instance more than one author one can add more elements specifying the name and "MARC relator code":http://www.loc.gov/marc/relators/ for each. 
+
+bc.. 
+<creator name="Nomen Nescio" file-as="Nescio, Nomen" role="aut/>
+<creator name="Ola Nordmann" file-as="Nordmann, Ola" role="aut/>
+
+p. Say for instance that you prepare a set of documentation files for a publication, but you are not the original author. Then you should add a *contributor* such as this:
+
+bc.. 
+<contributor name="Nomen Nescio" file-as="Nescio, Nomen" role="com/>
+
+p. There is a long list of different MARC relator codes. Some of the most typical are:
+
+|_. Name |_. Code |_. Description |
+|Artist|art|Use for a person (e.g., a painter) who conceives, and perhaps also implements, an original graphic design or work of art, if specific codes (e.g., [egr], [etr]) are not desired. For book illustrators, prefer Illustrator [ill].|
+|Author|aut|Use for a person or corporate body chiefly responsible for the intellectual or artistic content of a work. This term may also be used when more than one person or body bears such responsibility.|
+|Author in quotations or text extracts|aqt|Use for a person whose work is largely quoted or extracted in a works to which he or she did not contribute directly. Such quotations are found particularly in exhibition catalogs, collections of photographs, etc.|
+|Author of afterword, colophon, etc.|aft|Use for a person or corporate body responsible for an afterword, postface, colophon, etc. but who is not the chief author of a work.|
+|Author of introduction, etc.|aui|Use for a person or corporate body responsible for an introduction, preface, foreword, or other critical matter, but who is not the chief author.|
+|Collaborator|clb|Use for a person or corporate body that takes a limited part in the elaboration of a work of another author or that brings complements (e.g., appendices, notes) to the work of another author.|
+|Compiler|com|Use for a person who produces a work or publication by selecting and putting together material from the works of various persons or bodies.|
+|Designer|dsr|Use for a person or organization responsible for design if specific codes (e.g., [bkd], [tyd]) are not desired.|
+|Editor|edt|Use for a person who prepares for publication a work not primarily his/her own, such as by elucidating text, adding introductory or other critical matter, or technically directing an editorial staff.|
+|Illustrator|ill|Use for the person who conceives, and perhaps also implements, a design or illustration, usually to accompany a written text.|
+|Photographer|pht|Use for the person or organization responsible for taking photographs, whether they are used in their original form or as reproductions.|
+|Redactor|red|Use for a person who writes or develops the framework for an item without being intellectually responsible for its content.|
+|Reviewer|rev|Use for a person or corporate body responsible for the review of book, motion picture, performance, etc.|
+
+h3. Adding content
+
+Content is added using the **item** element. At a minimum you will have to specify the **file** attribute. This points to the file that will be added. Per default this will set the MIME type of the item to "application/html+xml" and add it to the __spine__. The __spine__ is a structure within the publication that defines the reading order. So the order you add items does matter. If you're adding other types of files such as cascading style sheets you will have to specify the type and whether or not to add it to the spine.
+
+h3. The guide
+
+The __guide__ allows you to specify the role of each file in the publication. While not required it is recommended that this feature is used.
+
+The following types are allowed:
+
+|_. Type |_. Description |
+|cover|The book cover(s), jacket information, etc.|
+|title-page|Page with possibly title, author, publisher, and other metadata|
+|toc|table of contents|
+|index|Back-of-book style index|
+|glossary|An alphabetical list of terms peculiar to the publication with definitions or explanations|
+|acknowledgements|Author’s statement acknowledging his use of the works of other authors|	
+|bibliography|A list of books or other material on a subject|	
+|colophon|A publisher’s emblem on a book|
+|copyright-page|Subject to or controlled by copyright|	
+|dedication|To address or inscribe (a book, artistic performance, etc) to a person, cause, etc as a token of affection or respect.|
+|epigraph|A quotation at the beginning of a book, chapter, etc, suggesting its theme.|
+|foreword|A phrase or passage from a book, poem, play, etc, remembered and spoken, esp to illustrate succinctly or support a point or an argument.|	
+|loi|A list of illustrations|
+|lot|A list of tables|
+|notes|A brief summary or record in writing, esp a jotting for future reference|	
+|preface|A statement written as an introduction to a literary or other work, typically explaining its scope, intention, method, etc; foreword.|	
+|text|First "real" page of content (e.g. "Chapter 1").|
+
+h3. Adding table of contents
+
+Exactly one **toc** element is used to declare a table of contents. There are two ways of doing this. Either by pointing to a readily prepared __ncx__  file using the **file** attribute or by setting **generate** to **true**. This will iterate through all the elements in the spine and figure out the table of contents based on the header elements. 
+
+If the **file** attribute is used the task will automatically do the house-keeping. The file will be copied into the OEPBS folder of the publication, it will be placed first in the content declaration and properly referenced.
+
+h3. Adding secondary files
+
+Files that are not required to be in the __spine__ and which MIME-type can be automatically determined may be added to the publication using a nested **fileset**. This is identical to the "fileset":http://ant.apache.org/manual/Types/fileset.html element type found in ANT. If you for instance have illustrations in the form of JPEG, PNG or GIF images; this is the most straightforward to add these.

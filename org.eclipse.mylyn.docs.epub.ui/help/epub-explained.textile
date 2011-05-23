@@ -1,0 +1,3 @@
+h1. What is EPUB?
+
+Do you need to distribute documentation, create an eBook, or just archive your favorite blog posts? EPUB is an open specification for digital books based on familiar technologies like XML, CSS, and XHTML, and EPUB files can be read on portable e-ink devices, mobile phones, and desktop computers. This tutorial explains the EPUB format in detail, demonstrates EPUB validation using Java technology, and moves step-by-step through automating EPUB creation using DocBook and Python.

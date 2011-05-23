@@ -1,0 +1,27 @@
+h1. Introduction
+
+Do you need to distribute documentation, create an electronic-book, or just archive your favorite web pages? EPUB is an open specification for digital books based on familiar technologies like XML, CSS, and XHTML, and EPUB files can be read on portable e-ink devices, mobile telephones, and desktop computers.
+
+The basic idea of EPUB support in Mylyn Docs is described in Eclipse bug 332122. Wiki markup converted to HTML (using Mylyn WikiText) or for that matter; pre-existing HTML files is processed by a ANT script and a EPUB file is created.
+
+Several other methods can be applied to obtain the same result. You can write the document in Apple's __Pages__ and directly export to EPUB. You can write it in Microsoft's __Word__ and convert it to EPUB using "EPUBGen":http://code.google.com/p/epub-tools/ or even in DocBook and convert it using "docbook2epub":http://code.google.com/p/epub-tools/. All these methods have their merits but few can be easily used to assemble publications during a __continuous build__ and none can be used without adding a few extra dependencies such as Ruby or Python. Hence the primary goal of this feature is being easily able to create EPUB publications using ANT tasks within Eclipse.
+
+Using wiki markup as the source yields a few additional benefits:
+* You get easy-to-use editors within Eclipse
+* The markup can be converted to a number of additional formats:
+** Eclipse Help
+** Hyper Text Markup Language (HTML)
+** PDF through XSL:FO
+** DocBook
+** OASIS DITA
+
+h2. Benefits of EPUB
+
+* Offline reading
+* Embedded comments and markings
+* Search
+* Easily accessible dictionary
+* Easy to distribute
+* Tablet readers
+
+

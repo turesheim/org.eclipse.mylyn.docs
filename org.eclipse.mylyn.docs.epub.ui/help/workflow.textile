@@ -1,0 +1,92 @@
+h1. Creating a publication from wiki markup
+
+If you are familiar with the WikiText component of Mylyn Docs you already know
+that you can author documents using one of the supported markup formats:
+
+* Confluence
+* MediaWiki
+* Textile
+* TracWiki
+* TWiki
+
+Using Eclipse you can start by creating a new project to hold the documentation. If you will only care to create a publication you can use the **General Project** wizard. If you also want to generate Eclipse help you should use the **Plug-in Project** wizard.
+
+Next you create a folder to hold the documents
+
+bc.. 
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Build EPUB of documentation" basedir="." default="build">
+
+	<property name="wikitext.standalone" value="/Applications/Eclipse_3.7/plugins/" />
+	<property name="tempdir" location="${basedir}/build/temp" />
+	<property name="workdir" location="${basedir}/build/work" />
+	<property name="srcdir" location="${basedir}/help" />
+	<property name="epubfile" location="${basedir}/Building_EPUBs_with_Eclipse.epub" />
+
+	<path id="epub.classpath">
+		<fileset dir="${wikitext.standalone}">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub/bin/" />
+	</path>
+
+	<taskdef classpathref="epub.classpath" resource="org/eclipse/mylyn/docs/epub/ant/tasks.properties" />
+	<taskdef classpathref="epub.classpath" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" />
+	<taskdef classpathref="epub.classpath" resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties" />
+
+	<target name="init">
+		<delete failonerror="false" includeEmptyDirs="true">
+			<fileset dir="${workdir}" />
+			<fileset dir="${tempdir}" />
+		</delete>
+		<delete file="${epubfile}" failonerror="false" />
+		<!-- We use MediaWiki. Textile is way too limited -->
+		<wikitext-to-html markupLanguage="Textile" xhtmlstrict="true">
+			<fileset dir="${srcdir}">
+				<include name="*.textile" />
+			</fileset>
+			<stylesheet url="style.css" />
+		</wikitext-to-html>
+		<move todir="${tempdir}">
+			<fileset dir="${srcdir}">
+				<include name="*.html" />
+				<exclude name="title-page.html"/>
+				<exclude name="cover.html"/>
+			</fileset>
+		</move>
+	</target>
+
+	<!-- contributor, date -->
+	<target name="build" depends="init">
+		<!-- <antstructure output="ant.dtd"/> -->
+		<html-to-epub identifierId="uuid" file="${epubfile}" workingFolder="${workdir}">
+			<title text="Building EPUBs with Eclipse" />
+			<language code="en" />
+			<identifier id="uuid" scheme="UUID" value="h1c7bb870-82d5-11e0-9d34-0800200c9a66" />
+			<subject text="Computing, Eclipse, Mylyn, EPUB" />
+			<creator name="Torkild Ulvøy Resheim" fileAs="Resheim, Torkild Ulvøy" role="aut" />
+			<!-- For the EPUB logo. See: logo http://www.epubbooks.com/blog/630/official-epub-logo-released -->
+			<contributor name="Ralph Burkhardt" fileAs="Burkhardt, Ralph" role="art" />
+			<publisher text="Eclipse.Org" />
+			<item file="${srcdir}/cover.html" spine="false"/>
+			<item file="${srcdir}/title-page.html"/>
+			<item file="${tempdir}/introduction.html" />
+			<item file="${tempdir}/epub-explained.html" />
+			<item file="${tempdir}/workflow.html" />
+			<item file="${tempdir}/html-to-epub.html" />
+			<item file="${tempdir}/tech-details.html" />
+			<item file="${srcdir}/style.css" type="text/css" spine="false" />
+			<reference href="cover.html" type="cover" title="Cover Page" />
+			<reference href="title-page.html" type="title-page" title="Building EPUBs with Eclipse" />
+			<reference href="introduction.html" type="preface" title="Introduction" />
+			<toc generate="true" />
+			<fileset dir="${srcdir}">
+				<include name="*.gif" />
+				<include name="*.png" />
+				<include name="*.jpg" />
+				<include name="*.otf" />
+			</fileset>
+		</html-to-epub>
+	</target>
+
+</project>
