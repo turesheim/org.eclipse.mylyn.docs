@@ -20,8 +20,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -36,6 +38,7 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.mylyn.docs.epub.dc.Contributor;
 import org.eclipse.mylyn.docs.epub.dc.Creator;
 import org.eclipse.mylyn.docs.epub.dc.DCFactory;
+import org.eclipse.mylyn.docs.epub.dc.Date;
 import org.eclipse.mylyn.docs.epub.dc.Description;
 import org.eclipse.mylyn.docs.epub.dc.Identifier;
 import org.eclipse.mylyn.docs.epub.dc.Language;
@@ -182,7 +185,8 @@ public class EPUB {
 	 *            the language code or <code>null</code>
 	 * @return the new creator
 	 */
-	public Contributor addContributor(String name, Role role, String fileAs, String lang) {
+	public Contributor addContributor(String name, Role role, String fileAs,
+			String lang) {
 		Contributor dc = DCFactory.eINSTANCE.createContributor();
 		FeatureMapUtil.addText(dc.getMixed(), name);
 		opfMetadata.getContributors().add(dc);
@@ -197,6 +201,7 @@ public class EPUB {
 		}
 		return dc;
 	}
+
 	/**
 	 * Adds a new description to the publication.
 	 * 
@@ -353,6 +358,42 @@ public class EPUB {
 	}
 
 	/**
+	 * Date of publication, in the format defined by "Date and Time Formats" at
+	 * http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
+	 * In particular, dates without times are represented in the form
+	 * YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month, and
+	 * if the month is given, an optional 2-digit day of month. The date element
+	 * has one optional OPF event attribute. The set of values for event are not
+	 * defined by this specification; possible values may include: creation,
+	 * publication, and modification.
+	 * 
+	 * @param date
+	 *            the date string
+	 * @param event
+	 *            an option event description
+	 * @return the new date
+	 */
+	public Date addDate(String date, String event) {
+		Date dc = DCFactory.eINSTANCE.createDate();
+		FeatureMapUtil.addText(dc.getMixed(), date);
+		opfMetadata.getDates().add(dc);
+		if (event != null) {
+			dc.setEvent(event);
+		}
+		return dc;
+	}
+
+	public Date addDate(java.util.Date date, String event) {
+		Date dc = DCFactory.eINSTANCE.createDate();
+		FeatureMapUtil.addText(dc.getMixed(), toString(date));
+		opfMetadata.getDates().add(dc);
+		if (event != null) {
+			dc.setEvent(event);
+		}
+		return dc;
+	}
+
+	/**
 	 * Specifies a new title for the publication. There must be at least one.
 	 * 
 	 * @param title
@@ -386,9 +427,18 @@ public class EPUB {
 		workingFolder.deleteOnExit();
 	}
 
+	public static String toString(java.util.Date date) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		TimeZone tz = TimeZone.getTimeZone("UTC");
+		df.setTimeZone(tz);
+		return df.format(date);
+
+	}
+
 	public void assemble(File workingFolder) throws IOException, SAXException,
 			ParserConfigurationException {
 		System.out.println("Assembling EPUB file in " + workingFolder);
+		addCompulsoryData();
 		// Note that order is important here. Some methods may insert data into
 		// the EPUB structure. Hence the OPF must be written last.
 		if (workingFolder.isDirectory() || workingFolder.mkdirs()) {
@@ -400,12 +450,28 @@ public class EPUB {
 				writeNCX(oepbsFolder);
 				writeOPF(oepbsFolder);
 			} else {
-				throw new IOException("Could not create OEBPS folder in "+oepbsFolder.getAbsolutePath());
+				throw new IOException("Could not create OEBPS folder in "
+						+ oepbsFolder.getAbsolutePath());
 			}
 			FileUtil.zip(new File(path), workingFolder);
 		} else {
-			throw new IOException("Could not create working folder in "+workingFolder.getAbsolutePath());
+			throw new IOException("Could not create working folder in "
+					+ workingFolder.getAbsolutePath());
 		}
+	}
+
+	/**
+	 * Adds data to the publication that we always want to be present.
+	 * <ul>
+	 * <li>The creation date.</li>
+	 * <li><i>Eclipse committers and contributors</i> as contributor redactor
+	 * role.</li>
+	 * </ul>
+	 */
+	private void addCompulsoryData() {
+		addDate(new java.util.Date(System.currentTimeMillis()), "creation");
+		addContributor("Eclipse Committers and Contributors", Role.REDACTOR,
+				null, null);
 	}
 
 	/**
@@ -464,7 +530,7 @@ public class EPUB {
 		Head head = NCXFactory.eINSTANCE.createHead();
 		ncxTOC.setHead(head);
 		Meta meta = NCXFactory.eINSTANCE.createMeta();
-		meta.setName("dtb:uid");		
+		meta.setName("dtb:uid");
 		meta.setContent(getIdentifier().getMixed().getValue(0).toString());
 		head.getMeta().add(meta);
 		DocTitle docTitle = NCXFactory.eINSTANCE.createDocTitle();
@@ -509,8 +575,8 @@ public class EPUB {
 				mimeType = URLConnection.guessContentTypeFromStream(is);
 				is.close();
 				// TODO: Improve upon this
-				if (mimeType==null){
-					if (file.getName().endsWith(".otf")){
+				if (mimeType == null) {
+					if (file.getName().endsWith(".otf")) {
 						return "font/opentype";
 					}
 				}

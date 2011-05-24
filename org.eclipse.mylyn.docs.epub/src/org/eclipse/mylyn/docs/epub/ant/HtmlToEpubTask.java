@@ -103,6 +103,10 @@ public class HtmlToEpubTask extends Task {
 		epub.addTitle(title.text, title.lang);
 	}
 
+	public void addConfiguredDate(Date date) {
+		epub.addDate(date.date, date.event);
+	}
+
 	public void addConfiguredToc(Toc toc) {
 		if (this.toc!=null){
 			throw new BuildException("Only one table of contents (toc) declaration is allowed.");
