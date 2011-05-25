@@ -18,6 +18,32 @@
             uri="http://eclipse.org/mylyn/docs/epub/dc">
       </package>
    </extension>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+      <antTask
+            class="org.eclipse.mylyn.docs.epub.ant.HtmlToEpubTask"
+            eclipseRuntime="true"
+            headless="true"
+            library="org.eclipse.mylyn.docs.epub.antTask1"
+            name="html-to-epub">
+      </antTask>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+      <antTask
+            class="org.eclipse.mylyn.docs.epub.ant.HtmlToEpubTask"
+            library="org.eclipse.mylyn.docs.epub.antTask1"
+            name="html-to-epub">
+      </antTask>
+   </extension>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+      <antTask
+            class="org.eclipse.mylyn.docs.epub.Task1"
+            library="org.eclipse.mylyn.docs.epub.antTask1"
+            name="html-to-epub">
+      </antTask>
+   </extension>
 
 
 </plugin>

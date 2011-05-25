@@ -22,16 +22,23 @@ import java.io.InputStream;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.emf.common.util.BasicDiagnostic;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.Diagnostician;
+import org.eclipse.emf.ecore.util.EcoreValidator;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -93,29 +100,27 @@ public class EPUB {
 
 	private static final String DEFAULT_MIMETYPE = "application/xhtml+xml";
 	private static final String TABLE_OF_CONTENTS_ID = "ncx";
+	public static String toString(java.util.Date date) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		TimeZone tz = TimeZone.getTimeZone("UTC");
+		df.setTimeZone(tz);
+		return df.format(date);
+
+	}
+	/** Whether or not a table of contents should be automatically generated */
+	private boolean generateToc;
 	final Ncx ncxTOC;
 	private final Guide opfGuide;
 	private final Manifest opfManifest;
 	private final Metadata opfMetadata;
 	private final Package opfPackage;
+	
+	
 	private final Spine opfSpine;
-	/** Whether or not a table of contents should be automatically generated */
-	private boolean generateToc;
-	private File tocFile;
-
-	public File getTocPath() {
-		return tocFile;
-	}
-
-	public void setTocFile(File tocFile) {
-		this.tocFile = tocFile;
-	}
 
 	private String path;
 
-	public void setGenerateToc(boolean generateToc) {
-		this.generateToc = generateToc;
-	}
+	private File tocFile;
 
 	/**
 	 * Creates a new EPUB file using the specified path.
@@ -128,19 +133,64 @@ public class EPUB {
 		opfPackage = OPFFactory.eINSTANCE.createPackage();
 		opfPackage.setVersion("2.0");
 		ncxTOC = NCXFactory.eINSTANCE.createNcx();
-		// Add required features
 		opfMetadata = OPFFactory.eINSTANCE.createMetadata();
 		opfPackage.setMetadata(opfMetadata);
 		opfGuide = OPFFactory.eINSTANCE.createGuide();
 		opfPackage.setGuide(opfGuide);
 		opfManifest = OPFFactory.eINSTANCE.createManifest();
 		opfPackage.setManifest(opfManifest);
+		// Create the spine and set a reference to the table of contents item 
+		// which will be added to the manifest on a later stage.
 		opfSpine = OPFFactory.eINSTANCE.createSpine();
+		opfSpine.setToc(TABLE_OF_CONTENTS_ID);
 		opfPackage.setSpine(opfSpine);
 		registerOPFResourceFactory();
 		registerNCXResourceFactory();
 
 		generateToc = false;
+	}
+
+	/**
+	 * Adds data to the publication that we always want to be present.
+	 * <ul>
+	 * <li>The creation date.</li>
+	 * <li><i>Eclipse committers and contributors</i> as contributor redactor
+	 * role.</li>
+	 * </ul>
+	 */
+	private void addCompulsoryData() {
+		addDate(new java.util.Date(System.currentTimeMillis()), "creation");
+		addContributor("Eclipse Committers and Contributors", Role.REDACTOR,
+				null, null);
+	}
+	/**
+	 * Specifies a new contributor for the publication.
+	 * 
+	 * @param name
+	 *            name of the creator
+	 * @param role
+	 *            the role or <code>null</code>
+	 * @param fileAs
+	 *            name to file the creator under or <code>null</code>
+	 * @param lang
+	 *            the language code or <code>null</code>
+	 * @return the new creator
+	 */
+	public Contributor addContributor(String name, Role role, String fileAs,
+			String lang) {
+		Contributor dc = DCFactory.eINSTANCE.createContributor();
+		FeatureMapUtil.addText(dc.getMixed(), name);
+		opfMetadata.getContributors().add(dc);
+		if (role != null) {
+			dc.setRole(role);
+		}
+		if (fileAs != null) {
+			dc.setFileAs(fileAs);
+		}
+		if (lang != null) {
+			dc.setLang(lang);
+		}
+		return dc;
 	}
 
 	/**
@@ -172,32 +222,38 @@ public class EPUB {
 		return dc;
 	}
 
+	public Date addDate(java.util.Date date, String event) {
+		Date dc = DCFactory.eINSTANCE.createDate();
+		FeatureMapUtil.addText(dc.getMixed(), toString(date));
+		opfMetadata.getDates().add(dc);
+		if (event != null) {
+			dc.setEvent(event);
+		}
+		return dc;
+	}
+
 	/**
-	 * Specifies a new contributor for the publication.
+	 * Date of publication, in the format defined by "Date and Time Formats" at
+	 * http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
+	 * In particular, dates without times are represented in the form
+	 * YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month, and
+	 * if the month is given, an optional 2-digit day of month. The date element
+	 * has one optional OPF event attribute. The set of values for event are not
+	 * defined by this specification; possible values may include: creation,
+	 * publication, and modification.
 	 * 
-	 * @param name
-	 *            name of the creator
-	 * @param role
-	 *            the role or <code>null</code>
-	 * @param fileAs
-	 *            name to file the creator under or <code>null</code>
-	 * @param lang
-	 *            the language code or <code>null</code>
-	 * @return the new creator
+	 * @param date
+	 *            the date string
+	 * @param event
+	 *            an option event description
+	 * @return the new date
 	 */
-	public Contributor addContributor(String name, Role role, String fileAs,
-			String lang) {
-		Contributor dc = DCFactory.eINSTANCE.createContributor();
-		FeatureMapUtil.addText(dc.getMixed(), name);
-		opfMetadata.getContributors().add(dc);
-		if (role != null) {
-			dc.setRole(role);
-		}
-		if (fileAs != null) {
-			dc.setFileAs(fileAs);
-		}
-		if (lang != null) {
-			dc.setLang(lang);
+	public Date addDate(String date, String event) {
+		Date dc = DCFactory.eINSTANCE.createDate();
+		FeatureMapUtil.addText(dc.getMixed(), date);
+		opfMetadata.getDates().add(dc);
+		if (event != null) {
+			dc.setEvent(event);
 		}
 		return dc;
 	}
@@ -273,6 +329,7 @@ public class EPUB {
 		item.setHref(file.getName());
 		item.setMedia_type(type);
 		item.setFile(file.getAbsolutePath());
+		//item.setManifest(opfManifest); // XXX: Why do we need to set this?
 		opfManifest.getItems().add(item);
 		if (spine) {
 			Itemref ref = OPFFactory.eINSTANCE.createItemref();
@@ -358,42 +415,6 @@ public class EPUB {
 	}
 
 	/**
-	 * Date of publication, in the format defined by "Date and Time Formats" at
-	 * http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
-	 * In particular, dates without times are represented in the form
-	 * YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month, and
-	 * if the month is given, an optional 2-digit day of month. The date element
-	 * has one optional OPF event attribute. The set of values for event are not
-	 * defined by this specification; possible values may include: creation,
-	 * publication, and modification.
-	 * 
-	 * @param date
-	 *            the date string
-	 * @param event
-	 *            an option event description
-	 * @return the new date
-	 */
-	public Date addDate(String date, String event) {
-		Date dc = DCFactory.eINSTANCE.createDate();
-		FeatureMapUtil.addText(dc.getMixed(), date);
-		opfMetadata.getDates().add(dc);
-		if (event != null) {
-			dc.setEvent(event);
-		}
-		return dc;
-	}
-
-	public Date addDate(java.util.Date date, String event) {
-		Date dc = DCFactory.eINSTANCE.createDate();
-		FeatureMapUtil.addText(dc.getMixed(), toString(date));
-		opfMetadata.getDates().add(dc);
-		if (event != null) {
-			dc.setEvent(event);
-		}
-		return dc;
-	}
-
-	/**
 	 * Specifies a new title for the publication. There must be at least one.
 	 * 
 	 * @param title
@@ -427,18 +448,11 @@ public class EPUB {
 		workingFolder.deleteOnExit();
 	}
 
-	public static String toString(java.util.Date date) {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		TimeZone tz = TimeZone.getTimeZone("UTC");
-		df.setTimeZone(tz);
-		return df.format(date);
-
-	}
-
 	public void assemble(File workingFolder) throws IOException, SAXException,
 			ParserConfigurationException {
 		System.out.println("Assembling EPUB file in " + workingFolder);
 		addCompulsoryData();
+		validate();
 		// Note that order is important here. Some methods may insert data into
 		// the EPUB structure. Hence the OPF must be written last.
 		if (workingFolder.isDirectory() || workingFolder.mkdirs()) {
@@ -461,20 +475,6 @@ public class EPUB {
 	}
 
 	/**
-	 * Adds data to the publication that we always want to be present.
-	 * <ul>
-	 * <li>The creation date.</li>
-	 * <li><i>Eclipse committers and contributors</i> as contributor redactor
-	 * role.</li>
-	 * </ul>
-	 */
-	private void addCompulsoryData() {
-		addDate(new java.util.Date(System.currentTimeMillis()), "creation");
-		addContributor("Eclipse Committers and Contributors", Role.REDACTOR,
-				null, null);
-	}
-
-	/**
 	 * Copies all items part of the publication into the OEPBS folder.
 	 * 
 	 * @param oepbsFolder
@@ -490,26 +490,6 @@ public class EPUB {
 			item.setHref(source.getName());
 			FileUtil.copy(source, destination);
 		}
-	}
-
-	public void disassemble() {
-
-	}
-
-	/**
-	 * Returns the main identifier of the publication or <code>null</code> if it
-	 * could not be determined.
-	 * 
-	 * @return the main identifier or <code>null</code>
-	 */
-	private Identifier getIdentifier() {
-		EList<Identifier> identifiers = opfMetadata.getIdentifiers();
-		for (Identifier identifier : identifiers) {
-			if (identifier.getId().equals(opfPackage.getUniqueIdentifier())) {
-				return identifier;
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -559,6 +539,22 @@ public class EPUB {
 	}
 
 	/**
+	 * Returns the main identifier of the publication or <code>null</code> if it
+	 * could not be determined.
+	 * 
+	 * @return the main identifier or <code>null</code>
+	 */
+	private Identifier getIdentifier() {
+		EList<Identifier> identifiers = opfMetadata.getIdentifiers();
+		for (Identifier identifier : identifiers) {
+			if (identifier.getId().equals(opfPackage.getUniqueIdentifier())) {
+				return identifier;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Attempts to figure out the MIME-type for the file.
 	 * 
 	 * @param file
@@ -587,6 +583,14 @@ public class EPUB {
 			}
 		}
 		return mimeType;
+	}
+
+	public File getTocPath() {
+		return tocFile;
+	}
+
+	public boolean isGenerateToc() {
+		return generateToc;
 	}
 
 	/**
@@ -643,8 +647,39 @@ public class EPUB {
 		this.path = file;
 	}
 
+	public void setGenerateToc(boolean generateToc) {
+		this.generateToc = generateToc;
+	}
+
 	public void setIdentifierId(String identifier_id) {
 		opfPackage.setUniqueIdentifier(identifier_id);
+	}
+
+	public void setTocFile(File tocFile) {
+		this.tocFile = tocFile;
+	}
+
+	/**
+	 * Validates the OPF structure.
+	 * 
+	 * @return <code>true</code> if the model is valid, <code>false</code> otherwise.
+	 */
+	private boolean validate(){		
+		EValidator.Registry.INSTANCE.put(OPFPackage.eINSTANCE, new EcoreValidator());
+		BasicDiagnostic diagnostics = new BasicDiagnostic();
+		boolean valid = true;
+		for (EObject eo : opfPackage.eContents())
+		{
+		    Map<Object, Object> context = new HashMap<Object, Object>();
+		    valid &= Diagnostician.INSTANCE.validate(eo, diagnostics, context);
+		}
+	    if (!valid){
+	    	List<Diagnostic> problems = diagnostics.getChildren();
+	    	for (Diagnostic diagnostic : problems) {
+				System.err.println(diagnostic.getMessage());
+			}
+	    }
+		return valid;
 	}
 
 	/**
@@ -710,7 +745,6 @@ public class EPUB {
 		Item item = addItem(ncxFile, TABLE_OF_CONTENTS_ID,
 				"application/x-dtbncx+xml", false);
 		opfPackage.getManifest().getItems().move(0, item);
-		opfSpine.setToc(TABLE_OF_CONTENTS_ID);
 	}
 
 	/**
@@ -735,9 +769,5 @@ public class EPUB {
 		options.put(XMLResource.OPTION_ENCODING, "UTF-8");
 		options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
 		resource.save(options);
-	}
-
-	public boolean isGenerateToc() {
-		return generateToc;
 	}
 }
