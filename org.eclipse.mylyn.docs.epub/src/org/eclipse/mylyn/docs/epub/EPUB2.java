@@ -52,8 +52,8 @@ import org.eclipse.mylyn.docs.epub.dc.Language;
 import org.eclipse.mylyn.docs.epub.dc.Publisher;
 import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
-import org.eclipse.mylyn.docs.epub.internal.EPUBXMLHelperImp;
 import org.eclipse.mylyn.docs.epub.internal.EPUBFileUtil;
+import org.eclipse.mylyn.docs.epub.internal.EPUBXMLHelperImp;
 import org.eclipse.mylyn.docs.epub.internal.TOCGenerator;
 import org.eclipse.mylyn.docs.epub.ncx.DocTitle;
 import org.eclipse.mylyn.docs.epub.ncx.Head;
@@ -84,29 +84,19 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * <q>EPUB</q> is a standard from the International Digital Publishing Forum. It
- * is an arrangement of several other standards (mainly: XHTML, CSS, XML, NCX,
- * DCMI). There are three parts, addressing: content, package metadata, and
- * archive (OPS, OPF, and OCF). It is powerful, straightforward, and
- * non-proprietary.
- * <p>
- * This particular type represents one EPUB-formatted publication. It maintains
- * a data structure representing the entire publication and API for building it.
- * </p>
+ * This particular type represents one EPUB revision 2.0.1 formatted
+ * publication. It maintains a data structure representing the entire
+ * publication and API for building it.
  * 
  * @author Torkild U. Resheim
  */
 public class EPUB2 {
 
 	private static final String DEFAULT_MIMETYPE = "application/xhtml+xml";
-	private static final String TABLE_OF_CONTENTS_ID = "ncx";
-	public static String toString(java.util.Date date) {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		TimeZone tz = TimeZone.getTimeZone("UTC");
-		df.setTimeZone(tz);
-		return df.format(date);
 
-	}
+	/** Identifier of the table of contents file */
+	private static final String TABLE_OF_CONTENTS_ID = "ncx";
+
 	/** Whether or not a table of contents should be automatically generated */
 	private boolean generateToc;
 	final Ncx ncxTOC;
@@ -114,8 +104,7 @@ public class EPUB2 {
 	private final Manifest opfManifest;
 	private final Metadata opfMetadata;
 	private final Package opfPackage;
-	
-	
+
 	private final Spine opfSpine;
 
 	private String path;
@@ -139,7 +128,7 @@ public class EPUB2 {
 		opfPackage.setGuide(opfGuide);
 		opfManifest = OPFFactory.eINSTANCE.createManifest();
 		opfPackage.setManifest(opfManifest);
-		// Create the spine and set a reference to the table of contents item 
+		// Create the spine and set a reference to the table of contents item
 		// which will be added to the manifest on a later stage.
 		opfSpine = OPFFactory.eINSTANCE.createSpine();
 		opfSpine.setToc(TABLE_OF_CONTENTS_ID);
@@ -163,6 +152,7 @@ public class EPUB2 {
 		addContributor("Eclipse Committers and Contributors", Role.REDACTOR,
 				null, null);
 	}
+
 	/**
 	 * Specifies a new contributor for the publication.
 	 * 
@@ -276,19 +266,18 @@ public class EPUB2 {
 		}
 		return dc;
 	}
-	/**
-	 * Adds a new &quot;Dublin Core Type&quot; to the publication.
-	 * 
-	 * @param type the type to add
-	 * @return the new type
-	 */
-	public org.eclipse.mylyn.docs.epub.dc.Type addType(String type) {
-		org.eclipse.mylyn.docs.epub.dc.Type dc = DCFactory.eINSTANCE.createType();
-		FeatureMapUtil.addText(dc.getMixed(), type);
-		opfMetadata.getTypes().add(dc);
-		return dc;
-	}
 
+	/**
+	 * Adds a new identifier to the publication.
+	 * 
+	 * @param id
+	 *            the identifier id
+	 * @param scheme
+	 *            the scheme used for representing the identifier
+	 * @param value
+	 *            the identifier value
+	 * @return the new identifier
+	 */
 	public Identifier addIdentifier(String id, Scheme scheme, String value) {
 		Identifier dc = DCFactory.eINSTANCE.createIdentifier();
 		dc.setId(id);
@@ -341,7 +330,6 @@ public class EPUB2 {
 		item.setHref(file.getName());
 		item.setMedia_type(type);
 		item.setFile(file.getAbsolutePath());
-		//item.setManifest(opfManifest); // XXX: Why do we need to set this?
 		opfManifest.getItems().add(item);
 		if (spine) {
 			Itemref ref = OPFFactory.eINSTANCE.createItemref();
@@ -442,6 +430,21 @@ public class EPUB2 {
 		if (lang != null) {
 			dc.setLang(lang);
 		}
+		return dc;
+	}
+
+	/**
+	 * Adds a new &quot;Dublin Core Type&quot; to the publication.
+	 * 
+	 * @param type
+	 *            the type to add
+	 * @return the new type
+	 */
+	public org.eclipse.mylyn.docs.epub.dc.Type addType(String type) {
+		org.eclipse.mylyn.docs.epub.dc.Type dc = DCFactory.eINSTANCE
+				.createType();
+		FeatureMapUtil.addText(dc.getMixed(), type);
+		opfMetadata.getTypes().add(dc);
 		return dc;
 	}
 
@@ -672,25 +675,42 @@ public class EPUB2 {
 	}
 
 	/**
+	 * Represents a {@link java.util.Date} instance in a format defined by
+	 * "Date and Time Formats" at http://www.w3.org/TR/NOTE-datetime and by ISO
+	 * 8601 on which it is based.
+	 * 
+	 * @param date
+	 *            the date to represent
+	 * @return the formatted string
+	 */
+	public String toString(java.util.Date date) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		TimeZone tz = TimeZone.getTimeZone("UTC");
+		df.setTimeZone(tz);
+		return df.format(date);
+	}
+
+	/**
 	 * Validates the OPF structure.
 	 * 
-	 * @return <code>true</code> if the model is valid, <code>false</code> otherwise.
+	 * @return <code>true</code> if the model is valid, <code>false</code>
+	 *         otherwise.
 	 */
-	private boolean validate(){		
-		EValidator.Registry.INSTANCE.put(OPFPackage.eINSTANCE, new EcoreValidator());
+	private boolean validate() {
+		EValidator.Registry.INSTANCE.put(OPFPackage.eINSTANCE,
+				new EcoreValidator());
 		BasicDiagnostic diagnostics = new BasicDiagnostic();
 		boolean valid = true;
-		for (EObject eo : opfPackage.eContents())
-		{
-		    Map<Object, Object> context = new HashMap<Object, Object>();
-		    valid &= Diagnostician.INSTANCE.validate(eo, diagnostics, context);
+		for (EObject eo : opfPackage.eContents()) {
+			Map<Object, Object> context = new HashMap<Object, Object>();
+			valid &= Diagnostician.INSTANCE.validate(eo, diagnostics, context);
 		}
-	    if (!valid){
-	    	List<Diagnostic> problems = diagnostics.getChildren();
-	    	for (Diagnostic diagnostic : problems) {
+		if (!valid) {
+			List<Diagnostic> problems = diagnostics.getChildren();
+			for (Diagnostic diagnostic : problems) {
 				System.err.println(diagnostic.getMessage());
 			}
-	    }
+		}
 		return valid;
 	}
 
@@ -724,6 +744,15 @@ public class EPUB2 {
 		}
 	}
 
+	/**
+	 * Writes the table of contents file in the specified folder
+	 * 
+	 * @param oepbsFolder
+	 *            the folder to create the file in.
+	 * @throws IOException
+	 * @throws SAXException
+	 * @throws ParserConfigurationException
+	 */
 	private void writeNCX(File oepbsFolder) throws IOException, SAXException,
 			ParserConfigurationException {
 		File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator
@@ -754,7 +783,7 @@ public class EPUB2 {
 		// As we now have written the table of contents we must make sure it is
 		// in the manifest and referenced in the spine. We also want it to be
 		// the first element in the manifest.
-		Item item = addItem(ncxFile, TABLE_OF_CONTENTS_ID,
+		Item item = addItem(ncxFile, opfSpine.getToc(),
 				"application/x-dtbncx+xml", false);
 		opfPackage.getManifest().getItems().move(0, item);
 	}
