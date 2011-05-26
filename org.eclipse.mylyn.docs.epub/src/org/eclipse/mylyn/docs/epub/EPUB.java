@@ -276,6 +276,18 @@ public class EPUB {
 		}
 		return dc;
 	}
+	/**
+	 * Adds a new &quot;Dublin Core Type&quot; to the publication.
+	 * 
+	 * @param type the type to add
+	 * @return the new type
+	 */
+	public org.eclipse.mylyn.docs.epub.dc.Type addType(String type) {
+		org.eclipse.mylyn.docs.epub.dc.Type dc = DCFactory.eINSTANCE.createType();
+		FeatureMapUtil.addText(dc.getMixed(), type);
+		opfMetadata.getTypes().add(dc);
+		return dc;
+	}
 
 	public Identifier addIdentifier(String id, Scheme scheme, String value) {
 		Identifier dc = DCFactory.eINSTANCE.createIdentifier();
