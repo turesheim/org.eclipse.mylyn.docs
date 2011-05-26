@@ -96,7 +96,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Torkild U. Resheim
  */
-public class EPUB {
+public class EPUB2 {
 
 	private static final String DEFAULT_MIMETYPE = "application/xhtml+xml";
 	private static final String TABLE_OF_CONTENTS_ID = "ncx";
@@ -128,7 +128,7 @@ public class EPUB {
 	 * @param file
 	 *            the EPUB file
 	 */
-	public EPUB() {
+	public EPUB2() {
 		// Start with the root of the OPF structure
 		opfPackage = OPFFactory.eINSTANCE.createPackage();
 		opfPackage.setVersion("2.0");

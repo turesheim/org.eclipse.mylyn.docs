@@ -19,7 +19,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
-import org.eclipse.mylyn.docs.epub.EPUB;
+import org.eclipse.mylyn.docs.epub.EPUB2;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.eclipse.mylyn.docs.epub.opf.Type;
@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
 
 public class HtmlToEpubTask extends Task {
 
-	EPUB epub = new EPUB();
+	EPUB2 epub = new EPUB2();
 	Toc toc = null;
 	
 	private File workingFolder;

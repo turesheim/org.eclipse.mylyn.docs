@@ -8,7 +8,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.Assert;
 
-import org.eclipse.mylyn.docs.epub.EPUB;
+import org.eclipse.mylyn.docs.epub.EPUB2;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.junit.After;
@@ -28,7 +28,7 @@ public class TestEPUB {
 			ParserConfigurationException {
 		File file = new File(EPUB_FILE_PATH);
 		file.delete();
-		EPUB epub = new EPUB();
+		EPUB2 epub = new EPUB2();
 		epub.setFile(EPUB_FILE_PATH);
 		epub.setIdentifierId("uuid");
 		epub.addLanguage("en");
