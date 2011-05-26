@@ -47,6 +47,7 @@ import org.eclipse.mylyn.docs.epub.dc.Creator;
 import org.eclipse.mylyn.docs.epub.dc.DCFactory;
 import org.eclipse.mylyn.docs.epub.dc.Date;
 import org.eclipse.mylyn.docs.epub.dc.Description;
+import org.eclipse.mylyn.docs.epub.dc.Format;
 import org.eclipse.mylyn.docs.epub.dc.Identifier;
 import org.eclipse.mylyn.docs.epub.dc.Language;
 import org.eclipse.mylyn.docs.epub.dc.Publisher;
@@ -435,6 +436,9 @@ public class EPUB2 {
 
 	/**
 	 * Adds a new &quot;Dublin Core Type&quot; to the publication.
+	 * <p>
+	 * This property is optional.
+	 * </p>
 	 * 
 	 * @param type
 	 *            the type to add
@@ -445,6 +449,24 @@ public class EPUB2 {
 				.createType();
 		FeatureMapUtil.addText(dc.getMixed(), type);
 		opfMetadata.getTypes().add(dc);
+		return dc;
+	}
+
+	/**
+	 * Sets the &quot;Dublin Core Format&quot; of the publication.
+	 * <p>
+	 * This property is optional.
+	 * </p>
+	 * 
+	 * @param type
+	 *            the format to add
+	 * @return the new format
+	 */
+	public Format addFormat(String format) {
+		Format dc = DCFactory.eINSTANCE
+				.createFormat();
+		FeatureMapUtil.addText(dc.getMixed(), format);
+		opfMetadata.setFormat(dc);
 		return dc;
 	}
 

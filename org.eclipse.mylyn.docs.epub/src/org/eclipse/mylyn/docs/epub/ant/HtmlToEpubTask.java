@@ -118,6 +118,10 @@ public class HtmlToEpubTask extends Task {
 		epub.addType(type.text);
 	}
 
+	public void addConfiguredFormat(Format format){
+		epub.addFormat(format.text);
+	}
+
 	@Override
 	public void execute() throws BuildException {
 		validate();
