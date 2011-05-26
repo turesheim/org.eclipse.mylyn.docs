@@ -35,15 +35,6 @@ public class HtmlToEpubTask extends Task {
 	public HtmlToEpubTask() {
 	}
 
-	public void addConfiguredCreator(Creator creator) {
-		if (creator.role == null) {
-			epub.addCreator(creator.name, null, creator.fileAs, creator.lang);
-		} else {
-			epub.addCreator(creator.name, Role.get(creator.role),
-					creator.fileAs, creator.lang);
-		}
-	}
-
 	public void addConfiguredContributor(Contributor contributor) {
 		if (contributor.role == null) {
 			epub.addContributor(contributor.name, null, contributor.fileAs, contributor.lang);
@@ -52,6 +43,19 @@ public class HtmlToEpubTask extends Task {
 					contributor.fileAs, contributor.lang);
 		}
 	}
+
+	public void addConfiguredCreator(Creator creator) {
+		if (creator.role == null) {
+			epub.addCreator(creator.name, null, creator.fileAs, creator.lang);
+		} else {
+			epub.addCreator(creator.name, Role.get(creator.role),
+					creator.fileAs, creator.lang);
+		}
+	}
+	public void addConfiguredDate(Date date) {
+		epub.addDate(date.date, date.event);
+	}
+
 	/**
 	 * The FileSet sub-element is used to add EPUB artifacts that are not a part
 	 * of the main text. This can be graphical items and styling (CSS).
@@ -83,10 +87,6 @@ public class HtmlToEpubTask extends Task {
 	public void addConfiguredItem(Item item) {
 		epub.addItem(item.file, item.id, item.type, item.spine);
 	}
-
-	public void addConfiguredReference(Reference reference) {
-		epub.addReference(reference.href, reference.title, Type.get(reference.type));
-	}
 	public void addConfiguredLanguage(Language language) {
 		epub.addLanguage(language.code);
 	}
@@ -95,16 +95,16 @@ public class HtmlToEpubTask extends Task {
 		epub.addPublisher(publisher.text, publisher.lang);
 	}
 
+	public void addConfiguredReference(Reference reference) {
+		epub.addReference(reference.href, reference.title, Type.get(reference.type));
+	}
+
 	public void addConfiguredSubject(Subject subject) {
 		epub.addSubject(subject.text, subject.lang);
 	}
-
+	
 	public void addConfiguredTitle(Title title) {
 		epub.addTitle(title.text, title.lang);
-	}
-
-	public void addConfiguredDate(Date date) {
-		epub.addDate(date.date, date.event);
 	}
 
 	public void addConfiguredToc(Toc toc) {
@@ -112,6 +112,10 @@ public class HtmlToEpubTask extends Task {
 			throw new BuildException("Only one table of contents (toc) declaration is allowed.");
 		}
 		this.toc =toc;
+	}
+
+	public void addConfiguredType(org.eclipse.mylyn.docs.epub.ant.Type type){
+		epub.addType(type.text);
 	}
 
 	@Override
