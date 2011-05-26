@@ -53,7 +53,7 @@ import org.eclipse.mylyn.docs.epub.dc.Publisher;
 import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
 import org.eclipse.mylyn.docs.epub.internal.EPUBXMLHelperImp;
-import org.eclipse.mylyn.docs.epub.internal.FileUtil;
+import org.eclipse.mylyn.docs.epub.internal.EPUBFileUtil;
 import org.eclipse.mylyn.docs.epub.internal.TOCGenerator;
 import org.eclipse.mylyn.docs.epub.ncx.DocTitle;
 import org.eclipse.mylyn.docs.epub.ncx.Head;
@@ -479,7 +479,7 @@ public class EPUB {
 				throw new IOException("Could not create OEBPS folder in "
 						+ oepbsFolder.getAbsolutePath());
 			}
-			FileUtil.zip(new File(path), workingFolder);
+			EPUBFileUtil.zip(new File(path), workingFolder);
 		} else {
 			throw new IOException("Could not create working folder in "
 					+ workingFolder.getAbsolutePath());
@@ -500,7 +500,7 @@ public class EPUB {
 			File destination = new File(oepbsFolder.getAbsolutePath()
 					+ File.separator + source.getName());
 			item.setHref(source.getName());
-			FileUtil.copy(source, destination);
+			EPUBFileUtil.copy(source, destination);
 		}
 	}
 
@@ -749,7 +749,7 @@ public class EPUB {
 			options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
 			resource.save(options);
 		} else {
-			FileUtil.copy(tocFile, ncxFile);
+			EPUBFileUtil.copy(tocFile, ncxFile);
 		}
 		// As we now have written the table of contents we must make sure it is
 		// in the manifest and referenced in the spine. We also want it to be
