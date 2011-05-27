@@ -51,6 +51,8 @@ import org.eclipse.mylyn.docs.epub.dc.Format;
 import org.eclipse.mylyn.docs.epub.dc.Identifier;
 import org.eclipse.mylyn.docs.epub.dc.Language;
 import org.eclipse.mylyn.docs.epub.dc.Publisher;
+import org.eclipse.mylyn.docs.epub.dc.Rights;
+import org.eclipse.mylyn.docs.epub.dc.Source;
 import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
 import org.eclipse.mylyn.docs.epub.internal.EPUBFileUtil;
@@ -85,9 +87,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * This particular type represents one EPUB revision 2.0.1 formatted
- * publication. It maintains a data structure representing the entire
- * publication and API for building it.
+ * This type represents one EPUB revision 2.0.1 formatted publication. It
+ * maintains a data structure representing the entire publication and API for
+ * building it.
  * 
  * @author Torkild U. Resheim
  */
@@ -115,7 +117,7 @@ public class EPUB2 {
 	/**
 	 * Creates a new EPUB file using the specified path.
 	 * 
-	 * @param file
+	 * @param href
 	 *            the EPUB file
 	 */
 	public EPUB2() {
@@ -136,8 +138,7 @@ public class EPUB2 {
 		opfPackage.setSpine(opfSpine);
 		registerOPFResourceFactory();
 		registerNCXResourceFactory();
-
-		generateToc = false;
+		generateToc = true;
 	}
 
 	/**
@@ -293,42 +294,65 @@ public class EPUB2 {
 	 * will automatically be assigned.
 	 * 
 	 * <p>
-	 * The
-	 * <q>spine</q> defines the reading order, so the order items are added and
-	 * whether or not <i>spine</i> is <code>true</code> does matter.
+	 * The <i>spine</i> defines the reading order, so the order items are added
+	 * and whether or not <i>spine</i> is <code>true</code> does matter. Unless
+	 * a table of contents file has been specified it will be generated. All
+	 * files that have been added to the spine will be examined unless the
+	 * <i>noToc</i> attribute has been set to <code>true</code>.
 	 * </p>
 	 * 
 	 * @param file
 	 *            the file to add
+	 * @param dest
+	 *            the destination sub-folder or <code>null</code>
 	 * @param id
 	 *            identifier or <code>null</code>
 	 * @param type
 	 *            MIME file type
 	 * @param spine
 	 *            whether or not to add the item to the spine
+	 * @param noToc
+	 *            whether or not to include in TOC when automatically generated
 	 * @return the new item
 	 */
-	public Item addItem(File file, String id, String type, boolean spine) {
+	public Item addItem(File file, String dest, String id, String type,
+			boolean spine, boolean noToc) {
 		if (file == null || !file.exists()) {
 			throw new IllegalArgumentException("\"file\" "
 					+ file.getAbsolutePath() + " must exist.");
 		}
 		Item item = OPFFactory.eINSTANCE.createItem();
-		if (type == null && !spine) {
-			type = getMimeType(file);
-			if (type == null) {
-				throw new IllegalArgumentException(
-						"Could not automatically determine MIME type for file "
-								+ file + ". Please specify the correct value");
+		if (type == null) {
+			if (!spine) {
+				type = getMimeType(file);
+				if (type == null) {
+					throw new IllegalArgumentException(
+							"Could not automatically determine MIME type for file "
+									+ file
+									+ ". Please specify the correct value");
+				}
+			} else {
+				type = DEFAULT_MIMETYPE;
 			}
-		} else {
-			type = DEFAULT_MIMETYPE;
 		}
 		if (id == null) {
-			id = file.getName().substring(0, file.getName().lastIndexOf('.'));
+			String prefix = "";
+			if (!type.equals(DEFAULT_MIMETYPE)) {
+				prefix = (type.indexOf('/')) == -1 ? type : type.substring(
+0,
+						type.indexOf('/')) + "-";
+			}
+			id = prefix
+					+ file.getName().substring(0,
+							file.getName().lastIndexOf('.'));
 		}
 		item.setId(id);
-		item.setHref(file.getName());
+		if (dest == null) {
+			item.setHref(file.getName());
+		} else {
+			item.setHref(dest + '/' + file.getName());
+		}
+		item.setNoToc(noToc);
 		item.setMedia_type(type);
 		item.setFile(file.getAbsolutePath());
 		opfManifest.getItems().add(item);
@@ -463,10 +487,43 @@ public class EPUB2 {
 	 * @return the new format
 	 */
 	public Format addFormat(String format) {
-		Format dc = DCFactory.eINSTANCE
-				.createFormat();
+		Format dc = DCFactory.eINSTANCE.createFormat();
 		FeatureMapUtil.addText(dc.getMixed(), format);
 		opfMetadata.setFormat(dc);
+		return dc;
+	}
+
+	/**
+	 * Sets the &quot;Dublin Core Source&quot; of the publication.
+	 * <p>
+	 * This property is optional.
+	 * </p>
+	 * 
+	 * @param text
+	 *            the source text
+	 * @return the new source element
+	 */
+	public Source setSource(String text) {
+		Source dc = DCFactory.eINSTANCE.createSource();
+		FeatureMapUtil.addText(dc.getMixed(), text);
+		opfMetadata.setSource(dc);
+		return dc;
+	}
+
+	/**
+	 * Sets the &quot;Dublin Core Rights&quot; of the publication.
+	 * <p>
+	 * This property is optional.
+	 * </p>
+	 * 
+	 * @param text
+	 *            the rights text
+	 * @return the new rights element
+	 */
+	public Rights setRights(String text) {
+		Rights dc = DCFactory.eINSTANCE.createRights();
+		FeatureMapUtil.addText(dc.getMixed(), text);
+		opfMetadata.setRights(dc);
 		return dc;
 	}
 
@@ -523,16 +580,15 @@ public class EPUB2 {
 		for (Item item : items) {
 			File source = new File(item.getFile());
 			File destination = new File(oepbsFolder.getAbsolutePath()
-					+ File.separator + source.getName());
-			item.setHref(source.getName());
+					+ File.separator + item.getHref());
 			EPUBFileUtil.copy(source, destination);
 		}
 	}
 
 	/**
 	 * This mechanism will traverse the spine of the publication (which is
-	 * representing the reading order) and parse each file for headers that can
-	 * be used to assemble a table of contents.
+	 * representing the reading order) and parse each file for information that
+	 * can be used to assemble a table of contents.
 	 * 
 	 * @throws SAXException
 	 * @throws IOException
@@ -555,22 +611,26 @@ public class EPUB2 {
 		FeatureMapUtil.addText(text.getMixed(), "Table of contents");
 		docTitle.setText(text);
 		ncxTOC.setDocTitle(docTitle);
-
+		int playOrder = 0;
+		// Iterate over the spine
 		EList<Itemref> items = opfSpine.getSpineItems();
+		EList<Item> manifestItems = opfManifest.getItems();
 		for (Itemref itemref : items) {
 			Item referencedItem = null;
 			String id = itemref.getIdref();
-			EList<Item> manifestItems = opfManifest.getItems();
+			// Find the manifest item that is referenced
 			for (Item item : manifestItems) {
 				if (item.getId().equals(id)) {
 					referencedItem = item;
 					break;
 				}
 			}
-			if (referencedItem != null) {
+			if (referencedItem != null && !referencedItem.isNoToc()) {
+				System.out.println("Generating table of contents from "
+						+ referencedItem.getFile());
 				FileReader fr = new FileReader(referencedItem.getFile());
-				TOCGenerator.parse(new InputSource(fr),
-						referencedItem.getHref(), ncxTOC);
+				playOrder = TOCGenerator.parse(new InputSource(fr),
+						referencedItem.getHref(), ncxTOC, playOrder);
 			}
 		}
 	}
@@ -624,10 +684,6 @@ public class EPUB2 {
 
 	public File getTocPath() {
 		return tocFile;
-	}
-
-	public boolean isGenerateToc() {
-		return generateToc;
 	}
 
 	/**
@@ -805,8 +861,8 @@ public class EPUB2 {
 		// As we now have written the table of contents we must make sure it is
 		// in the manifest and referenced in the spine. We also want it to be
 		// the first element in the manifest.
-		Item item = addItem(ncxFile, opfSpine.getToc(),
-				"application/x-dtbncx+xml", false);
+		Item item = addItem(ncxFile, null, opfSpine.getToc(),
+				"application/x-dtbncx+xml", false, false);
 		opfPackage.getManifest().getItems().move(0, item);
 	}
 

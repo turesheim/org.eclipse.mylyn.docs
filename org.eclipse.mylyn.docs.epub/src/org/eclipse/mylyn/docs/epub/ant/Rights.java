@@ -11,12 +11,10 @@
 package org.eclipse.mylyn.docs.epub.ant;
 
 /**
- * @ant.type name="subject" category="epub"
+ * @ant.type name="rights" category="epub"
  */
-public class Subject {
-
+public class Rights {
 	String text;
-	String lang;
 
 	/**
 	 * @ant.required
@@ -24,12 +22,5 @@ public class Subject {
 	public void setText(String text) {
 		this.text = text;
 	}
-
-	/**
-	 * @ant.not-required
-	 */
-	public void setLang(String lang) {
-		this.lang = lang;
-	}
-
+	
 }

@@ -8,26 +8,23 @@ import java.io.File;
  * NCX.
  * 
  * @author Torkild U. Resheim
- * 
+ * @ant.type name="toc" category="epub"
  */
 public class Toc {
 
-	private File file;
+	File file;
+	boolean generate;
 
-	private boolean generate;
-
-	File getFile() {
-		return file;
-	}
-
+	/**
+	 * @ant.not-required
+	 */
 	public void setFile(File file) {
 		this.file = file;
 	}
 
-	public boolean isGenerate() {
-		return generate;
-	}
-
+	/**
+	 * @ant.not-required
+	 */
 	public void setGenerate(boolean generate) {
 		this.generate = generate;
 	}

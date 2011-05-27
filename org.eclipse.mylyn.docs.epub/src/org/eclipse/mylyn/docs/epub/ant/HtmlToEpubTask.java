@@ -18,18 +18,23 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.FileSet;
 import org.eclipse.mylyn.docs.epub.EPUB2;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.eclipse.mylyn.docs.epub.opf.Type;
 import org.xml.sax.SAXException;
 
+/**
+ * Assemble a new EPUB.
+ * 
+ * @author Torkild U. Resheim
+ * @ant.task name="html-to-epub" category="control"
+ */
 public class HtmlToEpubTask extends Task {
 
 	EPUB2 epub = new EPUB2();
 	Toc toc = null;
-	
+
 	private File workingFolder;
 
 	public HtmlToEpubTask() {
@@ -37,7 +42,8 @@ public class HtmlToEpubTask extends Task {
 
 	public void addConfiguredContributor(Contributor contributor) {
 		if (contributor.role == null) {
-			epub.addContributor(contributor.name, null, contributor.fileAs, contributor.lang);
+			epub.addContributor(contributor.name, null, contributor.fileAs,
+					contributor.lang);
 		} else {
 			epub.addContributor(contributor.name, Role.get(contributor.role),
 					contributor.fileAs, contributor.lang);
@@ -52,6 +58,7 @@ public class HtmlToEpubTask extends Task {
 					creator.fileAs, creator.lang);
 		}
 	}
+
 	public void addConfiguredDate(Date date) {
 		epub.addDate(date.date, date.event);
 	}
@@ -70,23 +77,29 @@ public class HtmlToEpubTask extends Task {
 			filename = filename.substring(filename.lastIndexOf("/") + 1);
 			File base = ds.getBasedir(); // 5
 			File found = new File(base, includedFiles[i]);
-			epub.addItem(found, null, null, false);
+			epub.addItem(found, fs.dest, null, null, false, false);
 		}
 	}
 
 	/**
-	 * Adds a new identifier.
-	 * 
-	 * @param identifier
+	 * @ant.required
 	 */
 	public void addConfiguredIdentifier(Identifier identifier) {
 		epub.addIdentifier(identifier.id, Scheme.getByName(identifier.scheme),
 				identifier.value);
 	}
 
+	/**
+	 * @ant.required
+	 */
 	public void addConfiguredItem(Item item) {
-		epub.addItem(item.file, item.id, item.type, item.spine);
+		epub.addItem(item.file, item.dest, item.id, item.type, item.spine,
+				item.noToc);
 	}
+
+	/**
+	 * @ant.required
+	 */
 	public void addConfiguredLanguage(Language language) {
 		epub.addLanguage(language.code);
 	}
@@ -96,39 +109,54 @@ public class HtmlToEpubTask extends Task {
 	}
 
 	public void addConfiguredReference(Reference reference) {
-		epub.addReference(reference.href, reference.title, Type.get(reference.type));
+		epub.addReference(reference.href, reference.title,
+				Type.get(reference.type));
 	}
 
 	public void addConfiguredSubject(Subject subject) {
 		epub.addSubject(subject.text, subject.lang);
 	}
-	
+
+	/**
+	 * @ant.required
+	 */
 	public void addConfiguredTitle(Title title) {
 		epub.addTitle(title.text, title.lang);
 	}
 
 	public void addConfiguredToc(Toc toc) {
-		if (this.toc!=null){
-			throw new BuildException("Only one table of contents (toc) declaration is allowed.");
+		if (this.toc != null) {
+			throw new BuildException(
+					"Only one table of contents (toc) declaration is allowed.");
 		}
-		this.toc =toc;
+		this.toc = toc;
 	}
 
-	public void addConfiguredType(org.eclipse.mylyn.docs.epub.ant.Type type){
+	public void addConfiguredType(org.eclipse.mylyn.docs.epub.ant.Type type) {
 		epub.addType(type.text);
 	}
 
-	public void addConfiguredFormat(Format format){
+	public void addConfiguredFormat(Format format) {
 		epub.addFormat(format.text);
+	}
+
+	public void addConfiguredSource(Source source) {
+		epub.setSource(source.text);
+	}
+
+	public void addConfiguredRights(Rights rights) {
+		epub.setRights(rights.text);
 	}
 
 	@Override
 	public void execute() throws BuildException {
 		validate();
-		if (toc.isGenerate()){
-			epub.setGenerateToc(true);
-		} else if (toc.getFile()!=null){
-			epub.setTocFile(toc.getFile());
+		if (toc != null) {
+			if (toc.generate) {
+				epub.setGenerateToc(true);
+			} else if (toc.file != null) {
+				epub.setTocFile(toc.file);
+			}
 		}
 		try {
 			if (workingFolder == null) {
@@ -145,7 +173,7 @@ public class HtmlToEpubTask extends Task {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 
 	 * 
@@ -164,14 +192,7 @@ public class HtmlToEpubTask extends Task {
 		this.workingFolder = workingFolder;
 	}
 
-	private void validate(){
-		// Validate the table of contents
-		if (toc==null){
-			throw new BuildException("A table of contents (toc) must be declared.");
-		}
-		if (toc.getFile()==null && !toc.isGenerate()){
-			throw new BuildException("Missing 'file' or 'generate' attribute");
-		}
+	private void validate() {
 	}
 
 }

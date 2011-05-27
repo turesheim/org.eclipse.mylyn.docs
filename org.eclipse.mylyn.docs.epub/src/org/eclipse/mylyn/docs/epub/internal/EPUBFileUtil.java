@@ -30,6 +30,7 @@ public class EPUBFileUtil {
 	private static final String MIMETYPE = "application/epub+zip";
 
 	public static void copy(File source, File destination) throws IOException {
+		destination.getParentFile().mkdirs();
 		FileInputStream from = null;
 		FileOutputStream to = null;
 		try {

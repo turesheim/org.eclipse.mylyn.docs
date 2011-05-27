@@ -11,20 +11,32 @@
 
 package org.eclipse.mylyn.docs.epub.ant;
 
+/**
+ * @ant.type name="identifier" category="epub"
+ */
 public class Identifier {
 
 	String id;
 	String scheme;
 	String value;
 
+	/**
+	 * @ant.required
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
+	/**
+	 * @ant.required
+	 */
 	public void setScheme(String scheme) {
 		this.scheme = scheme;
 	}
 
+	/**
+	 * @ant.required
+	 */
 	public void setValue(String value) {
 		this.value = value;
 	}

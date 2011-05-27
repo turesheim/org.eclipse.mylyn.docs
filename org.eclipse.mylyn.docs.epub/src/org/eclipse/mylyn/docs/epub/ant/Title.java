@@ -10,15 +10,24 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.ant;
 
+/**
+ * @ant.type name="title" category="epub"
+ */
 public class Title {
 
 	String text;
 	String lang;
 
+	/**
+	 * @ant.required
+	 */
 	public void setText(String text) {
 		this.text = text;
 	}
 
+	/**
+	 * @ant.not-required
+	 */
 	public void setLang(String lang) {
 		this.lang = lang;
 	}

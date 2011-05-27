@@ -12,23 +12,40 @@ package org.eclipse.mylyn.docs.epub.ant;
 
 import java.io.File;
 
+/**
+ * @ant.type name="item" category="epub"
+ */
 public class Item {
 	File file;
 	String page;
 	String id;
 	String type;
+	String dest;
+
+	/**
+	 * @ant.not-required
+	 */
+	public void setNoToc(boolean toc) {
+		this.noToc = toc;
+	}
+
+	boolean noToc = false;
+
+	/**
+	 * @ant.not-required
+	 */
+	public void setDest(String dest) {
+		this.dest = dest;
+	}
+
 	/** Default is to add the item to the spine */
 	boolean spine = true;
-	boolean fetch = true;
-
-	public void setFetch(boolean fetch) {
-		this.fetch = fetch;
-	}
 
 	/**
 	 * A file on the local file system.
 	 * 
 	 * @param file
+	 * @ant.required
 	 */
 	public void setFile(File file) {
 		this.file = file;
@@ -43,14 +60,23 @@ public class Item {
 		this.page = page;
 	}
 
+	/**
+	 * @ant.not-required
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
+	/**
+	 * @ant.not-required
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * @ant.not-required
+	 */
 	public void setSpine(boolean spine) {
 		this.spine = spine;
 	}

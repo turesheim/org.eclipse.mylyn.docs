@@ -10,24 +10,39 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.ant;
 
+/**
+ * @ant.type name="creator" category="epub"
+ */
 public class Creator {
 	String fileAs;
 	String lang;
 	String name;
 	String role;
 
+	/**
+	 * @ant.not-required
+	 */
 	public void setFileAs(String fileAs) {
 		this.fileAs = fileAs;
 	}
 
+	/**
+	 * @ant.not-required
+	 */
 	public void setLang(String lang) {
 		this.lang = lang;
 	}
 
+	/**
+	 * @ant.required
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * @ant.not-required
+	 */
 	public void setRole(String role) {
 		this.role = role;
 	}

@@ -10,15 +10,24 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.ant;
 
+/**
+ * @ant.type name="date" category="epub"
+ */
 public class Date {
 
 	String date;
 	String event;
 
+	/**
+	 * @ant.required
+	 */
 	public void setDate(String date) {
 		this.date = date;
 	}
 
+	/**
+	 * @ant.not-required
+	 */
 	public void setEvent(String event) {
 		this.event = event;
 	}

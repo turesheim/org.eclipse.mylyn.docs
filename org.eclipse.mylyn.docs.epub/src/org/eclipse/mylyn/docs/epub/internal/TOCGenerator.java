@@ -22,6 +22,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * This type is a SAX parser that will read a XHTML file, locate headers and
  * create NCX items for the EPUB table of contents. Each header must have an
  * "id" attribute or it will not be possible to link to the header.
+ * TODO: Use file titles? when headers don't have an ID.
  * 
  * 
  * @author Torkild U. Resheim
@@ -32,16 +33,21 @@ public class TOCGenerator extends DefaultHandler {
 	private String currentId = null;
 	private NavPoint[] headers = null;
 	private final Ncx ncx;
-	private int playOrder = 0;
+	private int playOrder;
+
+	public int getPlayOrder() {
+		return playOrder;
+	}
 
 	private boolean recording = false;
 
-	public TOCGenerator(String href, Ncx ncx) {
+	public TOCGenerator(String href, Ncx ncx, int playOrder) {
 		super();
 		buffer = new StringBuilder();
 		currentHref = href;
 		headers = new NavPoint[6];
 		this.ncx = ncx;
+		this.playOrder = playOrder;
 	}
 
 	@Override
@@ -95,7 +101,7 @@ public class TOCGenerator extends DefaultHandler {
 		NavPoint np = NCXFactory.eINSTANCE.createNavPoint();
 		NavLabel nl = NCXFactory.eINSTANCE.createNavLabel();
 		Content c = NCXFactory.eINSTANCE.createContent();
-		c.setSrc(currentHref + "#" + currentId);
+		c.setSrc(currentId==null?currentHref:currentHref + "#" + currentId);
 		Text text = NCXFactory.eINSTANCE.createText();
 		FeatureMapUtil.addText(text.getMixed(), buffer.toString());
 		nl.setText(text);
@@ -110,14 +116,16 @@ public class TOCGenerator extends DefaultHandler {
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
 		if (isHeader(qName) > 0) {
+			recording = true;
 			if (attributes.getValue("id") != null) {
-				recording = true;
 				currentId = attributes.getValue("id");
+			} else {
+				currentId = null;
 			}
 		}
 	}
 
-	public static void parse(InputSource file, String href, Ncx ncx)
+	public static int parse(InputSource file, String href, Ncx ncx, int playOrder)
 			throws ParserConfigurationException, SAXException, IOException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setFeature("http://xml.org/sax/features/validation", false);
@@ -125,7 +133,9 @@ public class TOCGenerator extends DefaultHandler {
 				"http://apache.org/xml/features/nonvalidating/load-external-dtd",
 				false);
 		SAXParser parser = factory.newSAXParser();
-		parser.parse(file, new TOCGenerator(href, ncx));
+		TOCGenerator tocGenerator = new TOCGenerator(href, ncx, playOrder);
+		parser.parse(file, tocGenerator);
+		return tocGenerator.getPlayOrder();
 	}
 
 }

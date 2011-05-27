@@ -10,9 +10,15 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.ant;
 
+/**
+ * @ant.type name="format" category="epub"
+ */
 public class Format {
 	String text;
 
+	/**
+	 * @ant.required
+	 */
 	public void setText(String text) {
 		this.text = text;
 	}
