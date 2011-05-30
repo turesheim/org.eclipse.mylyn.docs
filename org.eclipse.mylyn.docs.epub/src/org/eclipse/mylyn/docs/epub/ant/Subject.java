@@ -21,7 +21,7 @@ public class Subject {
 	/**
 	 * @ant.required
 	 */
-	public void setText(String text) {
+	public void addText(String text) {
 		this.text = text;
 	}
 
