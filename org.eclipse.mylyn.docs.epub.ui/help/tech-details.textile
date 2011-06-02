@@ -1,3 +1,0 @@
-h1. Technologies used
-
-The publication is described using Ecore models representing the Open Packaging Format (OPF), a subset of Dublin Core and the Navigation Control File (NCX). All required parts of a properly assembled EPUB file. In addition there is a helper class that is used for composing and creating the EPUB file without having to paying attention to all the details (and there are quite a few).

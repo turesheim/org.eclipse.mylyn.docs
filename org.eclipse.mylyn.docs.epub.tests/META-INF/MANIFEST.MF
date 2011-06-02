@@ -16,13 +16,9 @@ Require-Bundle: org.junit,
  org.eclipse.emf.workspace;bundle-version="1.4.0",
  org.apache.ant;bundle-version="1.8.2",
  org.eclipse.mylyn.docs.epub,
- org.eclipse.mylyn.wikitext.core;bundle-version="1.5.0",
- org.eclipse.mylyn.wikitext.confluence.core;bundle-version="1.5.0",
- org.eclipse.mylyn.wikitext.mediawiki.core;bundle-version="1.5.0",
- org.eclipse.mylyn.wikitext.textile.core;bundle-version="1.5.0",
- org.eclipse.mylyn.wikitext.tracwiki.core;bundle-version="1.5.0",
- org.eclipse.mylyn.wikitext.twiki.core;bundle-version="1.5.0"
+ org.apache.ant.source;bundle-version="1.8.2"
 Bundle-ClassPath: .,
  lib/saxon.jar,
  lib/jing.jar,
  lib/epubcheck-1.2.jar
+Bundle-Activator: org.eclipse.mylyn.docs.epub.tests.TestPlugin

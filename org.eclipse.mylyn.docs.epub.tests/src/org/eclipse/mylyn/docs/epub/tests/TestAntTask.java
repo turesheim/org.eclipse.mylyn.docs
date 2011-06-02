@@ -25,7 +25,7 @@ import com.adobe.epubcheck.api.EpubCheck;
  */
 public class TestAntTask extends BuildFileTest {
 
-	private static final String EPUB_FILE_PATH = "test/test.epub";
+	private static final String EPUB_FILE_PATH = "test/alice-in-wonderland.epub";
 
 	public TestAntTask(String s) {
 		super(s);

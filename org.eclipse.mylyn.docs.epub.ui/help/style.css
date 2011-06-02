@@ -14,66 +14,66 @@ p {
   text-align: justify; line-height: 1.5em;
 }
 
-/*
- * INLINE FONTS
- */
 em {
   font-style: italic;
-  font-family: "DejaVu Serif Italic", serif;
 }
 
 strong {
   font-weight: bold;
-  font-family: "DejaVu Serif Bold", serif;
 }
 
 strong em, em strong, h1 em, h2 em, h3 em, h4 em {
   font-weight: bold;
   font-style: italic;
-  font-family: "DejaVu Serif Bold Italic", serif;
 }
 
 code strong em, code em strong {
   font-weight: bold;
   font-style: italic;
   font-family: "DejaVu Sans Mono Bold Oblique", monospace;
-  color: #6c4e50;
-  font-size: 0.9em;
+  color: #410080;
+  font-size: 0.8em;
 }
 
 code em, em code, pre em {
   font-style: italic;
   font-family: "DejaVu Sans Mono Oblique", monospace;
-  color: #6c4e50;
-  font-size: 0.9em;
+  color: #410080;
+  font-size: 0.8em;
 }
 
 code strong, strong code, pre strong {
   font-weight: bold;
   font-family: "DejaVu Sans Mono Bold", monospace;
-  color: #6c4e50;
-font-size: 0.9em;
+  color: #410080;
+  font-size: 0.8em;
 }
 
 code { 
   font-family: "DejaVu Sans Mono", monospace;
-  color: #6c4e50;
-  font-size: 0.9em;
+  color: #410080;
+  font-size: 0.8em;
 }
 
 /*
  * TABLES
  */
-table,td,th {
-  border-color: #7c755b; border-style: solid;
+table, td, th {
+  border-color: #3a2e2e; /* nearly black */ 
+  border-style: solid;
 }
 
 table {
-  border-width: 0 0 1px 1px; border-spacing: 0; border-collapse: collapse;
+  border-width: 0 0 1px 1px; 
+  border-spacing: 0; 
+  border-collapse: collapse;
 }
 
 td,th {
-  margin: 0; padding: 4px; border-width: 1px 1px 0 0; background-color: #c1b8a8;
+  margin: 0; 
+  padding: 4px; 
+  border-width: 1px 1px 0 0; 
+  background-color: #d9c497; /* sand */
   font-size: 0.9em;
 }
 
@@ -82,15 +82,15 @@ td,th {
 }
 
 .title {
-  color: #6c4e50;
-  font-family: "DejaVu Serif", serif;
-  margin-left: 2%; margin-right: 2%; font-size: 2em; text-align: center;
-  border-bottom: 1px black solid; text-transform: uppercase;
+  color: #000000;
+  font-size: 2em; 
+  text-align: center;
+  border-bottom: 1px black solid; 
+  text-transform: uppercase;
 }
 
 .author, .copyright {
   font-size: 1em; color: #7c755b;
-  font-family: "DejaVu Serif", serif;
   text-align: center;
 }
 
@@ -103,12 +103,14 @@ h1, h2, h3, h4, h5, h6 {
   page-break-after: avoid;
   font-weight: bold;
   display: block;
-  font-family: "DejaVu Serif", serif;
-  color: #557c81
+  color: #5a272c; /* dark brown */
 }
 
 h1 {
   font-size: 1.5em;
+  border-top: 1px #8a7476 solid;
+  text-align: center;
+  border-bottom: 1px #8a7476 solid;
 }
 
 h2 {
@@ -135,37 +137,10 @@ h6 {
 }
 
 /* 
- * fonts (keep at bottom); using DejaVu for its rich set of glyphs (and beeing
+ * fonts (keep at bottom); using DejaVu for its rich set of glyphs (and being
  * free for use)
  */
 
-@font-face {
-  font-family: "DejaVu Serif";
-  font-style: normal;
-  font-weight: normal;
-  src: url(DejaVuSerif.otf);
-}
-
-@font-face {
-  font-family: "DejaVu Serif Bold";
-  font-weight: bold;
-  font-style: normal;
-  src: url(DejaVuSerif-Bold.otf);
-}
-
-@font-face {
-  font-family: "DejaVu Serif Italic";
-  font-weight: normal;
-  font-style: italic;
-  src: url(DejaVuSerif-Italic.otf);
-}
-
-@font-face {
-  font-family: "DejaVu Serif Bold Italic";
-  font-weight: bold;
-  font-style: italic;
-  src: url(DejaVuSerif-BoldItalic.otf);
-}
 
 @font-face {
   font-family: "DejaVu Sans Mono";
@@ -196,7 +171,6 @@ h6 {
 }
 
 body {
-  font-family: "DejaVu Serif", serif;
   font-size: 1em;
   margin: 0;
   padding: 0;

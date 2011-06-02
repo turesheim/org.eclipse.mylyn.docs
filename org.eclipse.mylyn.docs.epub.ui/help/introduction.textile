@@ -1,27 +1,18 @@
 h1. Introduction
 
-Do you need to distribute documentation, create an electronic-book, or just archive your favorite web pages? EPUB is an open specification for digital books based on familiar technologies like XML, CSS, and XHTML, and EPUB files can be read on portable e-ink devices, mobile telephones, and desktop computers.
+The EPUB support in Eclipse is built around a data model describing the publication along with various mechanisms to manipulate this structure and assemble a EPUB file. The model is expressed in "Ecore":http://wiki.eclipse.org/Ecore, representing the "Open Packaging Format (OPF)":http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm, a subset of Dublin Core and the Navigation Control File (NCX). All required parts of a properly assembled EPUB file following the 2.0.1 revision of the standard.
 
-The basic idea of EPUB support in Mylyn Docs is described in Eclipse bug 332122. Wiki markup converted to HTML (using Mylyn WikiText) or for that matter; pre-existing HTML files is processed by a ANT script and a EPUB file is created.
+The mechanisms mentioned is an API for handling the EPUB and a Ant task that can be used during building. The following code shows the minimum Ant script required to generate a publication.
 
-Several other methods can be applied to obtain the same result. You can write the document in Apple's __Pages__ and directly export to EPUB. You can write it in Microsoft's __Word__ and convert it to EPUB using "EPUBGen":http://code.google.com/p/epub-tools/ or even in DocBook and convert it using "docbook2epub":http://code.google.com/p/epub-tools/. All these methods have their merits but few can be easily used to assemble publications during a __continuous build__ and none can be used without adding a few extra dependencies such as Ruby or Python. Hence the primary goal of this feature is being easily able to create EPUB publications using ANT tasks within Eclipse.
+bc.. 
+<html-to-epub file="my.epub">
+	<title text="My book" />
+	<subject text="My subject"/>
+	<item file="MyChapter.html"/>
+</html-to-epub>
 
-Using wiki markup as the source yields a few additional benefits:
-* You get easy-to-use editors within Eclipse
-* The markup can be converted to a number of additional formats:
-** Eclipse Help
-** Hyper Text Markup Language (HTML)
-** PDF through XSL:FO
-** DocBook
-** OASIS DITA
+p. Some of the fields required by will be automatically created and added to the publication when not specified in the Ant script. The table of contents will for instance be automatically created, the language set to __en__ for "English" and an identifier (based on UUID) will be generated. Details can be found in the chapter describing the "epub":epub-ant-task.html Ant task.
 
-h2. Benefits of EPUB
+p. Several other methods can be applied to obtain the same result. You can write the document in Apple's __Pages__ and directly export to EPUB. You can write it in Microsoft's __Word__ and convert it to EPUB using "EPUBGen":http://code.google.com/p/epub-tools/, in DocBook and convert it using "docbook2epub":http://code.google.com/p/epub-tools/ or even manually assembling the publication using various command line tools. All these methods have their merits but few can be easily used to assemble publications during a __continuous build__ and none can be used without adding a few extra dependencies such as Ruby or Python. 
 
-* Offline reading
-* Embedded comments and markings
-* Search
-* Easily accessible dictionary
-* Easy to distribute
-* Tablet readers
-
-
+p. Hence the primary goal of this feature is to create a mechanism that allows consistent building of EPUB files adhering to all relevant standards, using ANT tasks, while introducing as few dependencies as possible.

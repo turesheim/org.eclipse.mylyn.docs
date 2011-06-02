@@ -44,21 +44,18 @@
 	<target name="build" depends="init">
 		<!-- <antstructure output="ant.dtd"/> -->
 		<html-to-epub identifierId="uuid" file="${epubfile}" workingFolder="${workdir}">
-			<title text="Building EPUBs with Eclipse" />
 			<language code="en" />
-			<identifier id="uuid" scheme="UUID" value="h1c7bb870-82d5-11e0-9d34-0800200c9a66" />
-			<subject text="Computing, Eclipse, Mylyn, EPUB" />
+			<identifier id="uuid" scheme="UUID">h1c7bb870-82d5-11e0-9d34-0800200c9a66</identifier>
+			<title>Building EPUBs with Eclipse</title>
+			<subject>Computing, Eclipse, Mylyn, EPUB</subject>
+			<publisher>Eclipse.Org</publisher>
 			<creator name="Torkild Ulvøy Resheim" fileAs="Resheim, Torkild Ulvøy" role="aut" />
 			<!-- For the EPUB logo. See: logo http://www.epubbooks.com/blog/630/official-epub-logo-released -->
 			<contributor name="Ralph Burkhardt" fileAs="Burkhardt, Ralph" role="art" />
-			<publisher text="Eclipse.Org" />
 			<item file="${srcdir}/cover.html" spine="false"/>
 			<item file="${srcdir}/title-page.html"/>
 			<item file="${tempdir}/introduction.html" />
-			<item file="${tempdir}/epub-explained.html" />
-			<item file="${tempdir}/workflow.html" />
-			<item file="${tempdir}/html-to-epub.html" />
-			<item file="${tempdir}/tech-details.html" />
+			<item file="${tempdir}/epub-ant-task.html" />
 			<item file="${srcdir}/style.css" type="text/css" spine="false" />
 			<reference href="cover.html" type="cover" title="Cover Page" />
 			<reference href="title-page.html" type="title-page" title="Building EPUBs with Eclipse" />

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="EPB-UUID" version="2.0">
+   <metadata xmlns:opf="http://www.idpf.org/2007/opf"
+             xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <dc:title>Alice in Wonderland</dc:title>
+      <dc:creator opf:role="aut" opf:file-as="Carroll, Lewis">Lewis Carroll</dc:creator>
+      <dc:creator opf:role="ill" opf:file-as=""/>
+      <dc:date opf:event="original-publication">1916</dc:date>
+      <dc:publisher>epubBooks (www.epubbooks.com)</dc:publisher>
+      <dc:date opf:event="epub-publication">2010-06-15</dc:date>
+      <dc:subject>Young Readers</dc:subject>
+      <dc:subject>Fantasy</dc:subject>
+      <dc:source>Project Gutenberg</dc:source>
+      <dc:rights>
+            Provided for free by epubBooks.com. Not for commercial use.
+            This EPUB eBook is released under a Creative Commons (BY-NC-ND/3.0) Licence.
+            Source text and images are in the Public Domain.
+      </dc:rights>
+      <dc:identifier id="EPB-UUID">urn:uuid:19c2b129-40b2-40f4-88e3-59d12871da25</dc:identifier>
+      <dc:language>en</dc:language>
+   </metadata>
+   <manifest>
+      <!-- Content Documents -->
+      <item id="titlepage" href="title.xml" media-type="application/xhtml+xml"/>
+      <item id="epubbooksinfo" href="epubbooksinfo.xml" media-type="application/xhtml+xml"/>
+      <item id="chapter-001" href="chapter-001.xml" media-type="application/xhtml+xml"/>
+      <item id="chapter-002" href="chapter-002.xml" media-type="application/xhtml+xml"/>
+      <item id="chapter-003" href="chapter-003.xml" media-type="application/xhtml+xml"/>
+      <item id="chapter-004" href="chapter-004.xml" media-type="application/xhtml+xml"/>
+      <item id="chapter-005" href="chapter-005.xml" media-type="application/xhtml+xml"/>
+      <item id="chapter-006" href="chapter-006.xml" media-type="application/xhtml+xml"/>
+      <item id="chapter-007" href="chapter-007.xml" media-type="application/xhtml+xml"/>
+      <item id="chapter-008" href="chapter-008.xml" media-type="application/xhtml+xml"/>
+      <item id="chapter-009" href="chapter-009.xml" media-type="application/xhtml+xml"/>
+      <item id="chapter-010" href="chapter-010.xml" media-type="application/xhtml+xml"/>
+
+      <!-- CSS Style Sheets -->
+      <item id="title-page-css" href="css/titlepage.css" media-type="text/css"/>
+      <item id="main-css" href="css/book.css" media-type="text/css"/>
+
+      <!-- Images -->
+      <item id="epubbooks-logo" href="images/epubbooks-logo.png" media-type="image/png"/>
+      <item id="img-bookcover-jpeg" href="images/bookcover.jpg" media-type="image/jpeg"/>
+      <item id="img-i001-jpeg" href="images/i001.jpg" media-type="image/jpeg"/>
+      <item id="img-i002-jpeg" href="images/i002.jpg" media-type="image/jpeg"/>
+      <item id="img-i003-jpeg" href="images/i003.jpg" media-type="image/jpeg"/>
+      <item id="img-i004-jpeg" href="images/i004.jpg" media-type="image/jpeg"/>
+      <item id="img-i005-jpeg" href="images/i005.jpg" media-type="image/jpeg"/>
+      <item id="img-i006-jpeg" href="images/i006.jpg" media-type="image/jpeg"/>
+      <item id="img-i007-jpeg" href="images/i007.jpg" media-type="image/jpeg"/>
+      <item id="img-i008-jpeg" href="images/i008.jpg" media-type="image/jpeg"/>
+      <item id="img-i009-jpeg" href="images/i009.jpg" media-type="image/jpeg"/>
+      <item id="img-i010-jpeg" href="images/i010.jpg" media-type="image/jpeg"/>
+      <item id="img-i011-jpeg" href="images/i011.jpg" media-type="image/jpeg"/>
+      <item id="img-i012-jpeg" href="images/i012.jpg" media-type="image/jpeg"/>
+      <item id="img-i013-jpeg" href="images/i013.jpg" media-type="image/jpeg"/>
+      <item id="img-i014-jpeg" href="images/i014.jpg" media-type="image/jpeg"/>
+      <item id="img-i015-jpeg" href="images/i015.jpg" media-type="image/jpeg"/>
+      <item id="img-i016-jpeg" href="images/i016.jpg" media-type="image/jpeg"/>
+      <item id="img-i017-jpeg" href="images/i017.jpg" media-type="image/jpeg"/>
+      <item id="img-i018-jpeg" href="images/i018.jpg" media-type="image/jpeg"/>
+      <item id="img-i019-jpeg" href="images/i019.jpg" media-type="image/jpeg"/>
+      <item id="img-i020-jpeg" href="images/i020.jpg" media-type="image/jpeg"/>
+      <item id="img-i021-jpeg" href="images/i021.jpg" media-type="image/jpeg"/>
+      <item id="img-i022-jpeg" href="images/i022.jpg" media-type="image/jpeg"/>
+      <item id="img-plate01-jpeg" href="images/plate01.jpg" media-type="image/jpeg"/>
+      <item id="img-plate02-jpeg" href="images/plate02.jpg" media-type="image/jpeg"/>
+      <item id="img-plate03-jpeg" href="images/plate03.jpg" media-type="image/jpeg"/>
+      <item id="img-plate04-jpeg" href="images/plate04.jpg" media-type="image/jpeg"/>
+      <item id="img-title-jpeg" href="images/title.jpg" media-type="image/jpeg"/>
+
+      <!-- NCX -->
+      <item id="ncx" href="epb.ncx" media-type="application/x-dtbncx+xml"/>
+   </manifest>
+   <spine toc="ncx">
+      <itemref idref="titlepage" linear="yes"/>
+      <itemref idref="epubbooksinfo" linear="yes"/>
+      <itemref idref="chapter-001" linear="yes"/>
+      <itemref idref="chapter-002" linear="yes"/>
+      <itemref idref="chapter-003" linear="yes"/>
+      <itemref idref="chapter-004" linear="yes"/>
+      <itemref idref="chapter-005" linear="yes"/>
+      <itemref idref="chapter-006" linear="yes"/>
+      <itemref idref="chapter-007" linear="yes"/>
+      <itemref idref="chapter-008" linear="yes"/>
+      <itemref idref="chapter-009" linear="yes"/>
+      <itemref idref="chapter-010" linear="yes"/>
+   </spine>
+</package>

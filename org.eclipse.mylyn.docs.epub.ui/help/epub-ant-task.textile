@@ -1,0 +1,313 @@
+h1. The html-to-epub ANT task
+
+The **html-to-epub** "Ant":http://www.apache.org task is used to assemble an EPUB file from a number of source items. It is assumes that most of the source material such as HTML-files and illustrations has been prepared beforehand.
+
+The following is an approximate DTD for the task: 
+
+bc.. 
+<!ELEMENT html-to-epub (publisher | date | contributor | creator | creator | toc | reference | language | identifier | fileset | subject | title | item | type | source | rights)*>
+<!ATTLIST html-to-epub
+          id ID #IMPLIED
+          taskname CDATA #IMPLIED
+          identifierid CDATA #IMPLIED
+          file CDATA #IMPLIED
+          description CDATA #IMPLIED
+          workingfolder CDATA #IMPLIED>
+p. 
+* The **identifierid** is a reference to an identifier added using the **identifier** element. 
+* **file** - path to the resulting EPUB file.
+* **description** - short description of the EPUB file.
+* **workingfolder** - optionally used to specify the folder used for assembling the EPUB. If not specified a temporary folder will be used and deleted when the processing has completed.
+
+h2. Adding "header" information
+
+Certain elements are required in the header of the publication. These include the title of the publication, the identifier and the language code as shown in the minimal example above. It is possible to add more than one element of some types.
+
+The following elements can be used:
+|_. id |_. Required |_. Description |
+|title|yes|The publication title|
+|identifier|yes|The publication identifier|
+|language|yes|The publication language|
+|publisher|no||
+|subject|no||
+|creator|no||
+|contributor|no||
+|date|no||
+
+h3. Publication title
+
+p. Typically, Title will be a name by which the resource is formally known.
+
+bc.. 
+<!ELEMENT title (#PCDATA)>
+<!ATTLIST title
+          id ID #IMPLIED
+          lang CDATA #IMPLIED>
+
+h3. Publication identifiers
+
+p. Recommended best practice is to identify the resource by means of a string or number conforming to a formal identification system. Formal identification systems include but are not limited to the Uniform Resource Identifier (URI) (including the Uniform Resource Locator (URL)), the Digital Object Identifier (DOI) and the International Standard Book Number (ISBN).
+
+bc.. 
+<!ELEMENT identifier EMPTY>
+<!ATTLIST identifier
+          id ID #IMPLIED
+          scheme CDATA #IMPLIED
+          value CDATA #IMPLIED>
+
+h3. Language specification
+
+p. Recommended best practice is to use RFC 3066 which, in conjunction with "ISO639":http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes , defines two- and three-letter primary language tags with optional subtags. Examples include "no" for Norwegian, "en" for English", and "en-GB" for English used in the United Kingdom.
+
+bc.. 
+<!ELEMENT language EMPTY>
+<!ATTLIST language
+          id ID #IMPLIED
+          code CDATA #IMPLIED>
+
+h3. Publisher
+ 
+bc.. 
+<!ELEMENT publisher (#PCDATA)>
+<!ATTLIST publisher
+          id ID #IMPLIED
+          lang CDATA #IMPLIED>
+p.          
+* **id** - optional unique identifier.
+* **lang** - optional language code.
+* **text** - name of the publisher.
+
+h3. Publication subject
+
+bc.. 
+<!ELEMENT subject (#PCDATA)>
+<!ATTLIST subject
+          id ID #IMPLIED
+          lang CDATA #IMPLIED>
+
+h3. Contributors and Creators
+
+bc.. 
+<!ELEMENT contributor EMPTY>
+<!ATTLIST contributor
+          id ID #IMPLIED
+          fileas CDATA #IMPLIED
+          name CDATA #IMPLIED
+          lang CDATA #IMPLIED
+          role CDATA #IMPLIED>
+
+<!ELEMENT creator EMPTY>
+<!ATTLIST creator
+          id ID #IMPLIED
+          fileas CDATA #IMPLIED
+          name CDATA #IMPLIED
+          lang CDATA #IMPLIED
+          role CDATA #IMPLIED>
+          
+p. 
+* **id** - optional unique identifier.
+* **fileas** - optional filing specification.
+* **name** - name of the creator or contributor.
+* **lang** - optional language code.
+* **role** - optional MARC relator code.
+          
+
+p. If there is for instance more than one author one can add more elements specifying the name and "MARC relator code":http://www.loc.gov/marc/relators/ for each. 
+
+bc.. 
+<creator name="Nomen Nescio" file-as="Nescio, Nomen" role="aut/>
+<creator name="Ola Nordmann" file-as="Nordmann, Ola" role="aut/>
+
+p. Say for instance that you prepare a set of documentation files for a publication, but you are not the original author. Then you should add a *contributor* such as this:
+
+bc.. 
+<contributor name="Nomen Nescio" file-as="Nescio, Nomen" role="com/>
+
+p. There is a long list of different MARC relator codes. Some of the most typical are:
+
+|_. Name |_. Code |_. Description |
+|Artist|art|Use for a person (e.g., a painter) who conceives, and perhaps also implements, an original graphic design or work of art, if specific codes (e.g., [egr], [etr]) are not desired. For book illustrators, prefer Illustrator [ill].|
+|Author|aut|Use for a person or corporate body chiefly responsible for the intellectual or artistic content of a work. This term may also be used when more than one person or body bears such responsibility.|
+|Author in quotations or text extracts|aqt|Use for a person whose work is largely quoted or extracted in a works to which he or she did not contribute directly. Such quotations are found particularly in exhibition catalogs, collections of photographs, etc.|
+|Author of afterword, colophon, etc.|aft|Use for a person or corporate body responsible for an afterword, postface, colophon, etc. but who is not the chief author of a work.|
+|Author of introduction, etc.|aui|Use for a person or corporate body responsible for an introduction, preface, foreword, or other critical matter, but who is not the chief author.|
+|Collaborator|clb|Use for a person or corporate body that takes a limited part in the elaboration of a work of another author or that brings complements (e.g., appendices, notes) to the work of another author.|
+|Compiler|com|Use for a person who produces a work or publication by selecting and putting together material from the works of various persons or bodies.|
+|Designer|dsr|Use for a person or organization responsible for design if specific codes (e.g., [bkd], [tyd]) are not desired.|
+|Editor|edt|Use for a person who prepares for publication a work not primarily his/her own, such as by elucidating text, adding introductory or other critical matter, or technically directing an editorial staff.|
+|Illustrator|ill|Use for the person who conceives, and perhaps also implements, a design or illustration, usually to accompany a written text.|
+|Photographer|pht|Use for the person or organization responsible for taking photographs, whether they are used in their original form or as reproductions.|
+|Redactor|red|Use for a person who writes or develops the framework for an item without being intellectually responsible for its content.|
+|Reviewer|rev|Use for a person or corporate body responsible for the review of book, motion picture, performance, etc.|
+
+
+h3. Dates
+
+bc.. 
+<!ELEMENT date EMPTY>
+<!ATTLIST publisher
+          id ID #IMPLIED
+          date CDATA #IMPLIED
+          event CDATA #IMPLIED>
+          
+p.           
+* **id** - optional unique identifier.
+* **date** - a date on the format YYYY[-MM[-DD]].
+* **event** - an optional event specification.     
+          
+p. Date of publication, in the format defined by "Date and Time Formats":http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based. In particular, dates without times are represented in the form YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month, and if the month is given, an optional 2-digit day of month.
+
+p. You may also set the **event** attribute. Legal values are not defined but may include "creation", "publication" and "modification".
+
+p. The epub task will always add a "creation" date using the current date when assembling the epub file. 
+
+h3. Adding "Type"
+
+p. type includes terms describing general categories, functions, genres, or aggregation levels for content. The advised best practice is to select a value from a controlled vocabulary.
+
+p. Type includes terms describing general categories, functions, genres, or aggregation levels for content. Recommended best practice is to select a value from a controlled vocabulary (for example, the DCMI Type Vocabulary [DCT1]). To describe the physical or digital manifestation of the resource, use the FORMAT element.
+
+bc.. 
+<!ELEMENT publisher EMPTY>
+<!ATTLIST publisher
+          id ID #IMPLIED
+          lang CDATA #IMPLIED
+          text CDATA #IMPLIED>
+
+h3. Adding "Format"
+
+p. Typically, Format may include the media-type or dimensions of the resource. Format may be used to identify the software, hardware, or other equipment needed to display or operate the resource. Examples of dimensions include size and duration. Recommended best practice is to select a value from a controlled vocabulary (for example, the list of Internet Media Types [MIME] defining computer media formats).
+
+bc.. 
+<!ELEMENT format (#PCDATA)>
+<!ATTLIST format
+          id ID #IMPLIED
+          lang CDATA #IMPLIED>
+
+h3. Adding "Source"
+
+p. The publication may be derived from another resource in whole or part. Recommended best practice is to identify the referenced resource by means of a string or number conforming to a formal identification system. If the publication is built from a web site it would be a good idea to use the URL of the entry page. 
+
+bc.. 
+<!ELEMENT source (#PCDATA)>
+<!ATTLIST source
+          id ID #IMPLIED
+          lang CDATA #IMPLIED>
+
+h3. Adding "Rights"
+
+p. A statement about rights, or a reference to one. In this specification, the copyright notice and any further rights description should appear directly.
+This specification does not address the manner in which a Content Provider specifies to a secure distributor any licensing terms under which readership rights or copies of the content could be sold.
+
+p. Typically, Rights will contain a rights management statement for the resource, or reference a service providing such information. Rights information often encompasses Intellectual Property Rights (IPR), Copyright, and various Property Rights. If the Rights element is absent, no assumptions may be made about any rights held in or over the resource.
+
+bc.. 
+<!ELEMENT rights (#PCDATA)>
+<!ATTLIST rights
+          id ID #IMPLIED
+          lang CDATA #IMPLIED>
+          
+h3. Coverage
+
+p. The extent or scope of the publication’s content. The advised best practice is to select a value from a controlled vocabulary; see the Dublin Core Metadata Element Set (http://dublincore.org/documents/2004/12/20/dces/).
+
+p. Typically, Coverage will include spatial location (a place name or geographic coordinates), temporal period (a period label, date, or date range) or jurisdiction (such as a named administrative entity). Recommended best practice is to select a value from a controlled vocabulary (for example, the Thesaurus of Geographic Names [TGN]) and to use, where appropriate, named places or time periods in preference to numeric identifiers such as sets of coordinates or date ranges.
+
+h3. Relation
+          
+p. Recommended best practice is to identify the referenced resource by means of a string or number conforming to a formal identification system.
+
+h2. Adding content
+
+h3. Primary content files
+
+Content is added using the **item** element. At a minimum you will have to specify the **file** attribute. This points to the file that will be added. Per default this will set the MIME type of the item to "application/xhtml+xml" and add it to the __spine__. The __spine__ is a structure within the publication that defines the reading order. So the order you add items does matter. If you're adding other types of files such as cascading style sheets you will have to specify the type and whether or not to add it to the spine.
+
+bc.. 
+<!ELEMENT item EMPTY>
+<!ATTLIST item
+          id ID #IMPLIED
+          fetch %boolean; #IMPLIED
+          file CDATA #IMPLIED
+          type CDATA #IMPLIED
+          page CDATA #IMPLIED
+          spine %boolean; #IMPLIED>
+
+p. 
+* **file** - points to a file to include in the manifest
+* **type** - The MIME type of the file. If omitted the type will be set to "application/xhtml+xml".
+* **spine** - Whether or not to include the file in the reading order of the publication.
+
+h3. Secondary content files
+
+p. Files that are not required to be in the __spine__ and which MIME-type can be automatically determined may be added to the publication using a nested **fileset**. This is identical to the "fileset":http://ant.apache.org/manual/Types/fileset.html element type found in ANT except that you can add an extra **dest** attribute. The new attribute can be used to specify the destination sub-folder of the files. If you for instance have illustrations in the form of JPEG, PNG or GIF images; this is the most straightforward to add these.
+
+p. An identifier will automatically be created for each file added. It is on the form __&lt;mimetype&gt;-&lt;filename&gt;__. So a JPEG file named __my_house.jpg__ will be identified as __image-my_house__. If you have another file named __my_house.gif__ you will get a conflict so it would be wise to rename one of the files or add both using the **item** element and specify the identifier.
+
+An example of use is shown below:
+
+bc.. 
+<fileset dir="${srcdir}" dest="images/">
+	<include name="*.gif" />
+	<include name="*.png" />
+	<include name="*.jpg" />
+	<include name="*.otf" />
+</fileset>
+
+h3. References
+
+The __guide__ allows you to specify the role of each file in the publication. While not required it is recommended that this feature is used. It is basically a list of references to each of the content files and the role they play. Some reading systems will for instance open a fresh book on the first page that contains __text__.
+
+bc.. 
+<!ELEMENT reference EMPTY>
+<!ATTLIST reference
+          id ID #IMPLIED
+          href CDATA #IMPLIED
+          type CDATA #IMPLIED
+          title CDATA #IMPLIED>
+p. 
+* **id** - optional unique identifier.
+* **href** - the file that is referenced.
+* **type** - the role.
+* **title** - title of the reference.          
+
+bc.. 
+<reference href="cover.html" type="cover" title="Cover Page" />
+<reference href="title-page.html" type="title-page" title="Building EPUBs with Eclipse and ANT" />
+<reference href="introduction.html" type="preface" title="Introduction" />
+
+
+p. The following types are allowed:
+
+|_. Type |_. Description |
+|cover|The book cover(s), jacket information, etc.|
+|title-page|Page with possibly title, author, publisher, and other metadata|
+|toc|table of contents|
+|index|Back-of-book style index|
+|glossary|An alphabetical list of terms peculiar to the publication with definitions or explanations|
+|acknowledgements|Author’s statement acknowledging his use of the works of other authors|	
+|bibliography|A list of books or other material on a subject|	
+|colophon|A publisher’s emblem on a book|
+|copyright-page|Subject to or controlled by copyright|	
+|dedication|To address or inscribe (a book, artistic performance, etc) to a person, cause, etc as a token of affection or respect.|
+|epigraph|A quotation at the beginning of a book, chapter, etc, suggesting its theme.|
+|foreword|A phrase or passage from a book, poem, play, etc, remembered and spoken, esp to illustrate succinctly or support a point or an argument.|	
+|loi|A list of illustrations|
+|lot|A list of tables|
+|notes|A brief summary or record in writing, esp a jotting for future reference|	
+|preface|A statement written as an introduction to a literary or other work, typically explaining its scope, intention, method, etc; foreword.|	
+|text|First "real" page of content (e.g. "Chapter 1").|
+			
+h3. Table of contents
+
+bc.. 
+<!ELEMENT toc EMPTY>
+<!ATTLIST toc
+          id ID #IMPLIED
+          generate %boolean; #IMPLIED
+          file CDATA #IMPLIED>
+
+p. Exactly one **toc** element is used to declare a table of contents. There are two ways of doing this. Either by pointing to a readily prepared __ncx__  file using the **file** attribute or by setting **generate** to **true**. This will iterate through all the elements in the spine and figure out the table of contents based on the header elements. 
+
+If the **file** attribute is used the task will automatically do the house-keeping. The file will be copied into the OEPBS folder of the publication, it will be placed first in the content declaration and properly referenced.
+

@@ -15,7 +15,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ TestAntTask.class, TestEPUB.class, TestTOCGenerator.class })
+@SuiteClasses({ TestAntTask.class, TestAPI.class, TestTOCGenerator.class })
 public class AllTests {
 
 }
