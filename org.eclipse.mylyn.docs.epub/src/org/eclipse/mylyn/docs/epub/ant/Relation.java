@@ -10,27 +10,22 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.ant;
 
-/**
- * @ant.type name="date" category="epub"
- */
-public class Date {
+import java.util.Locale;
 
-	String date;
-	String event;
+/**
+ * @ant.type name="relation" category="epub"
+ */
+public class Relation {
+
 	String id;
+	Locale lang;
+	String text;
 
 	/**
 	 * @ant.required
 	 */
-	public void setDate(String date) {
-		this.date = date;
-	}
-
-	/**
-	 * @ant.not-required
-	 */
-	public void setEvent(String event) {
-		this.event = event;
+	public void addText(String text) {
+		this.text = text;
 	}
 
 	/**
@@ -40,4 +35,10 @@ public class Date {
 		this.id = id;
 	}
 
+	/**
+	 * @ant.not-required
+	 */
+	public void setLang(Locale lang) {
+		this.lang = lang;
+	}
 }

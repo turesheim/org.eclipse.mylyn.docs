@@ -23,6 +23,13 @@ public class Identifier {
 	/**
 	 * @ant.required
 	 */
+	public void addText(String value) {
+		this.value = value;
+	}
+
+	/**
+	 * @ant.required
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -32,12 +39,5 @@ public class Identifier {
 	 */
 	public void setScheme(String scheme) {
 		this.scheme = scheme;
-	}
-
-	/**
-	 * @ant.required
-	 */
-	public void setValue(String value) {
-		this.value = value;
 	}
 }

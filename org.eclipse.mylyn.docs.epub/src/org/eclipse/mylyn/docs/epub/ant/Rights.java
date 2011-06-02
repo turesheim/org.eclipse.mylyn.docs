@@ -10,10 +10,15 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.ant;
 
+import java.util.Locale;
+
 /**
  * @ant.type name="rights" category="epub"
  */
 public class Rights {
+
+	String id;
+	Locale lang;
 	String text;
 
 	/**
@@ -23,4 +28,18 @@ public class Rights {
 		this.text = text;
 	}
 	
+	/**
+	 * @ant.not-required
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @ant.not-required
+	 */
+	public void setLang(Locale lang) {
+		this.lang = lang;
+	}
+
 }

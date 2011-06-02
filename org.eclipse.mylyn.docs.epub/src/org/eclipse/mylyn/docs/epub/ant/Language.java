@@ -5,6 +5,11 @@ package org.eclipse.mylyn.docs.epub.ant;
  */
 public class Language {
 	String code;
+	String id;
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	/**
 	 * @ant.required

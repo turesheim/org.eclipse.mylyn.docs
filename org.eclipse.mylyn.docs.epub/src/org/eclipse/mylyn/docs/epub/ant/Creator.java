@@ -10,12 +10,16 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.ant;
 
+import java.util.Locale;
+
 /**
  * @ant.type name="creator" category="epub"
  */
 public class Creator {
+
 	String fileAs;
-	String lang;
+	String id;
+	Locale lang;
 	String name;
 	String role;
 
@@ -29,7 +33,14 @@ public class Creator {
 	/**
 	 * @ant.not-required
 	 */
-	public void setLang(String lang) {
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @ant.not-required
+	 */
+	public void setLang(Locale lang) {
 		this.lang = lang;
 	}
 

@@ -23,6 +23,7 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -45,12 +46,15 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.mylyn.docs.epub.dc.Contributor;
 import org.eclipse.mylyn.docs.epub.dc.Creator;
 import org.eclipse.mylyn.docs.epub.dc.DCFactory;
+import org.eclipse.mylyn.docs.epub.dc.DCType;
 import org.eclipse.mylyn.docs.epub.dc.Date;
 import org.eclipse.mylyn.docs.epub.dc.Description;
 import org.eclipse.mylyn.docs.epub.dc.Format;
 import org.eclipse.mylyn.docs.epub.dc.Identifier;
 import org.eclipse.mylyn.docs.epub.dc.Language;
+import org.eclipse.mylyn.docs.epub.dc.LocalizedDCType;
 import org.eclipse.mylyn.docs.epub.dc.Publisher;
+import org.eclipse.mylyn.docs.epub.dc.Relation;
 import org.eclipse.mylyn.docs.epub.dc.Rights;
 import org.eclipse.mylyn.docs.epub.dc.Source;
 import org.eclipse.mylyn.docs.epub.dc.Subject;
@@ -150,14 +154,17 @@ public class EPUB2 {
 	 * </ul>
 	 */
 	private void addCompulsoryData() {
-		addDate(new java.util.Date(System.currentTimeMillis()), "creation");
-		addContributor("Eclipse Committers and Contributors", Role.REDACTOR,
-				null, null);
+		addDate(null, new java.util.Date(System.currentTimeMillis()),
+				"creation");
+		addContributor(null, null, "Eclipse Committers and Contributors",
+				Role.REDACTOR, null);
 	}
 
 	/**
 	 * Specifies a new contributor for the publication.
 	 * 
+	 * @param id
+	 *            an identifier or <code>null</code>
 	 * @param name
 	 *            name of the creator
 	 * @param role
@@ -168,59 +175,57 @@ public class EPUB2 {
 	 *            the language code or <code>null</code>
 	 * @return the new creator
 	 */
-	public Contributor addContributor(String name, Role role, String fileAs,
-			String lang) {
+	public Contributor addContributor(String id, Locale lang, String name,
+			Role role, String fileAs) {
 		Contributor dc = DCFactory.eINSTANCE.createContributor();
-		FeatureMapUtil.addText(dc.getMixed(), name);
-		opfMetadata.getContributors().add(dc);
+		setDcLocalized(dc, id, lang, name);
 		if (role != null) {
 			dc.setRole(role);
 		}
 		if (fileAs != null) {
 			dc.setFileAs(fileAs);
 		}
-		if (lang != null) {
-			dc.setLang(lang);
-		}
+		opfMetadata.getContributors().add(dc);
 		return dc;
 	}
 
 	/**
 	 * Specifies a new creator for the publication.
 	 * 
+	 * 
+	 * @param id
+	 *            a unique identifier or <code>null</code>
+	 * @param lang
+	 *            the language code or <code>null</code>
 	 * @param name
 	 *            name of the creator
 	 * @param role
 	 *            the role or <code>null</code>
 	 * @param fileAs
 	 *            name to file the creator under or <code>null</code>
-	 * @param lang
-	 *            the language code or <code>null</code>
 	 * @return the new creator
 	 */
-	public Creator addCreator(String name, Role role, String fileAs, String lang) {
+	public Creator addCreator(String id, Locale lang, String name, Role role,
+			String fileAs) {
 		Creator dc = DCFactory.eINSTANCE.createCreator();
-		FeatureMapUtil.addText(dc.getMixed(), name);
-		opfMetadata.getCreators().add(dc);
+		setDcLocalized(dc, id, lang, name);
 		if (role != null) {
 			dc.setRole(role);
 		}
 		if (fileAs != null) {
 			dc.setFileAs(fileAs);
 		}
-		if (lang != null) {
-			dc.setLang(lang);
-		}
+		opfMetadata.getCreators().add(dc);
 		return dc;
 	}
 
-	public Date addDate(java.util.Date date, String event) {
+	public Date addDate(String id, java.util.Date date, String event) {
 		Date dc = DCFactory.eINSTANCE.createDate();
-		FeatureMapUtil.addText(dc.getMixed(), toString(date));
-		opfMetadata.getDates().add(dc);
+		setDcCommon(dc, id, toString(date));
 		if (event != null) {
 			dc.setEvent(event);
 		}
+		opfMetadata.getDates().add(dc);
 		return dc;
 	}
 
@@ -240,13 +245,13 @@ public class EPUB2 {
 	 *            an option event description
 	 * @return the new date
 	 */
-	public Date addDate(String date, String event) {
+	public Date addDate(String id, String date, String event) {
 		Date dc = DCFactory.eINSTANCE.createDate();
-		FeatureMapUtil.addText(dc.getMixed(), date);
-		opfMetadata.getDates().add(dc);
+		setDcCommon(dc, id, date);
 		if (event != null) {
 			dc.setEvent(event);
 		}
+		opfMetadata.getDates().add(dc);
 		return dc;
 	}
 
@@ -259,13 +264,27 @@ public class EPUB2 {
 	 *            the language code or <code>null</code>
 	 * @return the new description
 	 */
-	public Description addDescription(String description, String lang) {
+	public Description addDescription(String id, Locale lang, String description) {
 		Description dc = DCFactory.eINSTANCE.createDescription();
-		FeatureMapUtil.addText(dc.getMixed(), description);
+		setDcLocalized(dc, id, lang, description);
 		opfMetadata.setDescription(dc);
-		if (lang != null) {
-			dc.setLang(lang);
-		}
+		return dc;
+	}
+
+	/**
+	 * Sets the &quot;Dublin Core Format&quot; of the publication.
+	 * <p>
+	 * This property is optional.
+	 * </p>
+	 * 
+	 * @param value
+	 *            the format to add
+	 * @return the new format
+	 */
+	public Format addFormat(String id, String value) {
+		Format dc = DCFactory.eINSTANCE.createFormat();
+		setDcCommon(dc, id, value);
+		opfMetadata.setFormat(dc);
 		return dc;
 	}
 
@@ -287,6 +306,18 @@ public class EPUB2 {
 		FeatureMapUtil.addText(dc.getMixed(), value);
 		opfMetadata.getIdentifiers().add(dc);
 		return dc;
+	}
+
+	/**
+	 * Adds a new item to the manifest using default values for properties not
+	 * specified. Same as
+	 * <code>addItem(null, null, file, null, null, true, true);</code>.
+	 * 
+	 * @param file
+	 * @return
+	 */
+	public Item addItem(File file) {
+		return addItem(null, null, file, null, null, true, true);
 	}
 
 	/**
@@ -315,8 +346,8 @@ public class EPUB2 {
 	 *            whether or not to include in TOC when automatically generated
 	 * @return the new item
 	 */
-	public Item addItem(File file, String dest, String id, String type,
-			boolean spine, boolean noToc) {
+	public Item addItem(String id, Locale lang, File file, String dest,
+			String type, boolean spine, boolean noToc) {
 		if (file == null || !file.exists()) {
 			throw new IllegalArgumentException("\"file\" "
 					+ file.getAbsolutePath() + " must exist.");
@@ -338,8 +369,7 @@ public class EPUB2 {
 		if (id == null) {
 			String prefix = "";
 			if (!type.equals(DEFAULT_MIMETYPE)) {
-				prefix = (type.indexOf('/')) == -1 ? type : type.substring(
-0,
+				prefix = (type.indexOf('/')) == -1 ? type : type.substring(0,
 						type.indexOf('/')) + "-";
 			}
 			id = prefix
@@ -371,9 +401,9 @@ public class EPUB2 {
 	 *            the RFC-3066 format of the language code
 	 * @return the language instance
 	 */
-	public Language addLanguage(String lang) {
+	public Language addLanguage(String id, String lang) {
 		Language dc = DCFactory.eINSTANCE.createLanguage();
-		FeatureMapUtil.addText(dc.getMixed(), lang);
+		setDcCommon(dc, id, lang);
 		opfMetadata.getLanguages().add(dc);
 		return dc;
 	}
@@ -387,12 +417,9 @@ public class EPUB2 {
 	 *            the language code or <code>null</code>
 	 * @return the new publisher
 	 */
-	public Publisher addPublisher(String publisher, String lang) {
+	public Publisher addPublisher(String id, Locale lang, String publisher) {
 		Publisher dc = DCFactory.eINSTANCE.createPublisher();
-		FeatureMapUtil.addText(dc.getMixed(), publisher);
-		if (lang != null) {
-			dc.setLang(lang);
-		}
+		setDcLocalized(dc, id, lang, publisher);
 		opfMetadata.setPublisher(dc);
 		return dc;
 	}
@@ -421,6 +448,13 @@ public class EPUB2 {
 		return reference;
 	}
 
+	public Relation addRelation(String id, Locale lang, String value) {
+		Relation dc = DCFactory.eINSTANCE.createRelation();
+		setDcLocalized(dc, id, lang, value);
+		opfMetadata.setRelation(dc);
+		return dc;
+	}
+
 	/**
 	 * Adds a new subject to the publication.
 	 * 
@@ -429,13 +463,10 @@ public class EPUB2 {
 	 * @param lang
 	 *            the language code or <code>null</code>
 	 */
-	public Subject addSubject(String subject, String lang) {
+	public Subject addSubject(String id, Locale lang, String subject) {
 		Subject dc = DCFactory.eINSTANCE.createSubject();
-		FeatureMapUtil.addText(dc.getMixed(), subject);
+		setDcLocalized(dc, id, lang, subject);
 		opfMetadata.getSubjects().add(dc);
-		if (lang != null) {
-			dc.setLang(lang);
-		}
 		return dc;
 	}
 
@@ -448,13 +479,10 @@ public class EPUB2 {
 	 *            the language code or <code>null</code>
 	 * @return the new title
 	 */
-	public Title addTitle(String title, String lang) {
+	public Title addTitle(String id, Locale lang, String title) {
 		Title dc = DCFactory.eINSTANCE.createTitle();
-		FeatureMapUtil.addText(dc.getMixed(), title);
+		setDcLocalized(dc, id, lang, title);
 		opfMetadata.getTitles().add(dc);
-		if (lang != null) {
-			dc.setLang(lang);
-		}
 		return dc;
 	}
 
@@ -468,62 +496,11 @@ public class EPUB2 {
 	 *            the type to add
 	 * @return the new type
 	 */
-	public org.eclipse.mylyn.docs.epub.dc.Type addType(String type) {
+	public org.eclipse.mylyn.docs.epub.dc.Type addType(String id, String value) {
 		org.eclipse.mylyn.docs.epub.dc.Type dc = DCFactory.eINSTANCE
 				.createType();
-		FeatureMapUtil.addText(dc.getMixed(), type);
+		setDcCommon(dc, id, value);
 		opfMetadata.getTypes().add(dc);
-		return dc;
-	}
-
-	/**
-	 * Sets the &quot;Dublin Core Format&quot; of the publication.
-	 * <p>
-	 * This property is optional.
-	 * </p>
-	 * 
-	 * @param type
-	 *            the format to add
-	 * @return the new format
-	 */
-	public Format addFormat(String format) {
-		Format dc = DCFactory.eINSTANCE.createFormat();
-		FeatureMapUtil.addText(dc.getMixed(), format);
-		opfMetadata.setFormat(dc);
-		return dc;
-	}
-
-	/**
-	 * Sets the &quot;Dublin Core Source&quot; of the publication.
-	 * <p>
-	 * This property is optional.
-	 * </p>
-	 * 
-	 * @param text
-	 *            the source text
-	 * @return the new source element
-	 */
-	public Source setSource(String text) {
-		Source dc = DCFactory.eINSTANCE.createSource();
-		FeatureMapUtil.addText(dc.getMixed(), text);
-		opfMetadata.setSource(dc);
-		return dc;
-	}
-
-	/**
-	 * Sets the &quot;Dublin Core Rights&quot; of the publication.
-	 * <p>
-	 * This property is optional.
-	 * </p>
-	 * 
-	 * @param text
-	 *            the rights text
-	 * @return the new rights element
-	 */
-	public Rights setRights(String text) {
-		Rights dc = DCFactory.eINSTANCE.createRights();
-		FeatureMapUtil.addText(dc.getMixed(), text);
-		opfMetadata.setRights(dc);
 		return dc;
 	}
 
@@ -736,6 +713,21 @@ public class EPUB2 {
 				});
 	}
 
+	private void setDcCommon(DCType dc, String id, String value) {
+		FeatureMapUtil.addText(dc.getMixed(), value);
+		if (id != null) {
+			dc.setId(id);
+		}
+	}
+
+	private void setDcLocalized(LocalizedDCType dc, String id, Locale lang,
+			String value) {
+		setDcCommon(dc, id, value);
+		if (lang != null) {
+			dc.setLang(lang.toString());
+		}
+	}
+
 	public void setFile(String file) {
 		this.path = file;
 	}
@@ -746,6 +738,40 @@ public class EPUB2 {
 
 	public void setIdentifierId(String identifier_id) {
 		opfPackage.setUniqueIdentifier(identifier_id);
+	}
+
+	/**
+	 * Sets the &quot;Dublin Core Rights&quot; of the publication.
+	 * <p>
+	 * This property is optional.
+	 * </p>
+	 * 
+	 * @param text
+	 *            the rights text
+	 * @return the new rights element
+	 */
+	public Rights setRights(String id, Locale lang, String value) {
+		Rights dc = DCFactory.eINSTANCE.createRights();
+		setDcLocalized(dc, id, lang, value);
+		opfMetadata.setRights(dc);
+		return dc;
+	}
+
+	/**
+	 * Sets the &quot;Dublin Core Source&quot; of the publication.
+	 * <p>
+	 * This property is optional.
+	 * </p>
+	 * 
+	 * @param text
+	 *            the source text
+	 * @return the new source element
+	 */
+	public Source setSource(String id, Locale lang, String value) {
+		Source dc = DCFactory.eINSTANCE.createSource();
+		setDcLocalized(dc, id, lang, value);
+		opfMetadata.setSource(dc);
+		return dc;
 	}
 
 	public void setTocFile(File tocFile) {
@@ -861,7 +887,7 @@ public class EPUB2 {
 		// As we now have written the table of contents we must make sure it is
 		// in the manifest and referenced in the spine. We also want it to be
 		// the first element in the manifest.
-		Item item = addItem(ncxFile, null, opfSpine.getToc(),
+		Item item = addItem(null, null, ncxFile, opfSpine.getToc(),
 				"application/x-dtbncx+xml", false, false);
 		opfPackage.getManifest().getItems().move(0, item);
 	}

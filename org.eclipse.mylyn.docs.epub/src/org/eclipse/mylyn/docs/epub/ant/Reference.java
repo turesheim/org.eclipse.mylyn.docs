@@ -4,6 +4,7 @@ package org.eclipse.mylyn.docs.epub.ant;
  * @ant.type name="reference" category="epub"
  */
 public class Reference {
+
 	String href;
 	String title;
 	String type;
@@ -28,4 +29,5 @@ public class Reference {
 	public void setType(String type) {
 		this.type = type;
 	}
+
 }

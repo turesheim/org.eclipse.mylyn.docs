@@ -40,27 +40,27 @@ public class HtmlToEpubTask extends Task {
 	public HtmlToEpubTask() {
 	}
 
-	public void addConfiguredContributor(Contributor contributor) {
-		if (contributor.role == null) {
-			epub.addContributor(contributor.name, null, contributor.fileAs,
-					contributor.lang);
+	public void addConfiguredContributor(Contributor item) {
+		if (item.role == null) {
+			epub.addContributor(item.id, item.lang, item.name, null,
+					item.fileAs);
 		} else {
-			epub.addContributor(contributor.name, Role.get(contributor.role),
-					contributor.fileAs, contributor.lang);
+			epub.addContributor(item.id, item.lang, item.name,
+					Role.get(item.role), item.fileAs);
 		}
 	}
 
-	public void addConfiguredCreator(Creator creator) {
-		if (creator.role == null) {
-			epub.addCreator(creator.name, null, creator.fileAs, creator.lang);
+	public void addConfiguredCreator(Creator item) {
+		if (item.role == null) {
+			epub.addCreator(item.id, item.lang, item.name, null, item.fileAs);
 		} else {
-			epub.addCreator(creator.name, Role.get(creator.role),
-					creator.fileAs, creator.lang);
+			epub.addCreator(item.id, item.lang, item.name, Role.get(item.role),
+					item.fileAs);
 		}
 	}
 
-	public void addConfiguredDate(Date date) {
-		epub.addDate(date.date, date.event);
+	public void addConfiguredDate(Date item) {
+		epub.addDate(item.id, item.date, item.event);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class HtmlToEpubTask extends Task {
 			filename = filename.substring(filename.lastIndexOf("/") + 1);
 			File base = ds.getBasedir(); // 5
 			File found = new File(base, includedFiles[i]);
-			epub.addItem(found, fs.dest, null, null, false, false);
+			epub.addItem(null, fs.lang, found, fs.dest, null, false, false);
 		}
 	}
 
@@ -93,19 +93,19 @@ public class HtmlToEpubTask extends Task {
 	 * @ant.required
 	 */
 	public void addConfiguredItem(Item item) {
-		epub.addItem(item.file, item.dest, item.id, item.type, item.spine,
-				item.noToc);
+		epub.addItem(item.id, item.lang, item.file, item.dest, item.type,
+				item.spine, item.noToc);
 	}
 
 	/**
 	 * @ant.required
 	 */
 	public void addConfiguredLanguage(Language language) {
-		epub.addLanguage(language.code);
+		epub.addLanguage(language.id, language.code);
 	}
 
 	public void addConfiguredPublisher(Publisher publisher) {
-		epub.addPublisher(publisher.text, publisher.lang);
+		epub.addPublisher(publisher.id, publisher.lang, publisher.text);
 	}
 
 	public void addConfiguredReference(Reference reference) {
@@ -114,14 +114,14 @@ public class HtmlToEpubTask extends Task {
 	}
 
 	public void addConfiguredSubject(Subject subject) {
-		epub.addSubject(subject.text, subject.lang);
+		epub.addSubject(subject.id, subject.lang, subject.text);
 	}
 
 	/**
 	 * @ant.required
 	 */
 	public void addConfiguredTitle(Title title) {
-		epub.addTitle(title.text, title.lang);
+		epub.addTitle(title.id, title.lang, title.text);
 	}
 
 	public void addConfiguredToc(Toc toc) {
@@ -133,19 +133,19 @@ public class HtmlToEpubTask extends Task {
 	}
 
 	public void addConfiguredType(org.eclipse.mylyn.docs.epub.ant.Type type) {
-		epub.addType(type.text);
+		epub.addType(type.id, type.text);
 	}
 
 	public void addConfiguredFormat(Format format) {
-		epub.addFormat(format.text);
+		epub.addFormat(format.id, format.text);
 	}
 
 	public void addConfiguredSource(Source source) {
-		epub.setSource(source.text);
+		epub.setSource(source.id, source.lang, source.text);
 	}
 
 	public void addConfiguredRights(Rights rights) {
-		epub.setRights(rights.text);
+		epub.setRights(rights.id, rights.lang, rights.text);
 	}
 
 	@Override

@@ -11,25 +11,28 @@
 package org.eclipse.mylyn.docs.epub.ant;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * @ant.type name="item" category="epub"
  */
 public class Item {
-	File file;
-	String page;
-	String id;
-	String type;
-	String dest;
 
-	/**
-	 * @ant.not-required
-	 */
-	public void setNoToc(boolean toc) {
-		this.noToc = toc;
+	String dest;
+	File file;
+	String id;
+	boolean noToc = false;
+	String page;
+	Locale lang;
+
+	public void setLang(Locale lang) {
+		this.lang = lang;
 	}
 
-	boolean noToc = false;
+	/** Default is to add the item to the spine */
+	boolean spine = true;
+
+	String type;
 
 	/**
 	 * @ant.not-required
@@ -37,9 +40,6 @@ public class Item {
 	public void setDest(String dest) {
 		this.dest = dest;
 	}
-
-	/** Default is to add the item to the spine */
-	boolean spine = true;
 
 	/**
 	 * A file on the local file system.
@@ -49,6 +49,20 @@ public class Item {
 	 */
 	public void setFile(File file) {
 		this.file = file;
+	}
+
+	/**
+	 * @ant.not-required
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @ant.not-required
+	 */
+	public void setNoToc(boolean toc) {
+		this.noToc = toc;
 	}
 
 	/**
@@ -63,8 +77,8 @@ public class Item {
 	/**
 	 * @ant.not-required
 	 */
-	public void setId(String id) {
-		this.id = id;
+	public void setSpine(boolean spine) {
+		this.spine = spine;
 	}
 
 	/**
@@ -72,12 +86,5 @@ public class Item {
 	 */
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	/**
-	 * @ant.not-required
-	 */
-	public void setSpine(boolean spine) {
-		this.spine = spine;
 	}
 }

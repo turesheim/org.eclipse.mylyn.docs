@@ -14,6 +14,8 @@ package org.eclipse.mylyn.docs.epub.ant;
  * @ant.type name="type" category="epub"
  */
 public class Type {
+
+	String id;
 	String text;
 
 	/**
@@ -21,6 +23,13 @@ public class Type {
 	 */
 	public void addText(String text) {
 		this.text = text;
+	}
+
+	/**
+	 * @ant.not-required
+	 */
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 }

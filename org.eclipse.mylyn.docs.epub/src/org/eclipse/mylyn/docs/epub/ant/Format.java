@@ -14,13 +14,22 @@ package org.eclipse.mylyn.docs.epub.ant;
  * @ant.type name="format" category="epub"
  */
 public class Format {
+
+	String id;
 	String text;
 
 	/**
 	 * @ant.required
 	 */
-	public void setText(String text) {
+	public void addText(String text) {
 		this.text = text;
 	}
 	
+	/**
+	 * @ant.not-required
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
 }
