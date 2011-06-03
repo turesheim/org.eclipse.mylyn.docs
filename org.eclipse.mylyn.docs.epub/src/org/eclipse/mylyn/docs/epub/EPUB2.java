@@ -887,7 +887,8 @@ public class EPUB2 {
 		// As we now have written the table of contents we must make sure it is
 		// in the manifest and referenced in the spine. We also want it to be
 		// the first element in the manifest.
-		Item item = addItem(null, null, ncxFile, opfSpine.getToc(),
+		Item item = addItem(TABLE_OF_CONTENTS_ID, null, ncxFile,
+				opfSpine.getToc(),
 				"application/x-dtbncx+xml", false, false);
 		opfPackage.getManifest().getItems().move(0, item);
 	}
