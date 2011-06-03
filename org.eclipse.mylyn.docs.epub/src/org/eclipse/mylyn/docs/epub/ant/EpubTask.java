@@ -11,9 +11,6 @@
 package org.eclipse.mylyn.docs.epub.ant;
 
 import java.io.File;
-import java.io.IOException;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -22,7 +19,6 @@ import org.eclipse.mylyn.docs.epub.EPUB2;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.eclipse.mylyn.docs.epub.opf.Type;
-import org.xml.sax.SAXException;
 
 /**
  * Assemble a new EPUB.
@@ -109,8 +105,11 @@ public class EpubTask extends Task {
 	}
 
 	public void addConfiguredReference(ReferenceType reference) {
-		epub.addReference(reference.href, reference.title,
-				Type.get(reference.type));
+		Type type = Type.get(reference.type);
+		if (type == null) {
+			throw new BuildException("Unknown reference type " + reference.type);
+		}
+		epub.addReference(reference.href, reference.title, type);
 	}
 
 	public void addConfiguredSubject(SubjectType subject) {
@@ -165,12 +164,8 @@ public class EpubTask extends Task {
 				epub.assemble(workingFolder);
 			}
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new BuildException(e);
 		}
 	}
 
