@@ -43,7 +43,7 @@
 	<!-- contributor, date -->
 	<target name="build" depends="init">
 		<!-- <antstructure output="ant.dtd"/> -->
-		<html-to-epub identifierId="uuid" file="${epubfile}" workingFolder="${workdir}">
+		<epub identifierId="uuid" file="${epubfile}" workingFolder="${workdir}">
 			<language code="en" />
 			<identifier id="uuid" scheme="UUID">h1c7bb870-82d5-11e0-9d34-0800200c9a66</identifier>
 			<title>Building EPUBs with Eclipse</title>
@@ -67,7 +67,7 @@
 				<include name="*.jpg" />
 				<include name="*.otf" />
 			</fileset>
-		</html-to-epub>
+		</epub>
 	</target>
 
 </project>
