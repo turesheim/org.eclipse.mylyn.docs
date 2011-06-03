@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -151,6 +152,7 @@ public class EPUB2 {
 	 * <li>The creation date.</li>
 	 * <li><i>Eclipse committers and contributors</i> as contributor redactor
 	 * role.</li>
+	 * <li>A unique identifier if none has been specified.</li>
 	 * </ul>
 	 */
 	private void addCompulsoryData() {
@@ -158,6 +160,10 @@ public class EPUB2 {
 				"creation");
 		addContributor(null, null, "Eclipse Committers and Contributors",
 				Role.REDACTOR, null);
+		if (getIdentifier() == null) {
+			addIdentifier("uuid", Scheme.UUID, UUID.randomUUID().toString());
+			setIdentifierId("uuid");
+		}
 	}
 
 	/**
@@ -507,11 +513,9 @@ public class EPUB2 {
 	/**
 	 * Creates the final EPUB file.
 	 * 
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
+	 * @throws Exception
 	 */
-	public void assemble() throws IOException, SAXException,
-			ParserConfigurationException {
+	public void assemble() throws Exception {
 		File workingFolder = File.createTempFile("epub_", null);
 		if (workingFolder.delete() && workingFolder.mkdirs()) {
 			assemble(workingFolder);
@@ -519,11 +523,9 @@ public class EPUB2 {
 		workingFolder.deleteOnExit();
 	}
 
-	public void assemble(File workingFolder) throws IOException, SAXException,
-			ParserConfigurationException {
+	public void assemble(File workingFolder) throws Exception {
 		System.out.println("Assembling EPUB file in " + workingFolder);
 		addCompulsoryData();
-		validate();
 		// Note that order is important here. Some methods may insert data into
 		// the EPUB structure. Hence the OPF must be written last.
 		if (workingFolder.isDirectory() || workingFolder.mkdirs()) {
@@ -543,6 +545,7 @@ public class EPUB2 {
 			throw new IOException("Could not create working folder in "
 					+ workingFolder.getAbsolutePath());
 		}
+		validate();
 	}
 
 	/**
@@ -887,8 +890,7 @@ public class EPUB2 {
 		// As we now have written the table of contents we must make sure it is
 		// in the manifest and referenced in the spine. We also want it to be
 		// the first element in the manifest.
-		Item item = addItem(TABLE_OF_CONTENTS_ID, null, ncxFile,
-				opfSpine.getToc(),
+		Item item = addItem(opfSpine.getToc(), null, ncxFile, null,
 				"application/x-dtbncx+xml", false, false);
 		opfPackage.getManifest().getItems().move(0, item);
 	}
