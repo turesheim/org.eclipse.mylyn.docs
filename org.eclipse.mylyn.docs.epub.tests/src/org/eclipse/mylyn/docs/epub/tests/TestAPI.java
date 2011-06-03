@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Locale;
 import java.util.UUID;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -118,7 +119,34 @@ public class TestAPI {
 	}
 
 	/**
-	 * See if all reference types are serialised properly.
+	 * Tests node attributes.
+	 * 
+	 * @param node
+	 *            the node to test
+	 * @param ids
+	 *            expected identifiers
+	 * @param values
+	 *            expected values
+	 */
+	private void testAttributes(Node node, String[] ids, String[] values) {
+		Assert.assertEquals(ids.length, values.length);
+		Assert.assertEquals(
+				"Wrong number of attributes in '" + node.getNodeName() + "'",
+				ids.length, node.getAttributes().getLength());
+		for (int x = 0; x < ids.length; x++) {
+			Assert.assertEquals("No such node '" + ids[x] + "'", true,
+					node.getAttributes().getNamedItem(ids[x]) != null);
+			Assert.assertEquals(values[x],
+					node.getAttributes().getNamedItem(ids[x]).getNodeValue());
+		}
+	}
+
+	/**
+	 * See if all references are serialised properly.
+	 * <ul>
+	 * <li>Wrong number of attributes due to EMF default value handling.</li>
+	 * <li>Unexpected attribute names and or values</li>
+	 * </ul>
 	 * 
 	 * @throws Exception
 	 */
@@ -133,6 +161,7 @@ public class TestAPI {
 		Element doc = readOPF();
 		Node guide = doc.getElementsByTagName("opf:guide").item(0);
 		Node ref = guide.getFirstChild(); // Discard first TEXT node
+		String[] ids = new String[] { "title", "href", "type" };
 		for (Type type : types) {
 			ref = ref.getNextSibling();
 			// The should be exactly three attributes
@@ -140,19 +169,46 @@ public class TestAPI {
 					"Wrong number of attributes in '" + type.getLiteral() + "'",
 					3,
 					ref.getAttributes().getLength());
-			Assert.assertEquals(type.getName(), ref.getAttributes()
-					.getNamedItem("title").getNodeValue());
-			Assert.assertEquals(type.getLiteral() + ".xhtml", ref
-					.getAttributes().getNamedItem("href").getNodeValue());
-			Assert.assertEquals(type.getLiteral(), ref.getAttributes()
-					.getNamedItem("type").getNodeValue());
+			String[] values = new String[] { type.getName(),
+					type.getLiteral() + ".xhtml", type.getLiteral() };
+			testAttributes(ref, ids, values);
 			ref = ref.getNextSibling();
-			doc = null;
 		}
-
+		doc = null;
 	}
 
-
+	/**
+	 * See if all contributors are serialised properly.
+	 * <ul>
+	 * <li>Wrong number of attributes due to EMF default value handling.</li>
+	 * <li>Unexpected attribute names and or values</li>
+	 * </ul>
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testSerializationContributors() throws Exception {
+		Role[] roles = Role.values();
+		for (Role role : roles) {
+			epub.addContributor(role.getLiteral(), Locale.ENGLISH,
+					"Nomen Nescio", role, "Nescio, Nomen");
+		}
+		epub.assemble(workingFolder);
+		Element doc = readOPF();
+		Node guide = doc.getElementsByTagName("opf:metadata").item(0);
+		Node node = guide.getFirstChild(); // Discard first TEXT node
+		String[] ids = new String[] { "id", "xml:lang", "opf:role",
+				"opf:file-as" };
+		for (Role role : roles) {
+			node = node.getNextSibling();
+			String[] values = new String[] { role.getLiteral(),
+					Locale.ENGLISH.getLanguage(),
+					role.getLiteral(), "Nescio, Nomen" };
+			Assert.assertEquals("dc:contributor", node.getNodeName());
+			testAttributes(node, ids, values);
+			node = node.getNextSibling();
+		}
+	}
 
 	// @Test
 	public void testEPUB() throws Exception {
