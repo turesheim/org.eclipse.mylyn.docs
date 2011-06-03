@@ -16,7 +16,7 @@ import java.util.Locale;
 /**
  * @ant.type name="item" category="epub"
  */
-public class Item {
+public class ItemType {
 
 	String dest;
 	File file;

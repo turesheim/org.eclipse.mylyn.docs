@@ -3,7 +3,7 @@ package org.eclipse.mylyn.docs.epub.ant;
 /**
  * @ant.type name="language" category="epub"
  */
-public class Language {
+public class LanguageType {
 	String code;
 	String id;
 

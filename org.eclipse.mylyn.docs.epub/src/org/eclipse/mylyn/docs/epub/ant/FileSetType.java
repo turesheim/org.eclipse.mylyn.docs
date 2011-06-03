@@ -5,7 +5,7 @@ import java.util.Locale;
 /**
  * @ant.type name="fileset" category="epub"
  */
-public class FileSet extends org.apache.tools.ant.types.FileSet {
+public class FileSetType extends org.apache.tools.ant.types.FileSet {
 
 	String dest;
 

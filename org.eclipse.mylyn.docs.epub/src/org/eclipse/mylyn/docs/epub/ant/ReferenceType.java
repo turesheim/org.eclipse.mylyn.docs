@@ -3,7 +3,7 @@ package org.eclipse.mylyn.docs.epub.ant;
 /**
  * @ant.type name="reference" category="epub"
  */
-public class Reference {
+public class ReferenceType {
 
 	String href;
 	String title;

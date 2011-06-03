@@ -15,7 +15,7 @@ import java.util.Locale;
 /**
  * @ant.type name="creator" category="epub"
  */
-public class Creator {
+public class CreatorType {
 
 	String fileAs;
 	String id;

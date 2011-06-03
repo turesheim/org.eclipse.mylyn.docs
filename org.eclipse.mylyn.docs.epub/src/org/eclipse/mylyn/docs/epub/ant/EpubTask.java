@@ -30,17 +30,17 @@ import org.xml.sax.SAXException;
  * @author Torkild U. Resheim
  * @ant.task name="html-to-epub" category="control"
  */
-public class HtmlToEpubTask extends Task {
+public class EpubTask extends Task {
 
 	EPUB2 epub = new EPUB2();
-	Toc toc = null;
+	TocType toc = null;
 
 	private File workingFolder;
 
-	public HtmlToEpubTask() {
+	public EpubTask() {
 	}
 
-	public void addConfiguredContributor(Contributor item) {
+	public void addConfiguredContributor(ContributorType item) {
 		if (item.role == null) {
 			epub.addContributor(item.id, item.lang, item.name, null,
 					item.fileAs);
@@ -50,7 +50,7 @@ public class HtmlToEpubTask extends Task {
 		}
 	}
 
-	public void addConfiguredCreator(Creator item) {
+	public void addConfiguredCreator(CreatorType item) {
 		if (item.role == null) {
 			epub.addCreator(item.id, item.lang, item.name, null, item.fileAs);
 		} else {
@@ -59,7 +59,7 @@ public class HtmlToEpubTask extends Task {
 		}
 	}
 
-	public void addConfiguredDate(Date item) {
+	public void addConfiguredDate(DateType item) {
 		epub.addDate(item.id, item.date, item.event);
 	}
 
@@ -69,7 +69,7 @@ public class HtmlToEpubTask extends Task {
 	 * 
 	 * @param set
 	 */
-	public void addConfiguredFileSet(FileSet fs) {
+	public void addConfiguredFileSet(FileSetType fs) {
 		DirectoryScanner ds = fs.getDirectoryScanner(getProject()); // 3
 		String[] includedFiles = ds.getIncludedFiles();
 		for (int i = 0; i < includedFiles.length; i++) {
@@ -84,7 +84,7 @@ public class HtmlToEpubTask extends Task {
 	/**
 	 * @ant.required
 	 */
-	public void addConfiguredIdentifier(Identifier identifier) {
+	public void addConfiguredIdentifier(IdentifierType identifier) {
 		epub.addIdentifier(identifier.id, Scheme.getByName(identifier.scheme),
 				identifier.value);
 	}
@@ -92,7 +92,7 @@ public class HtmlToEpubTask extends Task {
 	/**
 	 * @ant.required
 	 */
-	public void addConfiguredItem(Item item) {
+	public void addConfiguredItem(ItemType item) {
 		epub.addItem(item.id, item.lang, item.file, item.dest, item.type,
 				item.spine, item.noToc);
 	}
@@ -100,31 +100,31 @@ public class HtmlToEpubTask extends Task {
 	/**
 	 * @ant.required
 	 */
-	public void addConfiguredLanguage(Language language) {
+	public void addConfiguredLanguage(LanguageType language) {
 		epub.addLanguage(language.id, language.code);
 	}
 
-	public void addConfiguredPublisher(Publisher publisher) {
+	public void addConfiguredPublisher(PublisherType publisher) {
 		epub.addPublisher(publisher.id, publisher.lang, publisher.text);
 	}
 
-	public void addConfiguredReference(Reference reference) {
+	public void addConfiguredReference(ReferenceType reference) {
 		epub.addReference(reference.href, reference.title,
 				Type.get(reference.type));
 	}
 
-	public void addConfiguredSubject(Subject subject) {
+	public void addConfiguredSubject(SubjectType subject) {
 		epub.addSubject(subject.id, subject.lang, subject.text);
 	}
 
 	/**
 	 * @ant.required
 	 */
-	public void addConfiguredTitle(Title title) {
+	public void addConfiguredTitle(TitleType title) {
 		epub.addTitle(title.id, title.lang, title.text);
 	}
 
-	public void addConfiguredToc(Toc toc) {
+	public void addConfiguredToc(TocType toc) {
 		if (this.toc != null) {
 			throw new BuildException(
 					"Only one table of contents (toc) declaration is allowed.");
@@ -132,19 +132,19 @@ public class HtmlToEpubTask extends Task {
 		this.toc = toc;
 	}
 
-	public void addConfiguredType(org.eclipse.mylyn.docs.epub.ant.Type type) {
+	public void addConfiguredType(org.eclipse.mylyn.docs.epub.ant.TypeType type) {
 		epub.addType(type.id, type.text);
 	}
 
-	public void addConfiguredFormat(Format format) {
+	public void addConfiguredFormat(FormatType format) {
 		epub.addFormat(format.id, format.text);
 	}
 
-	public void addConfiguredSource(Source source) {
+	public void addConfiguredSource(SourceType source) {
 		epub.setSource(source.id, source.lang, source.text);
 	}
 
-	public void addConfiguredRights(Rights rights) {
+	public void addConfiguredRights(RightsType rights) {
 		epub.setRights(rights.id, rights.lang, rights.text);
 	}
 

@@ -15,7 +15,7 @@ import java.util.Locale;
 /**
  * @ant.type name="subject" category="epub"
  */
-public class Subject {
+public class SubjectType {
 
 	String id;
 	Locale lang;

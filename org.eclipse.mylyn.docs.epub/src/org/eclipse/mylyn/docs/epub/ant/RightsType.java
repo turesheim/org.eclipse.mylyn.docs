@@ -8,36 +8,38 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.mylyn.docs.epub.ant;
 
+import java.util.Locale;
+
 /**
- * @ant.type name="identifier" category="epub"
+ * @ant.type name="rights" category="epub"
  */
-public class Identifier {
+public class RightsType {
 
 	String id;
-	String scheme;
-	String value;
+	Locale lang;
+	String text;
 
 	/**
 	 * @ant.required
 	 */
-	public void addText(String value) {
-		this.value = value;
+	public void addText(String text) {
+		this.text = text;
 	}
-
+	
 	/**
-	 * @ant.required
+	 * @ant.not-required
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * @ant.required
+	 * @ant.not-required
 	 */
-	public void setScheme(String scheme) {
-		this.scheme = scheme;
+	public void setLang(Locale lang) {
+		this.lang = lang;
 	}
+
 }

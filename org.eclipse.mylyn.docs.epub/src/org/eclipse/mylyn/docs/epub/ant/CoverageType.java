@@ -13,17 +13,13 @@ package org.eclipse.mylyn.docs.epub.ant;
 import java.util.Locale;
 
 /**
- * @ant.type name="title" category="epub"
+ * @ant.type name="coverage" category="epub"
  */
-public class Title {
+public class CoverageType {
 
+	String id;
 	String text;
 	Locale lang;
-	String id;
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	/**
 	 * @ant.required
@@ -35,8 +31,14 @@ public class Title {
 	/**
 	 * @ant.not-required
 	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @ant.not-required
+	 */
 	public void setLang(Locale lang) {
 		this.lang = lang;
 	}
-
 }

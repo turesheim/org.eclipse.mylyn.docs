@@ -10,26 +10,21 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.ant;
 
-import java.util.Locale;
-
 /**
- * @ant.type name="contributor" category="epub"
+ * @ant.type name="format" category="epub"
  */
-public class Contributor {
+public class FormatType {
 
-	String fileAs;
 	String id;
-	Locale lang;
-	String name;
-	String role;
+	String text;
 
 	/**
-	 * @ant.not-required
+	 * @ant.required
 	 */
-	public void setFileAs(String fileAs) {
-		this.fileAs = fileAs;
+	public void addText(String text) {
+		this.text = text;
 	}
-
+	
 	/**
 	 * @ant.not-required
 	 */
@@ -37,24 +32,4 @@ public class Contributor {
 		this.id = id;
 	}
 
-	/**
-	 * @ant.not-required the language code
-	 */
-	public void setLang(Locale lang) {
-		this.lang = lang;
-	}
-
-	/**
-	 * @ant.required name of the contributor
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @ant.not-required
-	 */
-	public void setRole(String role) {
-		this.role = role;
-	}
 }
