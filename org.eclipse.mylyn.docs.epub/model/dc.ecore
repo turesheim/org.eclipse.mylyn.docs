@@ -12,7 +12,8 @@
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="kind" value="mixed"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="ecore:EEnum opf.ecore#//Role">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="ecore:EEnum opf.ecore#//Role"
+        unsettable="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="namespace" value="http://www.idpf.org/2007/opf"/>
       </eAnnotations>
@@ -43,7 +44,8 @@
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="kind" value="mixed"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="ecore:EEnum opf.ecore#//Role">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" eType="ecore:EEnum opf.ecore#//Role"
+        defaultValueLiteral="" unsettable="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="namespace" value="http://www.idpf.org/2007/opf"/>
       </eAnnotations>
@@ -84,7 +86,8 @@
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         defaultValueLiteral="BookId"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="scheme" eType="ecore:EEnum opf.ecore#//Scheme">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="scheme" eType="ecore:EEnum opf.ecore#//Scheme"
+        unsettable="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="namespace" value="http://www.idpf.org/2007/opf"/>
       </eAnnotations>
