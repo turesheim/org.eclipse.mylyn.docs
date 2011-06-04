@@ -4,7 +4,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.mylyn.docs.epub/src-gen"
     modelPluginID="org.eclipse.mylyn.docs.epub" modelName="OPF-2.0.1" nonNLSMarkers="true"
     runtimeCompatibility="true" testsDirectory="/org.eclipse.mylyn.docs.epub.tests/src-gen"
-    importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0" copyrightFields="false"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
     publicConstructors="true" language="en" interfaceNamePattern="">
   <foreignModel>opf.ecore</foreignModel>
   <genPackages prefix="OPF" basePackage="org.eclipse.mylyn.docs.epub" resource="XML"
@@ -241,6 +241,25 @@
       <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Scheme/UUID"/>
       <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Scheme/URN"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="opf.ecore#//Type">
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Cover"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Title"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/TOC"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Index"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Glossary"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Acknowledgements"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Bibliography"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Colophon"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Copyright"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Dedication"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Epigraph"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Foreword"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Illustrations"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Tables"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Notes"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Preface"/>
+      <genEnumLiterals ecoreEnumLiteral="opf.ecore#//Type/Text"/>
+    </genEnums>
     <genClasses ecoreClass="opf.ecore#//Package">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Package/metadata"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Package/manifest"/>
@@ -278,8 +297,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/fallback_style"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/required_namespace"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/required_modules"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Item/Manifest"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/file"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/noToc"/>
     </genClasses>
     <genClasses ecoreClass="opf.ecore#//Spine">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Spine/spineItems"/>
@@ -301,70 +320,41 @@
   </genPackages>
   <genPackages prefix="DC" basePackage="org.eclipse.mylyn.docs.epub" resource="XML"
       disposableProviderFactory="true" ecorePackage="dc.ecore#/">
-    <genClasses ecoreClass="dc.ecore#//Title">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Title/lang"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Title/mixed"/>
-    </genClasses>
+    <genClasses ecoreClass="dc.ecore#//Title"/>
     <genClasses ecoreClass="dc.ecore#//Creator">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Creator/role"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Creator/fileAs"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Creator/lang"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Creator/mixed"/>
     </genClasses>
-    <genClasses ecoreClass="dc.ecore#//Subject">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Subject/lang"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Subject/mixed"/>
-    </genClasses>
-    <genClasses ecoreClass="dc.ecore#//Description">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Description/lang"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Description/mixed"/>
-    </genClasses>
-    <genClasses ecoreClass="dc.ecore#//Publisher">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Publisher/lang"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Publisher/mixed"/>
-    </genClasses>
+    <genClasses ecoreClass="dc.ecore#//Subject"/>
+    <genClasses ecoreClass="dc.ecore#//Description"/>
+    <genClasses ecoreClass="dc.ecore#//Publisher"/>
     <genClasses ecoreClass="dc.ecore#//Contributor">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Contributor/role"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Contributor/lang"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Contributor/mixed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Contributor/fileAs"/>
     </genClasses>
     <genClasses ecoreClass="dc.ecore#//Date">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Date/event"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Date/mixed"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Date/type"/>
     </genClasses>
-    <genClasses ecoreClass="dc.ecore#//Type">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Type/type"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Type/mixed"/>
-    </genClasses>
-    <genClasses ecoreClass="dc.ecore#//Format">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Format/type"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Format/mixed"/>
-    </genClasses>
+    <genClasses ecoreClass="dc.ecore#//Type"/>
+    <genClasses ecoreClass="dc.ecore#//Format"/>
     <genClasses ecoreClass="dc.ecore#//Identifier">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Identifier/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Identifier/scheme"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Identifier/mixed"/>
     </genClasses>
-    <genClasses ecoreClass="dc.ecore#//Source">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Source/lang"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Source/mixed"/>
-    </genClasses>
+    <genClasses ecoreClass="dc.ecore#//Source"/>
     <genClasses ecoreClass="dc.ecore#//Language">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Language/type"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Language/mixed"/>
     </genClasses>
-    <genClasses ecoreClass="dc.ecore#//Relation">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Relation/lang"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Relation/mixed"/>
+    <genClasses ecoreClass="dc.ecore#//Relation"/>
+    <genClasses ecoreClass="dc.ecore#//Coverage"/>
+    <genClasses ecoreClass="dc.ecore#//Rights"/>
+    <genClasses image="false" ecoreClass="dc.ecore#//DCType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//DCType/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//DCType/mixed"/>
     </genClasses>
-    <genClasses ecoreClass="dc.ecore#//Coverage">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Coverage/lang"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Coverage/mixed"/>
-    </genClasses>
-    <genClasses ecoreClass="dc.ecore#//Rights">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//Rights/lang"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute dc.ecore#//Rights/mixed"/>
+    <genClasses image="false" ecoreClass="dc.ecore#//LocalizedDCType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dc.ecore#//LocalizedDCType/lang"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
