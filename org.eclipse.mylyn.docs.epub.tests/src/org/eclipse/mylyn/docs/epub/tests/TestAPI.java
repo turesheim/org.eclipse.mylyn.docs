@@ -30,11 +30,17 @@ import com.adobe.epubcheck.api.EpubCheck;
 
 public class TestAPI {
 	private EPUB2 epub;
-	private File workingFolder;
 	private File epubFile;
+	private File workingFolder;
 
-	private File getFile(String path) throws URISyntaxException {
-		return new File(path);
+	private void delete(File f) throws IOException {
+		if (f.isDirectory()) {
+			for (File c : f.listFiles())
+				delete(c);
+		}
+
+		if (f.exists() && !f.delete())
+			throw new FileNotFoundException("Failed to delete file: " + f);
 	}
 
 	private boolean fileExists(String filename) {
@@ -44,14 +50,21 @@ public class TestAPI {
 		return file.exists();
 	}
 
-	void delete(File f) throws IOException {
-		if (f.isDirectory()) {
-			for (File c : f.listFiles())
-				delete(c);
-		}
+	private File getFile(String path) throws URISyntaxException {
+		return new File(path);
+	}
 
-		if (f.exists() && !f.delete())
-			throw new FileNotFoundException("Failed to delete file: " + f);
+	private Element readOPF() throws ParserConfigurationException,
+			SAXException, IOException {
+		File fXmlFile = new File(workingFolder.getAbsolutePath()
+				+ File.separator + "OEBPS" + File.separator + "content.opf");
+		Assert.assertEquals(true, fXmlFile.exists());
+		System.out.println(fXmlFile);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(fXmlFile);
+		doc.getDocumentElement().normalize();
+		return doc.getDocumentElement();
 	}
 
 	@Before
@@ -69,22 +82,137 @@ public class TestAPI {
 
 	}
 
-	private Element readOPF() throws ParserConfigurationException,
-			SAXException, IOException {
-		File fXmlFile = new File(workingFolder.getAbsolutePath()
-				+ File.separator + "OEBPS" + File.separator + "content.opf");
-		Assert.assertEquals(true, fXmlFile.exists());
-		System.out.println(fXmlFile);
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		Document doc = dBuilder.parse(fXmlFile);
-		doc.getDocumentElement().normalize();
-		return doc.getDocumentElement();
+	/**
+	 * Tests node attributes.
+	 * 
+	 * @param node
+	 *            the node to test
+	 * @param ids
+	 *            expected identifiers
+	 * @param values
+	 *            expected values
+	 */
+	private void testAttributes(Node node, String[] ids, String[] values) {
+		Assert.assertEquals(ids.length, values.length);
+		Assert.assertEquals(
+				"Wrong number of attributes in '" + node.getNodeName() + "'",
+				ids.length, node.getAttributes().getLength());
+		for (int x = 0; x < ids.length; x++) {
+			Assert.assertEquals("No such node '" + ids[x] + "'", true,
+					node.getAttributes().getNamedItem(ids[x]) != null);
+			Assert.assertEquals(values[x],
+					node.getAttributes().getNamedItem(ids[x]).getNodeValue());
+		}
+	}
+
+	// @Test
+	public void testEPUB() throws Exception {
+		epub.setIdentifierId("uuid");
+		epub.addLanguage(null, "en");
+		epub.addDate(null, "1916", "original-publication");
+		epub.addTitle(null, null, "Alice in Wonderland");
+		epub.addSubject(null, null, "Young Readers");
+		epub.addSubject(null, null, "Fantasy");
+		epub.setSource(null, null, "Project Gutenberg");
+		epub.addCreator(null, null, "Lewis Carroll", Role.AUTHOR,
+				"Carroll, Lewis");
+		epub.addItem(getFile("alice-in-wonderland/chapter-001.xhtml"));
+		epub.addItem(getFile("alice-in-wonderland/chapter-002.xhtml"));
+		epub.addItem(getFile("alice-in-wonderland/chapter-003.xhtml"));
+		epub.addItem(getFile("alice-in-wonderland/chapter-004.xhtml"));
+		epub.addItem(getFile("alice-in-wonderland/chapter-005.xhtml"));
+		epub.addItem(getFile("alice-in-wonderland/chapter-006.xhtml"));
+		epub.addItem(getFile("alice-in-wonderland/chapter-007.xhtml"));
+		epub.addItem(getFile("alice-in-wonderland/chapter-008.xhtml"));
+		epub.addItem(getFile("alice-in-wonderland/chapter-009.xhtml"));
+		epub.addItem(getFile("alice-in-wonderland/chapter-010.xhtml"));
+		epub.addReference("title.xhtml", "Cover Page", Type.COVER);
+		epub.addIdentifier("uuid", Scheme.UUID, UUID.randomUUID().toString());
+		epub.setGenerateToc(true);
+		epub.assemble(workingFolder);
+		EpubCheck checker = new EpubCheck(epubFile);
+		Assert.assertTrue(checker.validate());
+	}
+
+	/**
+	 * See if all contributors are serialised properly.
+	 * <ul>
+	 * <li>Wrong number of attributes due to EMF default value handling.</li>
+	 * <li>Unexpected attribute names and or values.</li>
+	 * <li>Wrong element value.</li>
+	 * </ul>
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testSerializationContributors() throws Exception {
+		Role[] roles = Role.values();
+		for (Role role : roles) {
+			epub.addContributor(role.getLiteral(), Locale.ENGLISH,
+					"Nomen Nescio", role, "Nescio, Nomen");
+		}
+		epub.assemble(workingFolder);
+		Element doc = readOPF();
+		Node guide = doc.getElementsByTagName("opf:metadata").item(0);
+		Node node = guide.getFirstChild(); // Discard first TEXT node
+		String[] ids = new String[] { "id", "xml:lang", "opf:role",
+				"opf:file-as" };
+		for (Role role : roles) {
+			node = node.getNextSibling();
+			String[] values = new String[] { role.getLiteral(),
+					Locale.ENGLISH.getLanguage(),
+					role.getLiteral(), "Nescio, Nomen" };
+			Assert.assertEquals("dc:contributor", node.getNodeName());
+			Assert.assertEquals("Nomen Nescio", node.getFirstChild()
+					.getNodeValue());
+			testAttributes(node, ids, values);
+			node = node.getNextSibling(); // Discard next TEXT node
+		}
+	}
+
+	/**
+	 * See if all creators are serialised properly.
+	 * <ul>
+	 * <li>Wrong number of attributes due to EMF default value handling.</li>
+	 * <li>Unexpected attribute names and or values.</li>
+	 * <li>Wrong element value.</li>
+	 * </ul>
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testSerializationCreators() throws Exception {
+		Role[] roles = Role.values();
+		for (Role role : roles) {
+			epub.addCreator(role.getLiteral(), Locale.ENGLISH,
+					"Nomen Nescio", role, "Nescio, Nomen");
+		}
+		epub.assemble(workingFolder);
+		Element doc = readOPF();
+		Node guide = doc.getElementsByTagName("opf:metadata").item(0);
+		Node node = guide.getFirstChild(); // Discard first TEXT node
+		String[] ids = new String[] { "id", "xml:lang", "opf:role",
+				"opf:file-as" };
+		for (Role role : roles) {
+			node = node.getNextSibling();
+			String[] values = new String[] { role.getLiteral(),
+					Locale.ENGLISH.getLanguage(), role.getLiteral(),
+					"Nescio, Nomen" };
+			Assert.assertEquals("dc:creator", node.getNodeName());
+			Assert.assertEquals("Nomen Nescio", node.getFirstChild()
+					.getNodeValue());
+			testAttributes(node, ids, values);
+			node = node.getNextSibling(); // Discard next TEXT node
+		}
 	}
 
 	/**
 	 * Checks the contents of the OPF when nothing has been added to the
 	 * publication.
+	 * <ul>
+	 * <li>There should be a table of contents</li>
+	 * <li>The metadata, manifest, spine and guide elements should exist.</li>
+	 * </ul>
 	 * 
 	 * @throws Exception
 	 */
@@ -116,29 +244,6 @@ public class TestAPI {
 		Assert.assertEquals("ncx", spine.getAttributes().getNamedItem("toc")
 				.getNodeValue());
 		doc = null;
-	}
-
-	/**
-	 * Tests node attributes.
-	 * 
-	 * @param node
-	 *            the node to test
-	 * @param ids
-	 *            expected identifiers
-	 * @param values
-	 *            expected values
-	 */
-	private void testAttributes(Node node, String[] ids, String[] values) {
-		Assert.assertEquals(ids.length, values.length);
-		Assert.assertEquals(
-				"Wrong number of attributes in '" + node.getNodeName() + "'",
-				ids.length, node.getAttributes().getLength());
-		for (int x = 0; x < ids.length; x++) {
-			Assert.assertEquals("No such node '" + ids[x] + "'", true,
-					node.getAttributes().getNamedItem(ids[x]) != null);
-			Assert.assertEquals(values[x],
-					node.getAttributes().getNamedItem(ids[x]).getNodeValue());
-		}
 	}
 
 	/**
@@ -175,68 +280,6 @@ public class TestAPI {
 			ref = ref.getNextSibling();
 		}
 		doc = null;
-	}
-
-	/**
-	 * See if all contributors are serialised properly.
-	 * <ul>
-	 * <li>Wrong number of attributes due to EMF default value handling.</li>
-	 * <li>Unexpected attribute names and or values</li>
-	 * </ul>
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testSerializationContributors() throws Exception {
-		Role[] roles = Role.values();
-		for (Role role : roles) {
-			epub.addContributor(role.getLiteral(), Locale.ENGLISH,
-					"Nomen Nescio", role, "Nescio, Nomen");
-		}
-		epub.assemble(workingFolder);
-		Element doc = readOPF();
-		Node guide = doc.getElementsByTagName("opf:metadata").item(0);
-		Node node = guide.getFirstChild(); // Discard first TEXT node
-		String[] ids = new String[] { "id", "xml:lang", "opf:role",
-				"opf:file-as" };
-		for (Role role : roles) {
-			node = node.getNextSibling();
-			String[] values = new String[] { role.getLiteral(),
-					Locale.ENGLISH.getLanguage(),
-					role.getLiteral(), "Nescio, Nomen" };
-			Assert.assertEquals("dc:contributor", node.getNodeName());
-			testAttributes(node, ids, values);
-			node = node.getNextSibling();
-		}
-	}
-
-	// @Test
-	public void testEPUB() throws Exception {
-		epub.setIdentifierId("uuid");
-		epub.addLanguage(null, "en");
-		epub.addDate(null, "1916", "original-publication");
-		epub.addTitle(null, null, "Alice in Wonderland");
-		epub.addSubject(null, null, "Young Readers");
-		epub.addSubject(null, null, "Fantasy");
-		epub.setSource(null, null, "Project Gutenberg");
-		epub.addCreator(null, null, "Lewis Carroll", Role.AUTHOR,
-				"Carroll, Lewis");
-		epub.addItem(getFile("alice-in-wonderland/chapter-001.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-002.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-003.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-004.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-005.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-006.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-007.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-008.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-009.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-010.xhtml"));
-		epub.addReference("title.xhtml", "Cover Page", Type.COVER);
-		epub.addIdentifier("uuid", Scheme.UUID, UUID.randomUUID().toString());
-		epub.setGenerateToc(true);
-		epub.assemble(workingFolder);
-		EpubCheck checker = new EpubCheck(epubFile);
-		Assert.assertTrue(checker.validate());
 	}
 
 }
