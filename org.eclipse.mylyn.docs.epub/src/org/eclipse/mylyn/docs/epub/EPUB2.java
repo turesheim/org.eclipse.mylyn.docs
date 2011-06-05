@@ -95,10 +95,14 @@ import org.xml.sax.SAXException;
  * This type represents one EPUB revision 2.0.1 formatted publication. It
  * maintains a data structure representing the entire publication and API for
  * building it.
+ * <p>
+ * Please note that this API is provisional and should not yet be used to build
+ * applications.
+ * </p>
  * 
  * @author Torkild U. Resheim
  */
-public class EPUB2 {
+public final class EPUB2 {
 
 	private static final String DEFAULT_MIMETYPE = "application/xhtml+xml";
 
