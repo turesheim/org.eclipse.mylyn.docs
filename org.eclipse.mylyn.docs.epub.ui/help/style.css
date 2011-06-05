@@ -1,57 +1,49 @@
-/*
- * #2c1f19 blackish
- * #6c4e50 reddish brown
- * #7c755b green sand
- * #96886d brown
- * #557c81 blue
- */
+/*******************************************************************************
+ * Copyright (c) 2011 Torkild U. Resheim.
+ * 
+ * All rights reserved. This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Torkild U. Resheim - initial API and implementation
+ *******************************************************************************/
+
 @page {
   margin-left: 0px;
   margin-right: 0px;
 }
 
 p {
-  text-align: justify; line-height: 1.5em;
-}
-
-em {
-  font-style: italic;
-}
-
-strong {
-  font-weight: bold;
-}
-
-strong em, em strong, h1 em, h2 em, h3 em, h4 em {
-  font-weight: bold;
-  font-style: italic;
+  text-align: justify; 
+  line-height: 1.5em;
 }
 
 code strong em, code em strong {
   font-weight: bold;
   font-style: italic;
   font-family: "DejaVu Sans Mono Bold Oblique", monospace;
-  color: #410080;
+  color: #2a3f58;
   font-size: 0.8em;
 }
 
 code em, em code, pre em {
   font-style: italic;
   font-family: "DejaVu Sans Mono Oblique", monospace;
-  color: #410080;
+  color: #2a3f58;
   font-size: 0.8em;
 }
 
 code strong, strong code, pre strong {
   font-weight: bold;
   font-family: "DejaVu Sans Mono Bold", monospace;
-  color: #410080;
+  color: #2a3f58;
   font-size: 0.8em;
 }
 
 code { 
   font-family: "DejaVu Sans Mono", monospace;
-  color: #410080;
+  color: #2a3f58;
   font-size: 0.8em;
 }
 
@@ -59,22 +51,33 @@ code {
  * TABLES
  */
 table, td, th {
-  border-color: #3a2e2e; /* nearly black */ 
+  border-color: #d5d399; 
   border-style: solid;
 }
 
 table {
+  width: 100%;
   border-width: 0 0 1px 1px; 
   border-spacing: 0; 
   border-collapse: collapse;
 }
 
-td,th {
+td, th {
   margin: 0; 
   padding: 4px; 
   border-width: 1px 1px 0 0; 
-  background-color: #d9c497; /* sand */
   font-size: 0.9em;
+}
+
+th {
+  background-color: #e4e3bd;
+  font-family: "Helvetica", sans-serif;
+  font-weight: bold;
+}
+
+td {
+  background-color: #f3f2e1;
+  font-family: "Helvetica", sans-serif;
 }
 
 .logo {
@@ -86,11 +89,14 @@ td,th {
   font-size: 2em; 
   text-align: center;
   border-bottom: 1px black solid; 
-  text-transform: uppercase;
+  font-family: "Palatino", serif;
+  font-weight: bold;
 }
 
 .author, .copyright {
   font-size: 1em; color: #7c755b;
+  font-family: "Palatino", serif;
+  font-weight: bold;
   text-align: center;
 }
 
@@ -103,45 +109,55 @@ h1, h2, h3, h4, h5, h6 {
   page-break-after: avoid;
   font-weight: bold;
   display: block;
-  color: #5a272c; /* dark brown */
 }
 
 h1 {
-  font-size: 1.5em;
-  border-top: 1px #8a7476 solid;
+  font-size: 1.7em;
   text-align: center;
-  border-bottom: 1px #8a7476 solid;
+  border-top: 1px #000000 solid;
+  border-bottom: 1px #000000 solid;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  margin-bottom: 1.5em;
+  font-family: "Palatino", serif;
+  font-weight: bold;
 }
 
 h2 {
-  font-size: 1.3em;
+  font-size: 1.5em;
+  font-family: "Palatino", serif;
+  font-weight: bold;
 }
 
 h3 {
-  font-size: 1.1em;
+  font-size: 1.3em;
+  font-family: "Palatino", serif;
+  font-weight: bold;
 }
 
 h4 {
-  font-size: 1em;
+  font-size: 1.2em;
   font-style: italic;
+  font-family: "Palatino", serif;
+  font-weight: bold;
 }
 
 h5 {
   font-size: 1em;
   font-style: italic;
+  font-family: "Palatino", serif;
 }
 
 h6 {
   font-size: 1em;
   font-style: italic;
+  font-family: "Palatino", serif;
 }
 
 /* 
  * fonts (keep at bottom); using DejaVu for its rich set of glyphs (and being
  * free for use)
  */
-
-
 @font-face {
   font-family: "DejaVu Sans Mono";
   font-weight: normal;
@@ -175,4 +191,5 @@ body {
   margin: 0;
   padding: 0;
   text-align: left;
+  font-family: "Palatino"
 }
