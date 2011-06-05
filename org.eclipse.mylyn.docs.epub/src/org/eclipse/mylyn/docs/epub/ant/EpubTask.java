@@ -59,6 +59,10 @@ public class EpubTask extends Task {
 		epub.addDate(item.id, item.date, item.event);
 	}
 
+	public void addConfiguredMeta(MetaType item) {
+		epub.addMeta(item.name, item.content);
+	}
+
 	/**
 	 * The FileSet sub-element is used to add EPUB artifacts that are not a part
 	 * of the main text. This can be graphical items and styling (CSS).

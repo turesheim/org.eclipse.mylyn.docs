@@ -151,6 +151,12 @@
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metas" upperBound="-1"
+        eType="#//Meta" containment="true">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="meta"/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Manifest">
     <eStructuralFeatures xsi:type="ecore:EReference" name="items" lowerBound="1" upperBound="-1"
@@ -478,5 +484,10 @@
     <eLiterals name="Notes" value="15" literal="notes"/>
     <eLiterals name="Preface" value="16" literal="preface"/>
     <eLiterals name="Text" value="17" literal="text"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Meta">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -285,6 +285,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/relation"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/coverage"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/rights"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/metas"/>
     </genClasses>
     <genClasses ecoreClass="opf.ecore#//Manifest">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Manifest/items"/>
@@ -317,6 +318,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Itemref/linear"/>
     </genClasses>
     <genClasses ecoreClass="opf.ecore#//Tours"/>
+    <genClasses ecoreClass="opf.ecore#//Meta">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Meta/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Meta/content"/>
+    </genClasses>
   </genPackages>
   <genPackages prefix="DC" basePackage="org.eclipse.mylyn.docs.epub" resource="XML"
       disposableProviderFactory="true" ecorePackage="dc.ecore#/">

@@ -418,6 +418,14 @@ public final class EPUB2 {
 		return dc;
 	}
 
+	public org.eclipse.mylyn.docs.epub.opf.Meta addMeta(String name, String content) {
+		org.eclipse.mylyn.docs.epub.opf.Meta opf = OPFFactory.eINSTANCE.createMeta();
+		opf.setName(name);
+		opf.setContent(content);
+		opfMetadata.getMetas().add(opf);
+		return opf;
+	}
+
 	/**
 	 * Adds a new publisher to the publication.
 	 * 
