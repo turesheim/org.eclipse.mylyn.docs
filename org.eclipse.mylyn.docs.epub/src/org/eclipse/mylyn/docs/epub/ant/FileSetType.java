@@ -11,6 +11,10 @@ public class FileSetType extends org.apache.tools.ant.types.FileSet {
 
 	Locale lang;
 
+	public FileSetType() {
+
+	}
+
 	public void setLocale(Locale lang) {
 		this.lang = lang;
 	}

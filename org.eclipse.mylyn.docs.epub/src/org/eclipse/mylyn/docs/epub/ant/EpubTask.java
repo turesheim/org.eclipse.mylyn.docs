@@ -11,10 +11,12 @@
 package org.eclipse.mylyn.docs.epub.ant;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.eclipse.mylyn.docs.epub.EPUB2;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Scheme;
@@ -26,14 +28,18 @@ import org.eclipse.mylyn.docs.epub.opf.Type;
  * @author Torkild U. Resheim
  * @ant.task name="html-to-epub" category="control"
  */
-public class EpubTask extends Task {
+public class EpubTask extends MatchingTask {
 
 	EPUB2 epub = new EPUB2();
-	TocType toc = null;
+	private final ArrayList<FileSetType> filesets;
+
+	private TocType toc = null;
 
 	private File workingFolder;
 
 	public EpubTask() {
+		super();
+		filesets = new ArrayList<FileSetType>();
 	}
 
 	public void addConfiguredContributor(ContributorType item) {
@@ -58,11 +64,7 @@ public class EpubTask extends Task {
 	public void addConfiguredDate(DateType item) {
 		epub.addDate(item.id, item.date, item.event);
 	}
-
-	public void addConfiguredMeta(MetaType item) {
-		epub.addMeta(item.name, item.content);
-	}
-
+	
 	/**
 	 * The FileSet sub-element is used to add EPUB artifacts that are not a part
 	 * of the main text. This can be graphical items and styling (CSS).
@@ -70,15 +72,11 @@ public class EpubTask extends Task {
 	 * @param set
 	 */
 	public void addConfiguredFileSet(FileSetType fs) {
-		DirectoryScanner ds = fs.getDirectoryScanner(getProject()); // 3
-		String[] includedFiles = ds.getIncludedFiles();
-		for (int i = 0; i < includedFiles.length; i++) {
-			String filename = includedFiles[i].replace('\\', '/'); // 4
-			filename = filename.substring(filename.lastIndexOf("/") + 1);
-			File base = ds.getBasedir(); // 5
-			File found = new File(base, includedFiles[i]);
-			epub.addItem(null, fs.lang, found, fs.dest, null, false, false);
-		}
+		filesets.add(fs);
+	}
+
+	public void addConfiguredFormat(FormatType format) {
+		epub.addFormat(format.id, format.text);
 	}
 
 	/**
@@ -104,6 +102,10 @@ public class EpubTask extends Task {
 		epub.addLanguage(language.id, language.code);
 	}
 
+	public void addConfiguredMeta(MetaType item) {
+		epub.addMeta(item.name, item.content);
+	}
+
 	public void addConfiguredPublisher(PublisherType publisher) {
 		epub.addPublisher(publisher.id, publisher.lang, publisher.text);
 	}
@@ -114,6 +116,14 @@ public class EpubTask extends Task {
 			throw new BuildException("Unknown reference type " + reference.type);
 		}
 		epub.addReference(reference.href, reference.title, type);
+	}
+
+	public void addConfiguredRights(RightsType rights) {
+		epub.setRights(rights.id, rights.lang, rights.text);
+	}
+
+	public void addConfiguredSource(SourceType source) {
+		epub.setSource(source.id, source.lang, source.text);
 	}
 
 	public void addConfiguredSubject(SubjectType subject) {
@@ -139,21 +149,49 @@ public class EpubTask extends Task {
 		epub.addType(type.id, type.text);
 	}
 
-	public void addConfiguredFormat(FormatType format) {
-		epub.addFormat(format.id, format.text);
+	private void addFilesets(){
+		for (FileSetType fs : filesets) {
+			if (fs.getProject() == null) {
+				log("Deleting fileset with no project specified;"
+						+ " assuming executing project", Project.MSG_VERBOSE);
+				fs = (FileSetType) fs.clone();
+				fs.setProject(getProject());
+			}
+			final File fsDir = fs.getDir();
+			if (!fs.getErrorOnMissingDir()
+					&& (fsDir == null || !fsDir.exists())) {
+				continue;
+			}
+			if (fsDir == null) {
+				throw new BuildException(
+						"File or Resource without directory or file specified");
+			} else if (!fsDir.isDirectory()) {
+				throw new BuildException("Directory does not exist:" + fsDir);
+			}
+			DirectoryScanner ds = fs.getDirectoryScanner();
+			String[] includedFiles = ds.getIncludedFiles();
+			for (int i = 0; i < includedFiles.length; i++) {
+				String filename = includedFiles[i].replace('\\', '/');
+				filename = filename.substring(filename.lastIndexOf("/") + 1);
+				File base = ds.getBasedir();
+				File found = new File(base, includedFiles[i]);
+				epub.addItem(null, fs.lang, found, fs.dest, null, false, false);
+			}
+
+		}
+		
 	}
 
-	public void addConfiguredSource(SourceType source) {
-		epub.setSource(source.id, source.lang, source.text);
-	}
-
-	public void addConfiguredRights(RightsType rights) {
-		epub.setRights(rights.id, rights.lang, rights.text);
+	@Override
+	public void setProject(Project project) {
+		// TODO Auto-generated method stub
+		super.setProject(project);
 	}
 
 	@Override
 	public void execute() throws BuildException {
 		validate();
+		addFilesets();
 		if (toc != null) {
 			if (toc.generate) {
 				epub.setGenerateToc(true);
