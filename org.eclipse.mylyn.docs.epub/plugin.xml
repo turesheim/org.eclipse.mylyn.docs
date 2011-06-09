@@ -23,7 +23,7 @@
       <antTask
             class="org.eclipse.mylyn.docs.epub.ant.EpubTask"
             library="lib/epub-ant.jar"
-            name="html-to-epub">
+            name="epub">
       </antTask>
    </extension>
    <extension
