@@ -59,12 +59,18 @@ public class TOCGenerator extends DefaultHandler {
 	}
 
 	private int isHeader(String qName) {
-		if (qName.startsWith("h") && qName.length() == 2) {
-			String n = qName.substring(1);
-			int i = Integer.parseInt(n);
-			// Levels must be between 1 and 6
-			if (i > 0 && i < 7) {
-				return i;
+		if (qName.startsWith("h") || qName.startsWith("H")) {
+			if (qName.length() == 2 && !qName.equalsIgnoreCase("hr")) {
+				String n = qName.substring(1);
+				try {
+					int i = Integer.parseInt(n);
+					// Levels must be between 1 and 6
+					if (i > 0 && i < 7) {
+						return i;
+					}
+				} catch (NumberFormatException e) {
+					System.err.println("Bad header in " + currentHref);
+				}
 			}
 		}
 		return 0;
@@ -134,7 +140,12 @@ public class TOCGenerator extends DefaultHandler {
 				false);
 		SAXParser parser = factory.newSAXParser();
 		TOCGenerator tocGenerator = new TOCGenerator(href, ncx, playOrder);
-		parser.parse(file, tocGenerator);
+		try {
+			parser.parse(file, tocGenerator);
+		} catch (SAXException e) {
+			System.err.println("Could nto parse " + href);
+			e.printStackTrace();
+		}
 		return tocGenerator.getPlayOrder();
 	}
 
