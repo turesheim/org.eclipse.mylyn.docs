@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ePUB Support
+Bundle-Name: Mylyn Docs ePUB Support
 Bundle-SymbolicName: org.eclipse.mylyn.docs.epub;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Torkild U. Resheim
@@ -71,3 +71,4 @@ Export-Package: org.eclipse.mylyn.docs.epub;uses:="org.eclipse.mylyn.docs.epub.d
    org.eclipse.emf.ecore.util,
    org.eclipse.emf.ecore,
    org.eclipse.emf.common.notify.impl"
+Bundle-ClassPath: .
