@@ -53,8 +53,10 @@ public class TOCGenerator extends DefaultHandler {
 	@Override
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
+		// Some titles actually contain newlines – so we need to remove them.
 		if (recording) {
-			buffer.append(ch, start, length);
+			String s = new String(ch, start, length);
+			buffer.append(s.replace("\n", ""));
 		}
 	}
 
@@ -80,8 +82,9 @@ public class TOCGenerator extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		int level = isHeader(qName);
-		if (level > 0 && recording) {
-			NavPoint np = createNavPoint();
+		if (level > 0) {
+			recording = false;
+			NavPoint np = createNavPoint(buffer.toString());
 			NavPoint h = headers[level - 1];
 
 			while (level > 1 && h == null) {
@@ -98,18 +101,17 @@ public class TOCGenerator extends DefaultHandler {
 				ncx.getNavMap().getNavPoint().add(np);
 			}
 			headers[level] = np;
+			buffer.setLength(0);
 		}
-		buffer.setLength(0);
-		recording = false;
 	}
 
-	private NavPoint createNavPoint() {
+	private NavPoint createNavPoint(String title) {
 		NavPoint np = NCXFactory.eINSTANCE.createNavPoint();
 		NavLabel nl = NCXFactory.eINSTANCE.createNavLabel();
 		Content c = NCXFactory.eINSTANCE.createContent();
 		c.setSrc(currentId==null?currentHref:currentHref + "#" + currentId);
 		Text text = NCXFactory.eINSTANCE.createText();
-		FeatureMapUtil.addText(text.getMixed(), buffer.toString());
+		FeatureMapUtil.addText(text.getMixed(), title);
 		nl.setText(text);
 		np.getNavLabels().add(nl);
 		np.setPlayOrder(++playOrder);
@@ -126,7 +128,7 @@ public class TOCGenerator extends DefaultHandler {
 			if (attributes.getValue("id") != null) {
 				currentId = attributes.getValue("id");
 			} else {
-				currentId = null;
+				currentId = Integer.toString(getPlayOrder());
 			}
 		}
 	}
@@ -143,7 +145,7 @@ public class TOCGenerator extends DefaultHandler {
 		try {
 			parser.parse(file, tocGenerator);
 		} catch (SAXException e) {
-			System.err.println("Could nto parse " + href);
+			System.err.println("Could not parse " + href);
 			e.printStackTrace();
 		}
 		return tocGenerator.getPlayOrder();
