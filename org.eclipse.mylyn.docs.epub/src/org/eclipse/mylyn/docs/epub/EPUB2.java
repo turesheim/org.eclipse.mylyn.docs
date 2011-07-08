@@ -103,15 +103,20 @@ import org.xml.sax.SAXException;
  * @author Torkild U. Resheim
  */
 public final class EPUB2 {
+	// Rules of engagement:
+	// * Keep all data in the model, use "transient" for temporary variables
+	// * Do not create files before the final assemble
+
+	private static final String COVER_IMAGE_ID = "cover-image";
 
 	private static final String DEFAULT_MIMETYPE = "application/xhtml+xml";
 
 	/** Identifier of the table of contents file */
 	private static final String TABLE_OF_CONTENTS_ID = "ncx";
 
-	/** Whether or not a table of contents should be automatically generated */
-	private boolean generateToc;
-	final Ncx ncxTOC;
+	private static final String UTF_8 = "UTF-8";
+
+	private final Ncx ncxTOC;
 	private final Guide opfGuide;
 	private final Manifest opfManifest;
 	private final Metadata opfMetadata;
@@ -147,7 +152,7 @@ public final class EPUB2 {
 		opfPackage.setSpine(opfSpine);
 		registerOPFResourceFactory();
 		registerNCXResourceFactory();
-		generateToc = true;
+		opfPackage.setGenerateTableOfContents(true);
 	}
 
 	/**
@@ -157,6 +162,9 @@ public final class EPUB2 {
 	 * <li><i>Eclipse committers and contributors</i> as contributor redactor
 	 * role.</li>
 	 * <li>A unique identifier if none has been specified.</li>
+	 * <li>A empty description if none has been specified.</li>
+	 * <li>Language "English" if none has been specified.</li>
+	 * <li>A dummy title if none has been specified.</li>
 	 * </ul>
 	 */
 	private void addCompulsoryData() {
@@ -167,6 +175,18 @@ public final class EPUB2 {
 		if (getIdentifier() == null) {
 			addIdentifier("uuid", Scheme.UUID, UUID.randomUUID().toString());
 			setIdentifierId("uuid");
+		}
+		// Add empty subject
+		if (opfMetadata.getSubjects().isEmpty()) {
+			addSubject(null, null, "");
+		}
+		// Add empty language
+		if (opfMetadata.getLanguages().isEmpty()) {
+			addLanguage(null, Locale.ENGLISH.toString());
+		}
+		// Add dummy title
+		if (opfMetadata.getTitles().isEmpty()) {
+			addTitle(null, null, "No title specified");
 		}
 	}
 
@@ -321,13 +341,13 @@ public final class EPUB2 {
 	/**
 	 * Adds a new item to the manifest using default values for properties not
 	 * specified. Same as
-	 * <code>addItem(null, null, file, null, null, true, true);</code>.
+	 * <code>addItem(null, null, file, null, null, true, false);</code>.
 	 * 
 	 * @param file
 	 * @return
 	 */
 	public Item addItem(File file) {
-		return addItem(null, null, file, null, null, true, true);
+		return addItem(null, null, file, null, null, true, false);
 	}
 
 	/**
@@ -361,6 +381,10 @@ public final class EPUB2 {
 		if (file == null || !file.exists()) {
 			throw new IllegalArgumentException("\"file\" "
 					+ file.getAbsolutePath() + " must exist.");
+		}
+		if (file.isDirectory()) {
+			throw new IllegalArgumentException("\"file\" "
+					+ file.getAbsolutePath() + " must not be a directory.");
 		}
 		Item item = OPFFactory.eINSTANCE.createItem();
 		if (type == null) {
@@ -418,8 +442,10 @@ public final class EPUB2 {
 		return dc;
 	}
 
-	public org.eclipse.mylyn.docs.epub.opf.Meta addMeta(String name, String content) {
-		org.eclipse.mylyn.docs.epub.opf.Meta opf = OPFFactory.eINSTANCE.createMeta();
+	public org.eclipse.mylyn.docs.epub.opf.Meta addMeta(String name,
+			String content) {
+		org.eclipse.mylyn.docs.epub.opf.Meta opf = OPFFactory.eINSTANCE
+				.createMeta();
 		opf.setName(name);
 		opf.setContent(content);
 		opfMetadata.getMetas().add(opf);
@@ -535,6 +561,12 @@ public final class EPUB2 {
 		workingFolder.deleteOnExit();
 	}
 
+	/**
+	 * Assembles the EPUB file.
+	 * 
+	 * @param workingFolder
+	 * @throws Exception
+	 */
 	public void assemble(File workingFolder) throws Exception {
 		System.out.println("Assembling EPUB file in " + workingFolder);
 		addCompulsoryData();
@@ -546,6 +578,9 @@ public final class EPUB2 {
 					+ File.separator + "OEBPS");
 			if (oepbsFolder.mkdir()) {
 				copyContent(oepbsFolder);
+				if (opfPackage.isGenerateCoverHTML()) {
+					writeCoverHTML(oepbsFolder);
+				}
 				writeNCX(oepbsFolder);
 				writeOPF(oepbsFolder);
 			} else {
@@ -561,7 +596,8 @@ public final class EPUB2 {
 	}
 
 	/**
-	 * Copies all items part of the publication into the OEPBS folder.
+	 * Copies all items part of the publication into the OEPBS folder unless the
+	 * item in question will be generated.
 	 * 
 	 * @param oepbsFolder
 	 *            the folder to copy into.
@@ -570,10 +606,12 @@ public final class EPUB2 {
 	private void copyContent(File oepbsFolder) throws IOException {
 		EList<Item> items = opfManifest.getItems();
 		for (Item item : items) {
-			File source = new File(item.getFile());
-			File destination = new File(oepbsFolder.getAbsolutePath()
-					+ File.separator + item.getHref());
-			EPUBFileUtil.copy(source, destination);
+			if (!item.isGenerated()) {
+				File source = new File(item.getFile());
+				File destination = new File(oepbsFolder.getAbsolutePath()
+						+ File.separator + item.getHref());
+				EPUBFileUtil.copy(source, destination);
+			}
 		}
 	}
 
@@ -643,6 +681,16 @@ public final class EPUB2 {
 		return null;
 	}
 
+	private Item getItemById(String id) {
+		EList<Item> items = opfManifest.getItems();
+		for (Item item : items) {
+			if (item.getId().equals(id)) {
+				return item;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Attempts to figure out the MIME-type for the file.
 	 * 
@@ -674,7 +722,7 @@ public final class EPUB2 {
 		return mimeType;
 	}
 
-	public File getTocPath() {
+	public File getTocFile() {
 		return tocFile;
 	}
 
@@ -728,6 +776,17 @@ public final class EPUB2 {
 				});
 	}
 
+	public void setCover(File image, String title) {
+		// Add the cover image to the manifest
+		Item item = addItem(COVER_IMAGE_ID, null, image, null, null, false,
+				true);
+		item.setTitle(title);
+		// Point to the cover using a meta tag
+		addMeta("cover", COVER_IMAGE_ID);
+		opfPackage.setGenerateCoverHTML(true);
+
+	}
+
 	private void setDcCommon(DCType dc, String id, String value) {
 		FeatureMapUtil.addText(dc.getMixed(), value);
 		if (id != null) {
@@ -743,12 +802,12 @@ public final class EPUB2 {
 		}
 	}
 
-	public void setFile(String file) {
-		this.path = file;
+	public void setFile(File file) {
+		this.path = file.getAbsolutePath();
 	}
 
 	public void setGenerateToc(boolean generateToc) {
-		this.generateToc = generateToc;
+		opfPackage.setGenerateTableOfContents(generateToc);
 	}
 
 	public void setIdentifierId(String identifier_id) {
@@ -789,6 +848,12 @@ public final class EPUB2 {
 		return dc;
 	}
 
+	/**
+	 * Specifies the table of content file.
+	 * 
+	 * @param tocFile
+	 *            the file with the table of contents
+	 */
 	public void setTocFile(File tocFile) {
 		this.tocFile = tocFile;
 	}
@@ -864,6 +929,45 @@ public final class EPUB2 {
 	}
 
 	/**
+	 * 
+	 * @param oepbsFolder
+	 * @throws IOException
+	 * 
+	 */
+	private void writeCoverHTML(File oepbsFolder) throws IOException {
+		Item coverImage = getItemById(COVER_IMAGE_ID);
+		File coverFile = new File(oepbsFolder.getAbsolutePath()
+				+ File.separator + "cover-page.xhtml");
+		if (!coverFile.exists()) {
+			try {
+				FileWriter fw = new FileWriter(coverFile);
+				fw.append("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n");
+				fw.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n");
+				fw.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n");
+				fw.append("  <head>\n");
+				fw.append("    <title>${title}</title>\n");
+				fw.append("    <style type=\"text/css\"> img { max-width: 100%; }</style>\n");
+				fw.append("  </head>\n");
+				fw.append("  <body>\n");
+				fw.append("    <div id=\"" + coverImage.getTitle() + "\">\n");
+				fw.append("      <img src=\"" + coverImage.getHref()
+						+ "\" alt=\"" + coverImage.getTitle() + "\"/>\n");
+				fw.append("    </div>\n");
+				fw.append("  </body>\n");
+				fw.append("</html>\n");
+				fw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		// Add the cover page item
+		Item coverPage = addItem(null, null, coverFile, null, DEFAULT_MIMETYPE,
+				false, false);
+		coverPage.setGenerated(true);
+
+	}
+
+	/**
 	 * Writes the table of contents file in the specified folder
 	 * 
 	 * @param oepbsFolder
@@ -887,13 +991,13 @@ public final class EPUB2 {
 			Resource resource = resourceSet.createResource(fileURI);
 			// We've been asked to generate a table of contents using pages
 			// contained in the spine.
-			if (generateToc) {
+			if (opfPackage.isGenerateTableOfContents()) {
 				generateNCX();
 			}
 			resource.getContents().add(ncxTOC);
 			Map<String, Object> options = new HashMap<String, Object>();
 			// NCX requires that we encode using UTF-8
-			options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+			options.put(XMLResource.OPTION_ENCODING, UTF_8);
 			options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
 			resource.save(options);
 		} else {
@@ -926,7 +1030,7 @@ public final class EPUB2 {
 		resource.getContents().add(opfPackage);
 		Map<String, Object> options = new HashMap<String, Object>();
 		// OPF requires that we encode using UTF-8
-		options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+		options.put(XMLResource.OPTION_ENCODING, UTF_8);
 		options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
 		resource.save(options);
 	}

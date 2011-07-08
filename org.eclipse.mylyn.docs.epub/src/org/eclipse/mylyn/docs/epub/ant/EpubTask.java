@@ -61,6 +61,10 @@ public class EpubTask extends MatchingTask {
 		}
 	}
 
+	public void addConfiguredCover(CoverType item) {
+		epub.setCover(new File(item.image), item.value);
+	}
+
 	public void addConfiguredDate(DateType item) {
 		epub.addDate(item.id, item.date, item.event);
 	}
@@ -217,7 +221,7 @@ public class EpubTask extends MatchingTask {
 	 * @param file
 	 *            path to the generated EPUB file.
 	 */
-	public void setFile(String file) {
+	public void setFile(File file) {
 		epub.setFile(file);
 	}
 
