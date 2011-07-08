@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.emf;bundle-version="[2.6.0,3.0.0)",
  org.eclipse.emf.ecore.xmi;bundle-version="[2.5.0,3.0.0)",
  org.apache.ant;bundle-version="[1.8.0,2.0.0)",
  org.eclipse.emf.validation;bundle-version="[1.4.0,2.0.0)",
- org.eclipse.ant.core;bundle-version="[3.2.0,4.0.0)"
+ org.eclipse.ant.core;bundle-version="[3.2.0,4.0.0)",
+ org.eclipse.mylyn.wikitext.core;bundle-version="1.5.0"
 Export-Package: org.eclipse.mylyn.docs.epub;uses:="org.eclipse.mylyn.docs.epub.dc,org.eclipse.mylyn.docs.epub.opf,org.eclipse.mylyn.docs.epub.ncx",
  org.eclipse.mylyn.docs.epub.ant;uses:="org.eclipse.mylyn.docs.epub,org.apache.tools.ant.types,org.apache.tools.ant",
  org.eclipse.mylyn.docs.epub.dc;uses:="org.eclipse.emf.ecore.util,org.eclipse.emf.ecore,org.eclipse.mylyn.docs.epub.opf",
@@ -70,5 +71,6 @@ Export-Package: org.eclipse.mylyn.docs.epub;uses:="org.eclipse.mylyn.docs.epub.d
    org.eclipse.emf.ecore.resource.impl,
    org.eclipse.emf.ecore.util,
    org.eclipse.emf.ecore,
-   org.eclipse.emf.common.notify.impl"
+   org.eclipse.emf.common.notify.impl",
+ org.eclipse.mylyn.docs.epub.wikitext
 Bundle-ClassPath: .
