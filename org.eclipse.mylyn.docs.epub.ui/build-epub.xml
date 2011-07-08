@@ -45,27 +45,33 @@
 		<!-- <antstructure output="ant.dtd"/> -->
 		<epub identifierId="uuid" file="${epubfile}" workingFolder="${workdir}">
 			<language code="en" />
-			<identifier id="uuid" scheme="UUID">h1c7bb870-82d5-11e0-9d34-0800200c9a66</identifier>
-			<title>Building EPUBs with Eclipse</title>
+			<identifier id="uuid" scheme="UUID">70ce7c20-8f9e-11e0-91e4-0800200c9a66</identifier>
+			<title>Building EPUBs</title>
 			<subject>Computing, Eclipse, Mylyn, EPUB</subject>
 			<publisher>Eclipse.Org</publisher>
 			<creator name="Torkild Ulvøy Resheim" fileAs="Resheim, Torkild Ulvøy" role="aut" />
-			<!-- For the EPUB logo. See: logo http://www.epubbooks.com/blog/630/official-epub-logo-released -->
+			<!-- For the EPUB logo - logo http://www.epubbooks.com/blog/630/official-epub-logo-released -->
 			<contributor name="Ralph Burkhardt" fileAs="Burkhardt, Ralph" role="art" />
-			<item file="${srcdir}/cover.html" spine="false"/>
+			<!-- The DejaVu Fonts - http://dejavu-fonts.org/wiki/License -->
+			<contributor name="Bitstream" fileAs="Bitstream" role="art" />
+			<cover image="${srcdir}/cover.jpg">Cover page</cover>
 			<item file="${srcdir}/title-page.html"/>
+			<item file="${tempdir}/copyright.html" />
 			<item file="${tempdir}/introduction.html" />
 			<item file="${tempdir}/epub-ant-task.html" />
+			<item file="${tempdir}/examples.html" />
 			<item file="${srcdir}/style.css" type="text/css" spine="false" />
 			<reference href="cover.html" type="cover" title="Cover Page" />
-			<reference href="title-page.html" type="title-page" title="Building EPUBs with Eclipse" />
+			<reference href="title-page.html" type="title-page" title="Building EPUBs" />
 			<reference href="introduction.html" type="preface" title="Introduction" />
+			<reference href="copyright.html" type="copyright-page" title="Copyright" />
 			<toc generate="true" />
 			<fileset dir="${srcdir}">
 				<include name="*.gif" />
 				<include name="*.png" />
-				<include name="*.jpg" />
 				<include name="*.otf" />
+				<include name="*.jpeg" />
+				<exclude name="cover.jpg" />
 			</fileset>
 		</epub>
 	</target>
