@@ -80,16 +80,20 @@ public class EPUBFileUtil {
 	 * independent manner. The returned string is a path starting from but
 	 * excluding <i>root</i> using the '/' character as a directory separator.
 	 * If the <i>file</i> argument is a folder a trailing directory separator is
-	 * added.
+	 * added. if the <i>root</i> argument is a file, it's parent folder will be
+	 * used.
 	 * 
 	 * @param root
-	 *            the root directory
+	 *            the root directory or file
 	 * @param file
 	 *            the root contained file or directory
 	 * @return the platform independent, relative path
 	 */
 	public static String getRelativePath(File root, File file) {
 		ArrayList<String> segments = new ArrayList<String>();
+		if (root.isFile()) {
+			root = root.getParentFile();
+		}
 		getPathSegments(root, file, segments);
 		StringBuilder path = new StringBuilder();
 		for (int p = 0; p < segments.size(); p++) {
