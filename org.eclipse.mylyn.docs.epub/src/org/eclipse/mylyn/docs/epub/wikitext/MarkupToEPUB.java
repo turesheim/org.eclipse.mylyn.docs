@@ -15,7 +15,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Writer;
 
-import org.eclipse.mylyn.docs.epub.EPUB2;
+import org.eclipse.mylyn.docs.epub.EPUB;
 import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
@@ -66,7 +66,7 @@ public class MarkupToEPUB {
 			markupParser.setMarkupLanguage(markupLanguage);
 			markupParser.parse(new FileReader(markup));
 			// Convert the generated HTML to EPUB
-			EPUB2 epub = new EPUB2();
+			EPUB epub = EPUB.getVersion2Instance();
 			epub.setGenerateToc(true);
 			Item item = epub.addItem(htmlFile);
 			item.setSourcePath(markup.getAbsolutePath());

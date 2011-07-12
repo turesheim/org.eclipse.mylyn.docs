@@ -17,7 +17,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.eclipse.mylyn.docs.epub.EPUB2;
+import org.eclipse.mylyn.docs.epub.EPUB;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.eclipse.mylyn.docs.epub.opf.Type;
@@ -30,7 +30,7 @@ import org.eclipse.mylyn.docs.epub.opf.Type;
  */
 public class EpubTask extends MatchingTask {
 
-	EPUB2 epub = new EPUB2();
+	EPUB epub = EPUB.getVersion2Instance();
 	private final ArrayList<FileSetType> filesets;
 
 	private TocType toc = null;
