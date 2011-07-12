@@ -13,7 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.Assert;
 
-import org.eclipse.mylyn.docs.epub.EPUB2;
+import org.eclipse.mylyn.docs.epub.EPUB;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.eclipse.mylyn.docs.epub.opf.Type;
@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
 import com.adobe.epubcheck.api.EpubCheck;
 
 public class TestAPI {
-	private EPUB2 epub;
+	private EPUB epub;
 	private File epubFile;
 	private File workingFolder;
 
@@ -73,8 +73,8 @@ public class TestAPI {
 		delete(workingFolder);
 		epubFile = getFile("test/api/alice-in-wonderland.epub");
 		epubFile.delete();
-		epub = new EPUB2();
-		epub.setFile(epubFile.getAbsolutePath());
+		epub = EPUB.getVersion2Instance();
+		epub.setFile(epubFile);
 	}
 
 	@After

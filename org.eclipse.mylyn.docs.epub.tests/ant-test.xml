@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Test markup-to-epub" basedir="." default="test.item">
-	<property name="testdir" location="${basedir}/test" />
+	<property name="testdir" location="${basedir}/test/ant" />
 	<property name="srcdir" location="${basedir}/alice-in-wonderland" />
 
 	<path id="java.class.path">
 		<pathelement path="${java.class.path}" />
 	</path>
-
-	<taskdef classpathref="java.class.path" resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" />
-	<taskdef classpathref="java.class.path" resource="org/eclipse/mylyn/internal/wikitext/mediawiki/core/tasks/tasks.properties" />
 
 	<path id="epub-classpath">
 		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub/bin/" />
@@ -27,39 +24,37 @@
 	</target>
 
 	<target name="test.item">	
-		<html-to-epub>
-			<contributor />
-		</html-to-epub>
-		<html-to-epub identifierId="uuid" file="${testdir}/alice-in-wonderland.epub" workingFolder="${testdir}/work">			
-			<title text="Alice in Wonderland" />
+		<epub identifierId="uuid" file="${testdir}/alice-in-wonderland.epub" workingFolder="${testdir}/work">			
+			<title>Alice in Wonderland</title>
 			<language code="en" />
-			<identifier id="uuid" scheme="UUID" value="urn:uuid:15bcb770-882d-11e0-9d78-0800200c9a66" />
-			<subject text="Young readers" />
-			<subject text="Fantasy" />
-			<creator name="Lewis Carrol" fileAs="Carrol, Lewis" role="aut" />
-			<publisher text="Eclipse.Org" />
+			<identifier id="uuid" scheme="UUID">urn:uuid:15bcb770-882d-11e0-9d78-0800200c9a66</identifier>
+			<subject>Young readers</subject>
+			<subject>Fantasy</subject>
+			<creator fileAs="Carrol, Lewis" role="aut" name="Lewis Carroll"/>
+			<publisher>Eclipse.Org</publisher>
 			<date event="original-publication" date="1916" />
-			<source text="Project Gutenberg" />
-			<rights text="This EPUB eBook is released under the Eclipse Public License version 1.0." />
-			<item file="${srcdir}/title.xml" spine="true" noToc="true"/>
-			<item file="${srcdir}/epubbooksinfo.xml" spine="true" noToc="true" />
-			<item file="${srcdir}/chapter-001.xml" spine="true" />
-			<item file="${srcdir}/chapter-002.xml" spine="true" />
-			<item file="${srcdir}/chapter-003.xml" spine="true" />
-			<item file="${srcdir}/chapter-004.xml" spine="true" />
-			<item file="${srcdir}/chapter-005.xml" spine="true" />
-			<item file="${srcdir}/chapter-006.xml" spine="true" />
-			<item file="${srcdir}/chapter-007.xml" spine="true" />
-			<item file="${srcdir}/chapter-008.xml" spine="true" />
-			<item file="${srcdir}/chapter-009.xml" spine="true" />
-			<item file="${srcdir}/chapter-010.xml" spine="true" />
+			<source>Project Gutenberg</source>
+			<rights>This EPUB eBook is released under the Eclipse Public License version 1.0.</rights>
+			<item file="${srcdir}/title.xhtml" spine="true" noToc="true"/>
+			<item file="${srcdir}/epubbooksinfo.xhtml" spine="true" noToc="true" />
+			<item file="${srcdir}/chapter-001.xhtml"/>
+			<item file="${srcdir}/chapter-002.xhtml"/>
+			<item file="${srcdir}/chapter-003.xhtml"/>
+			<item file="${srcdir}/chapter-004.xhtml"/>
+			<item file="${srcdir}/chapter-005.xhtml"/>
+			<item file="${srcdir}/chapter-006.xhtml"/>
+			<item file="${srcdir}/chapter-007.xhtml"/>
+			<item file="${srcdir}/chapter-008.xhtml"/>
+			<item file="${srcdir}/chapter-009.xhtml"/>
+			<item file="${srcdir}/chapter-010.xhtml"/>
 			<item file="${srcdir}/css/titlepage.css" dest="css" type="text/css" spine="false" />
 			<item file="${srcdir}/css/book.css" dest="css" type="text/css" spine="false" />
-			<reference id="title" type="cover"/>
+			<reference href="title.xhtml" type="title-page" title="Cover Page"/>
+			<reference href="title.xhtml" type="cover" title="Cover Page"/>
 			<fileset dir="${srcdir}/images" dest="images">
 				<include name="*.jpg" />
 			</fileset>
-		</html-to-epub>
+		</epub>
 	</target>
 
 </project>

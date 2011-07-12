@@ -55,8 +55,12 @@ public class TestAntTask extends BuildFileTest {
 	 * validated.
 	 */
 	public void testItem() {
-		executeTarget("init");
-		executeTarget("test.item");
-		assertEpub();
+		// executeTarget("init");
+		// executeTarget("test.item");
+		File file = new File("prof77.epub");
+		EpubCheck checker = new EpubCheck(file);
+		System.out.println(file.getAbsolutePath());
+		Assert.assertTrue(checker.validate());
+		// assertEpub();
 	}
 }
