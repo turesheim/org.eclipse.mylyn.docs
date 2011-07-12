@@ -152,8 +152,6 @@ class EPUB2 extends EPUB {
 	 */
 	public EPUB2() {
 		super();
-		// Start with the root of the OPF structure
-		opfPackage = OPFFactory.eINSTANCE.createPackage();
 		opfPackage.setVersion("2.0");
 		ncxTOC = NCXFactory.eINSTANCE.createNcx();
 		Metadata opfMetadata = OPFFactory.eINSTANCE.createMetadata();

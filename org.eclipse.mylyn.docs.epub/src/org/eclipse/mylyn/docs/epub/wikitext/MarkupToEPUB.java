@@ -68,6 +68,7 @@ public class MarkupToEPUB {
 			// Convert the generated HTML to EPUB
 			EPUB epub = EPUB.getVersion2Instance();
 			epub.setGenerateToc(true);
+			epub.setIncludeReferencedResources(true);
 			Item item = epub.addItem(htmlFile);
 			item.setSourcePath(markup.getAbsolutePath());
 			epub.setFile(file);

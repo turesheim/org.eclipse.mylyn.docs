@@ -540,7 +540,9 @@ public class EPUB {
 				if (opfPackage.isGenerateCoverHTML()) {
 					writeCoverHTML(oepbsFolder);
 				}
-				includeReferencedResources();
+				if (opfPackage.isIncludeReferencedResources()) {
+					includeReferencedResources();
+				}
 				copyContent(oepbsFolder);
 				writeTableOfContents(oepbsFolder);
 				writeOPF(oepbsFolder);
@@ -554,6 +556,10 @@ public class EPUB {
 					+ workingFolder.getAbsolutePath());
 		}
 		validate();
+	}
+
+	public void setIncludeReferencedResources(boolean op) {
+		opfPackage.setIncludeReferencedResources(op);
 	}
 
 	/**
@@ -666,8 +672,13 @@ public class EPUB {
 		EList<Item> manifestItems = opfPackage.getManifest().getItems();
 		HashMap<File, List<File>> detectedFiles = new HashMap<File, List<File>>();
 		for (Item item : manifestItems) {
-			File source = new File(item.getSourcePath());
-			detectedFiles.put(source, ImageScanner.parse(item));
+			if (item.getSourcePath() != null) {
+				File source = new File(item.getSourcePath());
+				detectedFiles.put(source, ImageScanner.parse(item));
+			} else {
+				File source = new File(item.getFile());
+				detectedFiles.put(source, ImageScanner.parse(item));
+			}
 		}
 		System.out.println("Including referenced resources, "
 				+ detectedFiles.size() + " files found.");
