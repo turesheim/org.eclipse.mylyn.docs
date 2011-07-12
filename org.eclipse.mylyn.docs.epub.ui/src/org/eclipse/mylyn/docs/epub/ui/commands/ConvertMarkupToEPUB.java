@@ -10,10 +10,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.ui.commands;
 
-import java.io.BufferedInputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 
@@ -38,7 +35,7 @@ import org.eclipse.ui.PlatformUI;
 public class ConvertMarkupToEPUB extends AbstractMarkupResourceHandler {
 
 	@Override
-	protected void handleFile(IFile file, String name)
+	protected void handleFile(final IFile file, String name)
 			throws ExecutionException {
 		final IFile newFile = file.getParent()
 				.getFile(new Path(name + ".epub")); //$NON-NLS-1$
@@ -57,17 +54,6 @@ public class ConvertMarkupToEPUB extends AbstractMarkupResourceHandler {
 		markupToEPUB.setBookTitle(name);
 
 		try {
-			final StringWriter w = new StringWriter();
-			Reader r = new InputStreamReader(new BufferedInputStream(
-					file.getContents()), file.getCharset());
-			try {
-				int i;
-				while ((i = r.read()) != -1) {
-					w.write((char) i);
-				}
-			} finally {
-				r.close();
-			}
 
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 				public void run(IProgressMonitor monitor)
@@ -76,7 +62,8 @@ public class ConvertMarkupToEPUB extends AbstractMarkupResourceHandler {
 						if (newFile.exists()) {
 							newFile.delete(true, monitor);
 						}
-						markupToEPUB.parse(w.toString(), newFile.getLocation()
+						markupToEPUB.parse(file.getLocation().toFile(), newFile
+								.getLocation()
 								.toFile());
 						newFile.refreshLocal(IResource.DEPTH_ONE, monitor);
 					} catch (Exception e) {

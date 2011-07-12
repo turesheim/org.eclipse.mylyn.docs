@@ -62,6 +62,7 @@ import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
 import org.eclipse.mylyn.docs.epub.internal.EPUBFileUtil;
 import org.eclipse.mylyn.docs.epub.internal.EPUBXMLHelperImp;
+import org.eclipse.mylyn.docs.epub.internal.ImageScanner;
 import org.eclipse.mylyn.docs.epub.internal.TOCGenerator;
 import org.eclipse.mylyn.docs.epub.ncx.DocTitle;
 import org.eclipse.mylyn.docs.epub.ncx.Head;
@@ -577,10 +578,11 @@ public final class EPUB2 {
 			File oepbsFolder = new File(workingFolder.getAbsolutePath()
 					+ File.separator + "OEBPS");
 			if (oepbsFolder.mkdir()) {
-				copyContent(oepbsFolder);
 				if (opfPackage.isGenerateCoverHTML()) {
 					writeCoverHTML(oepbsFolder);
 				}
+				includeReferencedResources();
+				copyContent(oepbsFolder);
 				writeNCX(oepbsFolder);
 				writeOPF(oepbsFolder);
 			} else {
@@ -643,9 +645,9 @@ public final class EPUB2 {
 		ncxTOC.setDocTitle(docTitle);
 		int playOrder = 0;
 		// Iterate over the spine
-		EList<Itemref> items = opfSpine.getSpineItems();
+		EList<Itemref> spineItems = opfSpine.getSpineItems();
 		EList<Item> manifestItems = opfManifest.getItems();
-		for (Itemref itemref : items) {
+		for (Itemref itemref : spineItems) {
 			Item referencedItem = null;
 			String id = itemref.getIdref();
 			// Find the manifest item that is referenced
@@ -663,6 +665,28 @@ public final class EPUB2 {
 						referencedItem.getHref(), ncxTOC, playOrder);
 			}
 		}
+	}
+
+	private void includeReferencedResources()
+			throws ParserConfigurationException, SAXException, IOException {
+		EList<Item> manifestItems = opfManifest.getItems();
+		HashMap<File, List<File>> detectedFiles = new HashMap<File, List<File>>();
+		for (Item item : manifestItems) {
+			File source = new File(item.getSourcePath());
+			detectedFiles.put(source, ImageScanner.parse(item));
+		}
+		System.out.println("Including referenced resources, "
+				+ detectedFiles.size() + " files found.");
+		for (File root : detectedFiles.keySet()) {
+			List<File> items = detectedFiles.get(root);
+			for (File file : items) {
+				System.out.println(root);
+				System.out.println(file);
+				String relativePath = EPUBFileUtil.getRelativePath(root, file);
+				addItem(null, null, file, relativePath, null, false, false);
+			}
+		}
+
 	}
 
 	/**

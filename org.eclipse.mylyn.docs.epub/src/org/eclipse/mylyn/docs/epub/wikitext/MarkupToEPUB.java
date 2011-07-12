@@ -11,10 +11,12 @@
 package org.eclipse.mylyn.docs.epub.wikitext;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Writer;
 
 import org.eclipse.mylyn.docs.epub.EPUB2;
+import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
@@ -40,17 +42,17 @@ public class MarkupToEPUB {
 		this.markupLanguage = markupLanguage;
 	}
 
-	public void parse(String markupContent, File file) throws Exception {
+	public void parse(File markup, File file) throws Exception {
 		if (markupLanguage == null) {
 			throw new IllegalStateException("must set markupLanguage"); //$NON-NLS-1$
 		}
+
 		// Create a temporary working folder
-		File workingFolder = File.createTempFile("epub_", null);
+		File workingFolder = File.createTempFile("wikitext_", null);
 		if (workingFolder.delete() && workingFolder.mkdirs()) {
 			File htmlFile = new File(workingFolder.getAbsolutePath()
 					+ File.separator + "markup.html");
 			FileWriter out = new FileWriter(htmlFile);
-
 			HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out) {
 				@Override
 				protected XmlStreamWriter createXmlStreamWriter(Writer out) {
@@ -62,11 +64,12 @@ public class MarkupToEPUB {
 
 			markupParser.setBuilder(builder);
 			markupParser.setMarkupLanguage(markupLanguage);
-			markupParser.parse(markupContent);
+			markupParser.parse(new FileReader(markup));
 			// Convert the generated HTML to EPUB
 			EPUB2 epub = new EPUB2();
 			epub.setGenerateToc(true);
-			epub.addItem(htmlFile);
+			Item item = epub.addItem(htmlFile);
+			item.setSourcePath(markup.getAbsolutePath());
 			epub.setFile(file);
 			epub.assemble();
 		}
