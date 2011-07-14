@@ -680,13 +680,13 @@ public class EPUB {
 				detectedFiles.put(source, ImageScanner.parse(item));
 			}
 		}
-		System.out.println("Including referenced resources, "
-				+ detectedFiles.size() + " files found.");
 		for (File root : detectedFiles.keySet()) {
 			List<File> items = detectedFiles.get(root);
 			for (File file : items) {
-				String relativePath = EPUBFileUtil.getRelativePath(root, file);
-				addItem(null, null, file, relativePath, null, false, false);
+				File relativePath = new File(EPUBFileUtil.getRelativePath(root,
+						file));
+				addItem(null, null, file, relativePath.getParent(), null,
+						false, false);
 			}
 		}
 
