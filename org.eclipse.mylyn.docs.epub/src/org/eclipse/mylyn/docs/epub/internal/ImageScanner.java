@@ -98,10 +98,10 @@ public class ImageScanner extends DefaultHandler {
 				false);
 		SAXParser parser = factory.newSAXParser();
 		String href = item.getHref();
-		ImageScanner tocGenerator = new ImageScanner(item);
+		ImageScanner scanner = new ImageScanner(item);
 		try {
-			parser.parse(file, tocGenerator);
-			return tocGenerator.files;
+			parser.parse(file, scanner);
+			return scanner.files;
 		} catch (SAXException e) {
 			System.err.println("Could not parse " + href);
 			e.printStackTrace();
