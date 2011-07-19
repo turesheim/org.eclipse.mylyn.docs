@@ -187,12 +187,6 @@ public class EpubTask extends MatchingTask {
 	}
 
 	@Override
-	public void setProject(Project project) {
-		// TODO Auto-generated method stub
-		super.setProject(project);
-	}
-
-	@Override
 	public void execute() throws BuildException {
 		validate();
 		addFilesets();
