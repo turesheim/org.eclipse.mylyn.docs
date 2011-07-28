@@ -1,5 +1,7 @@
 h1. Copyrights
 
-* The EPUB 2.0.1 Specification is Copyright &copy; 2007 by International Digital Publishing Forum&tm;.
-* The Dublin Core Specification is Copyright &copy; 1995-2011 DCMI. All Rights Reserved. Licensed under a Creative Commons Attribution 3.0 Unported License.
-* This book is Copyright &copy; 2011 by Torkild Ulvøy Resheim.
+p. The EPUB 2.0.1 Specification is Copyright &copy; 2007 by International Digital Publishing Forum&tm;.
+
+p. The Dublin Core Specification is Copyright &copy; 1995-2011 DCMI. All Rights Reserved. Licensed under a Creative Commons Attribution 3.0 Unported License.
+
+p. This book is Copyright &copy; 2011 by Torkild Ulvøy Resheim
