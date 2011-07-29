@@ -1,0 +1,9 @@
+h1. The EPUB file format
+
+p. The __EPUB file format__ is basically a ZIP-file with a defined set of contents. The first file in the container is a file by the ASCII name of "mimetype" which holds the MIME type for the ZIP container. This file must be treated a bit special as the contents are defined and the file must not be compressed, nor encrypted and there must be no extra fields in it's ZIP header. 
+
+p. The EPUB also have a META-INF folder that contains a file named __container.xml__. This declares the format of the publication and points to the main entry: __content.opf__. If there is a table of contents (__toc.ncx__) the main entry will point to it. 
+
+!Illustrations.002.jpg(Contents of a example EPUB container.)! 
+
+The illustration shows the contents of an example publication. The marked files and folders marked are ones created by the EPUB tooling.

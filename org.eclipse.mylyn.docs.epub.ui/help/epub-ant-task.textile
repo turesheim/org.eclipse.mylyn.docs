@@ -38,7 +38,7 @@ The following elements can be used:
 
 h3. Publication title
 
-p. Typically, Title will be a name by which the resource is formally known.
+p. Typically, the title will be a name by which the resource is formally known.
 
 bc.. 
 <!ELEMENT title (#PCDATA)>
@@ -48,7 +48,7 @@ bc..
 
 h3. Publication identifiers
 
-p. The recommended best practice is to identify the resource by means of a string or number conforming to a formal identification system. These include but are not limited to the Uniform Resource Identifier, the Digital Object Identifier (DOI) and the International Standard Book Number (ISBN).
+p. The recommended best practice is to identify the resource by means of a string or number conforming to a formal identification system. These include but are not limited to the "Uniform Resource Identifier":http://en.wikipedia.org/wiki/Uniform_Resource_Identifier, the "Digital Object Identifier":http://en.wikipedia.org/wiki/Digital_object_identifier (DOI) and the "International Standard Book Number":http://en.wikipedia.org/wiki/International_Standard_Book_Number (ISBN).
 
 bc.. 
 <!ELEMENT identifier EMPTY>
@@ -57,7 +57,7 @@ bc..
           scheme CDATA #IMPLIED
           value CDATA #IMPLIED>
 
-p. If an identifier is not specified, one will be generated based on the UUID scheme.
+p. If an identifier is not specified, one will be generated based on a random "UUID":http://en.wikipedia.org/wiki/Universally_unique_identifier.
 
 h3. Language specification
 
@@ -68,6 +68,10 @@ bc..
 <!ATTLIST language
           id ID #IMPLIED
           code CDATA #IMPLIED>
+
+p.          
+* **id** - optional unique identifier.
+* **code** - the language code.
 
 p. If a language is not specified it will be set to "en" for English.
 
@@ -143,7 +147,6 @@ p. In **role** "MARC relator codes":http://www.loc.gov/marc/relators/ are used f
 |Redactor|red|Use for a person who writes or develops the framework for an item without being intellectually responsible for its content.|
 |Reviewer|rev|Use for a person or corporate body responsible for the review of book, motion picture, performance, etc.|
 
-
 h3. Dates
 
 bc.. 
@@ -179,7 +182,7 @@ bc..
 
 h3. Formats
 
-p. Typically, Format may include the media-type or dimensions of the resource. Format may be used to identify the software, hardware, or other equipment needed to display or operate the resource. Examples of dimensions include size and duration. Recommended best practice is to select a value from a controlled vocabulary (for example, the list of Internet Media Types [MIME] defining computer media formats).
+p. Use to specify the format of the publication. Typically this is the MIME type or the software, hardware, or other equipment needed. The epub task will always set the format to "application/epub+zip" unless another format is specified.
 
 bc.. 
 <!ELEMENT format (#PCDATA)>
@@ -291,7 +294,7 @@ p.
 
 bc.. 
 <reference href="cover.html" type="cover" title="Cover Page" />
-<reference href="title-page.html" type="title-page" title="Building EPUBs with Eclipse and ANT" />
+<reference href="title-page.html" type="title-page" title="Building EPUBs" />
 <reference href="introduction.html" type="preface" title="Introduction" />
 
 

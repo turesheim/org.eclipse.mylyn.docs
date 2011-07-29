@@ -2,12 +2,12 @@ h1. Practical examples
 
 h2. Adding a cover
 
-p. Correctly adding a cover to a publication can be a bit awkward as different reading systems handle this differently. So there is a shortcut:
+p. Correctly adding a cover to a publication can be a bit awkward as different reading systems expect different input. So there is a shortcut:
 
 bc.. 
 <cover image="cover.jpg" title="My Title"/> 
 
-p. Simply point to the file in question and this epub tooling will take care of the rest. There is of course another, more laborious way: 
+p. Simply point to the file in question and this EPUB tooling will take care of the rest. There is of course another, more laborious way: 
 
 # Add a cover image to the publication
 # Add a HTML file using the image

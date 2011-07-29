@@ -5,7 +5,7 @@
 	<property name="tempdir" location="${basedir}/build/temp" />
 	<property name="workdir" location="${basedir}/build/work" />
 	<property name="srcdir" location="${basedir}/help" />
-	<property name="epubfile" location="${basedir}/Building_EPUBs_with_Eclipse.epub" />
+	<property name="epubfile" location="${basedir}/Building_EPUBs.epub" />
 
 	<path id="epub.classpath">
 		<fileset dir="${wikitext.standalone}">
@@ -35,7 +35,6 @@
 			<fileset dir="${srcdir}">
 				<include name="*.html" />
 				<exclude name="title-page.html"/>
-				<exclude name="cover.html"/>
 			</fileset>
 		</move>
 	</target>
@@ -58,10 +57,10 @@
 			<item file="${srcdir}/title-page.html"/>
 			<item file="${tempdir}/copyright.html" />
 			<item file="${tempdir}/introduction.html" />
+			<item file="${tempdir}/epub-format.html" />
 			<item file="${tempdir}/epub-ant-task.html" />
 			<item file="${tempdir}/examples.html" />
 			<item file="${srcdir}/style.css" type="text/css" spine="false" />
-			<reference href="cover.html" type="cover" title="Cover Page" />
 			<reference href="title-page.html" type="title-page" title="Building EPUBs" />
 			<reference href="introduction.html" type="preface" title="Introduction" />
 			<reference href="copyright.html" type="copyright-page" title="Copyright" />
@@ -70,7 +69,8 @@
 				<include name="*.gif" />
 				<include name="*.png" />
 				<include name="*.otf" />
-				<include name="*.jpeg" />
+				<include name="*.jpg" />
+				<!-- Cover image is already included using the "cover" element -->
 				<exclude name="cover.jpg" />
 			</fileset>
 		</epub>
