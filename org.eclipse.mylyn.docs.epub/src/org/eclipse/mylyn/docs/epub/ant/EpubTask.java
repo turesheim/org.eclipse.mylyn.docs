@@ -80,7 +80,7 @@ public class EpubTask extends MatchingTask {
 	}
 
 	public void addConfiguredFormat(FormatType format) {
-		epub.addFormat(format.id, format.text);
+		epub.setFormat(format.id, format.text);
 	}
 
 	/**

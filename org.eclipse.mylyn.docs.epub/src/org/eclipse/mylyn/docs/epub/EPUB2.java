@@ -49,6 +49,17 @@ import org.eclipse.mylyn.docs.epub.opf.Spine;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+/**
+ * This type represents one EPUB revision 2.0.1 formatted publication. It
+ * maintains a data structure representing the entire publication and API for
+ * building it.
+ * <p>
+ * Please note that this API is provisional and should not yet be used to build
+ * applications.
+ * </p>
+ * 
+ * @author Torkild U. Resheim
+ */
 class EPUB2 extends EPUB {
 
 	protected final Ncx ncxTOC;
@@ -133,7 +144,7 @@ class EPUB2 extends EPUB {
 			resource.getContents().add(ncxTOC);
 			Map<String, Object> options = new HashMap<String, Object>();
 			// NCX requires that we encode using UTF-8
-			options.put(XMLResource.OPTION_ENCODING, UTF_8);
+			options.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
 			options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
 			resource.save(options);
 		} else {

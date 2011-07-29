@@ -77,9 +77,8 @@ import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceImpl;
 import org.xml.sax.SAXException;
 
 /**
- * This type represents one EPUB revision 2.0.1 formatted publication. It
- * maintains a data structure representing the entire publication and API for
- * building it.
+ * This type represents one EPUB formatted publication. It maintains a data
+ * structure representing the entire publication and API for building it.
  * <p>
  * Please note that this API is provisional and should not yet be used to build
  * applications.
@@ -99,12 +98,20 @@ public class EPUB {
 	/** Identifier of the table of contents file */
 	protected static final String TABLE_OF_CONTENTS_ID = "ncx";
 
-	protected static final String UTF_8 = "UTF-8";
+	/** The encoding to use in XML files */
+	protected static final String XML_ENCODING = "UTF-8";
 
+	/**
+	 * Returns an EPUB version 2.0.1 instance.
+	 * 
+	 * @return an EPUB instance
+	 */
 	public static EPUB getVersion2Instance() {
 		EPUB2 epub = new EPUB2();
 		return epub;
 	}
+
+	/** The root model element */
 	protected Package opfPackage;
 
 	protected String path;
@@ -125,6 +132,7 @@ public class EPUB {
 	 * <li>A empty description if none has been specified.</li>
 	 * <li>Language "English" if none has been specified.</li>
 	 * <li>A dummy title if none has been specified.</li>
+	 * <li>The publication format if not specified.</li>
 	 * </ul>
 	 */
 	private void addCompulsoryData() {
@@ -147,6 +155,10 @@ public class EPUB {
 		// Add dummy title
 		if (opfPackage.getMetadata().getTitles().isEmpty()) {
 			addTitle(null, null, "No title specified");
+		}
+		// Set the publication format
+		if (opfPackage.getMetadata().getFormat() == null) {
+			setFormat(null, "application/epub+zip");
 		}
 	}
 
@@ -258,23 +270,6 @@ public class EPUB {
 		Description dc = DCFactory.eINSTANCE.createDescription();
 		setDcLocalized(dc, id, lang, description);
 		opfPackage.getMetadata().setDescription(dc);
-		return dc;
-	}
-
-	/**
-	 * Sets the &quot;Dublin Core Format&quot; of the publication.
-	 * <p>
-	 * This property is optional.
-	 * </p>
-	 * 
-	 * @param value
-	 *            the format to add
-	 * @return the new format
-	 */
-	public Format addFormat(String id, String value) {
-		Format dc = DCFactory.eINSTANCE.createFormat();
-		setDcCommon(dc, id, value);
-		opfPackage.getMetadata().setFormat(dc);
 		return dc;
 	}
 
@@ -558,10 +553,6 @@ public class EPUB {
 		validate();
 	}
 
-	public void setIncludeReferencedResources(boolean op) {
-		opfPackage.setIncludeReferencedResources(op);
-	}
-
 	/**
 	 * Copies all items part of the publication into the OEPBS folder unless the
 	 * item in question will be generated.
@@ -747,12 +738,33 @@ public class EPUB {
 		this.path = file.getAbsolutePath();
 	}
 
+	/**
+	 * Sets the &quot;Dublin Core Format&quot; of the publication.
+	 * <p>
+	 * This property is optional.
+	 * </p>
+	 * 
+	 * @param value
+	 *            the format to add
+	 * @return the new format
+	 */
+	public Format setFormat(String id, String value) {
+		Format dc = DCFactory.eINSTANCE.createFormat();
+		setDcCommon(dc, id, value);
+		opfPackage.getMetadata().setFormat(dc);
+		return dc;
+	}
+
 	public void setGenerateToc(boolean generateToc) {
 		opfPackage.setGenerateTableOfContents(generateToc);
 	}
 
 	public void setIdentifierId(String identifier_id) {
 		opfPackage.setUniqueIdentifier(identifier_id);
+	}
+
+	public void setIncludeReferencedResources(boolean op) {
+		opfPackage.setIncludeReferencedResources(op);
 	}
 
 	/**
@@ -927,7 +939,7 @@ public class EPUB {
 		resource.getContents().add(opfPackage);
 		Map<String, Object> options = new HashMap<String, Object>();
 		// OPF requires that we encode using UTF-8
-		options.put(XMLResource.OPTION_ENCODING, UTF_8);
+		options.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
 		options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
 		resource.save(options);
 	}
