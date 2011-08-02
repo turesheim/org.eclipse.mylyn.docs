@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -298,6 +298,15 @@ public class MediaWikiLanguageTest extends TestCase {
 				.find());
 	}
 
+	public void testPreformattedSource_bug349724() {
+		String html = parser.parseToHtml("normal para\n<source lang=\"javascript\">preformatted\n more pre\n</source>normal para");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile(
+				"<p>normal para</p><pre class=\"source-javascript\">preformatted\\s+more pre\\s+</pre><p>normal para</p>")
+				.matcher(html)
+				.find());
+	}
+
 	public void testHtmlTags() {
 		String html = parser.parseToHtml("normal para <b id=\"foo\">test heading</b>");
 		TestUtil.println("HTML: \n" + html);
@@ -333,6 +342,20 @@ public class MediaWikiLanguageTest extends TestCase {
 		String html = parser.parseToHtml("a [[Main Page|alternative text]] reference to the Main Page");
 		TestUtil.println("HTML: \n" + html);
 		assertTrue(html.contains("<body><p>a <a href=\"/wiki/Main_Page\" title=\"Main Page\">alternative text</a> reference to the Main Page</p></body>"));
+	}
+
+	public void testLinkInternalPageReferenceWithAltText2() {
+		String html = parser.parseToHtml("[[Orion/Server_API/Preference API| Preference API]]");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<p><a href=\"/wiki/Orion/Server_API/Preference_API\" title=\"Orion/Server_API/Preference API\">Preference API</a></p>"));
+	}
+
+	public void testLinkInternalPageReferenceWithAltTextInTables() {
+		String html = parser.parseToHtml("{|\n" //
+				+ "| [[Orion/Server_API/Preference API| Preference API]]\n" //
+				+ "|}");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<td><a href=\"/wiki/Orion/Server_API/Preference_API\" title=\"Orion/Server_API/Preference API\">Preference API</a></td>"));
 	}
 
 	public void testLinkInternalCategoryReference() {

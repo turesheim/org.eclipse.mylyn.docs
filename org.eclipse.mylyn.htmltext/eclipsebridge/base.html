@@ -14,6 +14,7 @@ http://www.eclipse.org/legal/epl-v10.html
 	<meta content="text/html; charset=utf-8" http-equiv="content-type" />
 	<script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
 	<script type="text/javascript" src="integration.js"></script>
+	<script type="text/javascript" src="externalconfiguration.js"></script>
 	<script type="text/javascript" src="format.js"></script>
 	<script type="text/javascript">
 	//<![CDATA[
@@ -28,6 +29,22 @@ CKEDITOR.on( 'instanceReady', function( ev )
 	//registerListeners();
 });
 
+CKEDITOR.editorConfig = function( config )
+{
+	// Define changes to default configuration here. For example:
+	// config.language = 'fr';
+	// config.uiColor = '#AADC6E';
+	config.skin = 'office2003';
+	config.resize_enabled = false;
+	config.toolbar =[[]];
+	config.toolbarLocation = 'bottom';
+	config.toolbarCanCollapse = true;
+	config.toolbarStartupExpanded = false;
+	config.scayt_autoStartup = false;
+	config.startupFocus = true;
+	doExternalConfiguration(config);
+};
+
 
 var fireOuter = function(selection)
 {
@@ -35,6 +52,7 @@ var fireOuter = function(selection)
 	var state = editor.getCommand('bold').state
 	selectionChanged("test",selection);
 };
+
 
 function registerListeners()
 {

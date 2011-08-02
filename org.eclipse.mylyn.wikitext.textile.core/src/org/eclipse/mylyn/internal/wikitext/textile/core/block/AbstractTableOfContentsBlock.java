@@ -25,6 +25,8 @@ public abstract class AbstractTableOfContentsBlock extends Block {
 
 	private String style = "none"; //$NON-NLS-1$
 
+	private String cssClass = "toc"; //$NON-NLS-1$
+
 	protected int maxLevel = Integer.MAX_VALUE;
 
 	public AbstractTableOfContentsBlock() {
@@ -32,19 +34,27 @@ public abstract class AbstractTableOfContentsBlock extends Block {
 	}
 
 	protected void emitToc(OutlineItem item) {
+
+		Attributes nullAttributes = new Attributes();
+
+		emitToc(item, 0, nullAttributes);
+	}
+
+	private void emitToc(OutlineItem item, int level, Attributes nullAttributes) {
 		if (item.getChildren().isEmpty()) {
 			return;
 		}
 		if ((item.getLevel() + 1) > maxLevel) {
 			return;
 		}
-		Attributes nullAttributes = new Attributes();
 
-		builder.beginBlock(BlockType.NUMERIC_LIST, new Attributes(null, "toc", "list-style: " + style + ";", null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		Attributes listAttributes = new Attributes(null, level == 0 ? cssClass : null,
+				"list-style: " + style + ";", null);//$NON-NLS-1$ //$NON-NLS-2$ 
+		builder.beginBlock(BlockType.NUMERIC_LIST, listAttributes);
 		for (OutlineItem child : item.getChildren()) {
 			builder.beginBlock(BlockType.LIST_ITEM, nullAttributes);
 			builder.link('#' + child.getId(), child.getLabel());
-			emitToc(child);
+			emitToc(child, level + 1, nullAttributes);
 			builder.endBlock();
 		}
 		builder.endBlock();
@@ -56,6 +66,14 @@ public abstract class AbstractTableOfContentsBlock extends Block {
 
 	public void setStyle(String style) {
 		this.style = style;
+	}
+
+	public String getCssClass() {
+		return cssClass;
+	}
+
+	public void setCssClass(String cssClass) {
+		this.cssClass = cssClass;
 	}
 
 	public int getMaxLevel() {

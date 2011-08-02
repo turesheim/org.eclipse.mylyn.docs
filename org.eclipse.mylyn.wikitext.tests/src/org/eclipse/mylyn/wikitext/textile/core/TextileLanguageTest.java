@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 David Green and others.
+ * Copyright (c) 2007, 2011 David Green and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1061,6 +1061,13 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<a href=\"/stories/10146\"><em>Click me</em></a>"));
 	}
 
+	public void testHyperlinkWithEmphasis2() throws IOException {
+		String html = parser.parseToHtml("\"_Eclipse_\":http://eclipse.org");
+
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<a href=\"http://eclipse.org\"><em>Eclipse</em></a>"));
+	}
+
 	public void testHyperlinkWithPunctuation() throws IOException {
 		String html = parser.parseToHtml("Here comes a \"Click me!\":/stories/10146 to something");
 
@@ -1183,6 +1190,31 @@ public class TextileLanguageTest extends TestCase {
 		assertTrue(html.contains("<h2 id=\"Subhead2\">"));
 		assertTrue(html.contains("href=\"#Subhead4\""));
 		assertTrue(html.contains("<h3 id=\"Subhead4\">"));
+	}
+
+	public void testTableOfContentsWithNoClass() throws IOException {
+		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
+
+		TestUtil.println("HTML: \n" + html);
+
+		assertTrue(html.contains("<ol class=\"toc\""));
+	}
+
+	public void testTableOfContentsWithClass() throws IOException {
+		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc:class=test}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
+
+		TestUtil.println("HTML: \n" + html);
+
+		assertTrue(html.contains("<ol class=\"test\""));
+	}
+
+	public void testTableOfContentsWithClassAtTopLevel_bug341019() throws IOException {
+		String html = parser.parseToHtml("h1. Table Of Contents\n\n{toc:class=test}\n\nh1. Top Header\n\nsome text\n\nh2. Subhead\n\nh2. Subhead2\n\nh1. Top Header 2\n\nh2. Subhead 3\n\nh3. Subhead 4");
+
+		TestUtil.println("HTML: \n" + html);
+
+		assertTrue(html.contains("<ol class=\"test\" style=\"list-style: none;\">"));
+		assertTrue(html.contains("<ol style=\"list-style: none;\">"));
 	}
 
 	public void testTableOfContentsWithMaxLevel() throws IOException {

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.mylyn.htmltext
-Bundle-Version: 0.8.0.qualifier
+Bundle-Version: 0.9.0.qualifier
 Bundle-Activator: org.eclipse.mylyn.htmltext.HtmlTextActivator
 Bundle-Vendor: %Bundle-Vendor
 Require-Bundle: org.eclipse.ui,
@@ -17,7 +17,9 @@ Export-Package: org.eclipse.mylyn.htmltext,
  org.eclipse.mylyn.htmltext.commands.indent,
  org.eclipse.mylyn.htmltext.commands.justify,
  org.eclipse.mylyn.htmltext.commands.list,
+ org.eclipse.mylyn.htmltext.configuration,
  org.eclipse.mylyn.htmltext.events,
  org.eclipse.mylyn.htmltext.listener,
- org.eclipse.mylyn.htmltext.model
+ org.eclipse.mylyn.htmltext.model,
+ org.eclipse.mylyn.internal.htmltext.configuration;x-internal:=true
 Bundle-ClassPath: htmltext.jar

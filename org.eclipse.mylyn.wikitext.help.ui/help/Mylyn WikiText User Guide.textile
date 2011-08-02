@@ -303,6 +303,7 @@ WikiText conversion to XSL-FO is performed using the @wikitext-to-xslfo@ task.  
 | @pageMargin@ |  The page margin in cm.  Defaults to 1.5. |
 | @pageHeight@ | The page height in cm. Defaults to A4 sizing (29.7) |
 | @pageWidth@ | The page width in cm. Defaults to A4 sizing (21.0) |
+| @generateBookmarks@ | When true, generates bookmarks in the form of a @<bookmark-tree>@ in the output.  Defaults to true. | 
 
 h4. PDF from XSL-FO Quick-Start
 
@@ -576,6 +577,17 @@ bc..
  and continues
  
  p. a paragraph starts
+
+
+h2. Textile Extensions
+
+Mylyn WikiText adds the following extensions to Textile:
+
+* @{toc}@ - emit a table of contents.  Parameters may be specified as follows: 
+** @{toc:style=circle}@ Emit with list-style=circle
+** @{toc:maxLevel=2}@ Emit with heading levels up to and including h2.
+** @{toc:class=tableOfContents}@ Emit with CSS class of "tableOfContents".  Defaults to "toc" if unspecified.
+* @{glossary}@ - emit a glossary of terms in a definition list.  Glossary terms are specified using Textile syntax for acronyms.
 
 h2. Examples
 
