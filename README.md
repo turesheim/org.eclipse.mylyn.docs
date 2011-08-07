@@ -6,7 +6,7 @@ This branch is all about adding EPUB support to Mylyn Docs. Currently the only r
 
 The other projects are unchanged and recent forks of Mylyn Docs.
 
-* [Introduction](help/introduction.help)
-* [The EPUB format](help/epub-format.textile)
-* [The EPUB ANT Task](help/epub-ant-task.html.textile)
-* [Practical Examples](help/examples.textile)
+* [Introduction](org.eclipse.mylyn.docs.epub.ui/help/introduction.help)
+* [The EPUB format](org.eclipse.mylyn.docs.epub.ui/help/epub-format.textile)
+* [The EPUB ANT Task](org.eclipse.mylyn.docs.epub.ui/help/epub-ant-task.html.textile)
+* [Practical Examples](org.eclipse.mylyn.docs.epub.ui/help/examples.textile)
