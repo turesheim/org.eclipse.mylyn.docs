@@ -62,7 +62,7 @@ public class ImageScanner extends DefaultHandler {
 	 * @return the attribute value or <code>null</code>
 	 */
 	private String getAttribute(Attributes attributes, String name) {
-		for (int i = 0;i<attributes.getLength();i++){
+		for (int i = 0; i < attributes.getLength(); i++) {
 			String aname = attributes.getQName(i);
 			if (aname.equalsIgnoreCase(name)) {
 				return attributes.getValue(i);
@@ -77,10 +77,15 @@ public class ImageScanner extends DefaultHandler {
 		if (qName.equalsIgnoreCase("img")) {
 			String ref = getAttribute(attributes, "src");
 			if (ref != null) {
-				File source = new File(currentItem.getSourcePath());
-				File file = new File(source.getParentFile().getAbsolutePath()
-						+ File.separator + ref);
-				files.add(file);
+				File refPath = new File(ref);
+				if (refPath.isAbsolute()) {
+					files.add(refPath);
+				} else {
+					File source = new File(currentItem.getSourcePath());
+					File file = new File(source.getParentFile()
+							.getAbsolutePath() + File.separator + ref);
+					files.add(file);
+				}
 			}
 		}
 	}
