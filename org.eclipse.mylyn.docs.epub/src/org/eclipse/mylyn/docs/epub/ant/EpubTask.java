@@ -162,8 +162,7 @@ public class EpubTask extends MatchingTask {
 				fs.setProject(getProject());
 			}
 			final File fsDir = fs.getDir();
-			if (!fs.getErrorOnMissingDir()
-					&& (fsDir == null || !fsDir.exists())) {
+			if (!(fsDir == null || !fsDir.exists())) {
 				continue;
 			}
 			if (fsDir == null) {
