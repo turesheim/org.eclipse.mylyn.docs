@@ -5,7 +5,7 @@
     modelPluginID="org.eclipse.mylyn.docs.epub" modelName="OPF-2.0.1" nonNLSMarkers="true"
     runtimeCompatibility="true" testsDirectory="/org.eclipse.mylyn.docs.epub.tests/src-gen"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
-    publicConstructors="true" language="en" interfaceNamePattern="">
+    publicConstructors="true" runtimeVersion="2.6" language="en" interfaceNamePattern="">
   <foreignModel>opf.ecore</foreignModel>
   <genPackages prefix="OPF" basePackage="org.eclipse.mylyn.docs.epub" resource="XML"
       disposableProviderFactory="true" dataTypeConverters="true" ecorePackage="opf.ecore#/">
@@ -268,6 +268,9 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference opf.ecore#//Package/tours"/>
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/version"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/uniqueIdentifier"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/generateCoverHTML"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/generateTableOfContents"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Package/includeReferencedResources"/>
     </genClasses>
     <genClasses ecoreClass="opf.ecore#//Metadata">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/titles"/>
@@ -300,6 +303,9 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/required_modules"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/file"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/noToc"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/generated"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute opf.ecore#//Item/sourcePath"/>
     </genClasses>
     <genClasses ecoreClass="opf.ecore#//Spine">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Spine/spineItems"/>
