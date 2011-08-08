@@ -1,6 +1,6 @@
 h1. The **epub** ANT task
 
-The **epub** "Ant":http://www.apache.org task is used to assemble an EPUB file from a given set of source items. It is assumes that most of the source material such as HTML-files and illustrations has been prepared beforehand.
+The **epub** "Ant":http://www.apache.org task is used to assemble an EPUB file from a given set of source items. It is assumes that most of the source material such as HTML-files and illustrations has been prepared beforehand. Ant version 1.7 and newer is supported.
 
 The following is an approximate DTD for the task: 
 
