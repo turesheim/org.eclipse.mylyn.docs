@@ -62,7 +62,7 @@ public class ConvertMarkupToEPUB extends AbstractMarkupResourceHandler {
 						if (newFile.exists()) {
 							newFile.delete(true, monitor);
 						}
-						markupToEPUB.parse(file.getLocation().toFile(), newFile
+						markupToEPUB.parseAndAssemble(file.getLocation().toFile(), newFile
 								.getLocation()
 								.toFile());
 						newFile.refreshLocal(IResource.DEPTH_ONE, monitor);
