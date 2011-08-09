@@ -42,11 +42,23 @@ public class MarkupToEPUB {
 		this.markupLanguage = markupLanguage;
 	}
 
-	public void parse(File markup, File file) throws Exception {
+	/**
+	 * Parses the markup file and populates the EPUB data model — but does not
+	 * assemble the resulting EPUB file. This is left to the consumer which may
+	 * also do further manipulation of the data model.
+	 * 
+	 * @param markup
+	 *            the WikiText markup file
+	 * @param file
+	 *            the resulting EPUB file
+	 * @return the EPUB instance
+	 * @throws Exception
+	 */
+	public EPUB parse(File markup, File file) throws Exception {
 		if (markupLanguage == null) {
 			throw new IllegalStateException("must set markupLanguage"); //$NON-NLS-1$
 		}
-
+		EPUB epub = EPUB.getVersion2Instance();
 		// Create a temporary working folder
 		File workingFolder = File.createTempFile("wikitext_", null);
 		if (workingFolder.delete() && workingFolder.mkdirs()) {
@@ -66,17 +78,20 @@ public class MarkupToEPUB {
 			markupParser.setMarkupLanguage(markupLanguage);
 			markupParser.parse(new FileReader(markup));
 			// Convert the generated HTML to EPUB
-			EPUB epub = EPUB.getVersion2Instance();
 			epub.setGenerateToc(true);
 			epub.setIncludeReferencedResources(true);
 			Item item = epub.addItem(htmlFile);
 			item.setSourcePath(markup.getAbsolutePath());
 			epub.setFile(file);
-			epub.assemble();
 		}
 		workingFolder.deleteOnExit();
+		return epub;
 
+	}
 
+	public void parseAndAssemble(File markup, File file) throws Exception {
+		EPUB epub = parse(markup, file);
+		epub.assemble();
 	}
 
 	public String getBookTitle() {
