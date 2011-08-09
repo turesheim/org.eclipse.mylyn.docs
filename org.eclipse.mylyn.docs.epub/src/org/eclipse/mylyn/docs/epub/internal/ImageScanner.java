@@ -34,6 +34,30 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class ImageScanner extends DefaultHandler {
 
+	public static List<File> parse(Item item)
+			throws ParserConfigurationException, SAXException, IOException {
+		FileReader fr = new FileReader(item.getFile());
+		InputSource file = new InputSource(fr);
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		factory.setFeature("http://xml.org/sax/features/validation", false);
+		factory.setFeature(
+				"http://apache.org/xml/features/nonvalidating/load-external-dtd",
+				false);
+		SAXParser parser = factory.newSAXParser();
+		String href = item.getHref();
+		ImageScanner scanner = new ImageScanner(item);
+		try {
+			parser.parse(file, scanner);
+			return scanner.files;
+		} catch (SAXException e) {
+			System.err.println("Could not parse " + href);
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	Item currentItem;
+
 	ArrayList<File> files;
 
 	public ImageScanner(Item item) {
@@ -77,41 +101,12 @@ public class ImageScanner extends DefaultHandler {
 		if (qName.equalsIgnoreCase("img")) {
 			String ref = getAttribute(attributes, "src");
 			if (ref != null) {
-				File refPath = new File(ref);
-				if (refPath.isAbsolute()) {
-					files.add(refPath);
-				} else {
-					File source = new File(currentItem.getSourcePath());
-					File file = new File(source.getParentFile()
-							.getAbsolutePath() + File.separator + ref);
-					files.add(file);
-				}
+				File source = new File(currentItem.getSourcePath());
+				File file = new File(source.getParentFile().getAbsolutePath()
+						+ File.separator + ref);
+				files.add(file);
 			}
 		}
-	}
-
-	Item currentItem;
-
-	public static List<File> parse(Item item)
-			throws ParserConfigurationException, SAXException, IOException {
-		FileReader fr = new FileReader(item.getFile());
-		InputSource file = new InputSource(fr);
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setFeature("http://xml.org/sax/features/validation", false);
-		factory.setFeature(
-				"http://apache.org/xml/features/nonvalidating/load-external-dtd",
-				false);
-		SAXParser parser = factory.newSAXParser();
-		String href = item.getHref();
-		ImageScanner scanner = new ImageScanner(item);
-		try {
-			parser.parse(file, scanner);
-			return scanner.files;
-		} catch (SAXException e) {
-			System.err.println("Could not parse " + href);
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 }
