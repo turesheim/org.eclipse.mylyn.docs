@@ -28,7 +28,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This type is a SAX parser that will read a XHTML file and create a list of
- * all images that referenced.
+ * all images that are referenced either through an <i>img<i/> tag or a link.
  * 
  * @author Torkild U. Resheim
  */
@@ -98,12 +98,25 @@ public class ImageScanner extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
+		// Handle inline image files
 		if (qName.equalsIgnoreCase("img")) {
 			String ref = getAttribute(attributes, "src");
 			if (ref != null) {
 				File source = new File(currentItem.getSourcePath());
 				File file = new File(source.getParentFile().getAbsolutePath()
 						+ File.separator + ref);
+				files.add(file);
+			}
+		}
+		// Also handle links to image files
+		if (qName.equalsIgnoreCase("a")) {
+			String ref = getAttribute(attributes, "href");
+			if (ref != null) {
+				File source = new File(currentItem.getSourcePath());
+				File file = new File(source.getParentFile().getAbsolutePath()
+						+ File.separator + ref);
+				String mimetype = EPUBFileUtil.getMimeType(file);
+				System.out.println(mimetype);
 				files.add(file);
 			}
 		}

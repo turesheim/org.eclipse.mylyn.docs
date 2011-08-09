@@ -11,14 +11,9 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -344,7 +339,7 @@ public class EPUB {
 		Item item = OPFFactory.eINSTANCE.createItem();
 		if (type == null) {
 			if (!spine) {
-				type = getMimeType(file);
+				type = EPUBFileUtil.getMimeType(file);
 				if (type == null) {
 					throw new IllegalArgumentException(
 							"Could not automatically determine MIME type for file "
@@ -609,36 +604,6 @@ public class EPUB {
 		return null;
 	}
 
-	/**
-	 * Attempts to figure out the MIME-type for the file.
-	 * 
-	 * @param file
-	 *            the file to determine MIME-type for
-	 * @return the MIME-type or <code>null</code>
-	 */
-	private String getMimeType(File file) {
-		String mimeType = URLConnection
-				.guessContentTypeFromName(file.getName());
-		if (mimeType == null) {
-			try {
-				InputStream is = new BufferedInputStream(new FileInputStream(
-						file));
-				mimeType = URLConnection.guessContentTypeFromStream(is);
-				is.close();
-				// TODO: Improve upon this
-				if (mimeType == null) {
-					if (file.getName().endsWith(".otf")) {
-						return "font/opentype";
-					}
-				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return mimeType;
-	}
 
 	protected Spine getSpine() {
 		if (opfPackage.getSpine() == null) {

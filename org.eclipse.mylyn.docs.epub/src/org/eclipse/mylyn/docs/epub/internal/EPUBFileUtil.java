@@ -10,10 +10,14 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.internal;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
@@ -28,6 +32,39 @@ import java.util.zip.ZipOutputStream;
 public class EPUBFileUtil {
 
 	private static final String MIMETYPE = "application/epub+zip";
+
+	/**
+	 * Attempts to figure out the MIME-type for the file.
+	 * 
+	 * @param file
+	 *            the file to determine MIME-type for
+	 * @return the MIME-type or <code>null</code>
+	 */
+	public static String getMimeType(File file) {
+		// These are not detected or correctly detected by URLConnection
+		if (file.getName().endsWith(".otf")) {
+			return "font/opentype";
+		}
+		if (file.getName().endsWith(".svg")) {
+			return "image/svg+xml";
+		}
+		// Use URLConnection or content type detection
+		String mimeType = URLConnection
+				.guessContentTypeFromName(file.getName());
+		if (mimeType == null) {
+			try {
+				InputStream is = new BufferedInputStream(new FileInputStream(
+						file));
+				mimeType = URLConnection.guessContentTypeFromStream(is);
+				is.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return mimeType;
+	}
 
 	public static void copy(File source, File destination) throws IOException {
 		destination.getParentFile().mkdirs();
