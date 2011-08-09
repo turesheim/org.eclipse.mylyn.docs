@@ -661,23 +661,24 @@ public class EPUB {
 	private void includeReferencedResources()
 			throws ParserConfigurationException, SAXException, IOException {
 		EList<Item> manifestItems = opfPackage.getManifest().getItems();
-		HashMap<File, List<File>> detectedFiles = new HashMap<File, List<File>>();
+		// Compose a list of file references
+		HashMap<File, List<File>> references = new HashMap<File, List<File>>();
 		for (Item item : manifestItems) {
 			if (item.getSourcePath() != null) {
 				File source = new File(item.getSourcePath());
-				detectedFiles.put(source, ImageScanner.parse(item));
+				references.put(source, ImageScanner.parse(item));
 			} else {
 				File source = new File(item.getFile());
-				detectedFiles.put(source, ImageScanner.parse(item));
+				references.put(source, ImageScanner.parse(item));
 			}
 		}
-		for (File root : detectedFiles.keySet()) {
-			List<File> items = detectedFiles.get(root);
-			for (File file : items) {
+		for (File root : references.keySet()) {
+			List<File> images = references.get(root);
+			for (File image : images) {
 				File relativePath = new File(EPUBFileUtil.getRelativePath(root,
-						file));
-				addItem(null, null, file, relativePath.getParent(), null,
-						false, false);
+						image));
+				addItem(null, null, image, relativePath.getParent(), null,
+							false, false);
 			}
 		}
 
