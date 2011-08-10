@@ -75,15 +75,17 @@
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="description" eType="ecore:EClass dc.ecore#//Description"
-        containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="descriptions" upperBound="-1"
+        eType="ecore:EClass dc.ecore#//Description" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="description"/>
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="publisher" eType="ecore:EClass dc.ecore#//Publisher"
-        containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="publishers" upperBound="-1"
+        eType="ecore:EClass dc.ecore#//Publisher" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="name" value="publisher"/>
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
       </eAnnotations>
     </eStructuralFeatures>
@@ -108,8 +110,8 @@
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="format" eType="ecore:EClass dc.ecore#//Format"
-        containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="formats" upperBound="-1"
+        eType="ecore:EClass dc.ecore#//Format" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="name" value="format"/>
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
@@ -122,8 +124,8 @@
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="ecore:EClass dc.ecore#//Source"
-        containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sources" upperBound="-1"
+        eType="ecore:EClass dc.ecore#//Source" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="name" value="source"/>
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
@@ -136,22 +138,22 @@
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="relation" eType="ecore:EClass dc.ecore#//Relation"
-        containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="relations" upperBound="-1"
+        eType="ecore:EClass dc.ecore#//Relation" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="name" value="relation"/>
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="coverage" eType="ecore:EClass dc.ecore#//Coverage"
-        containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coverages" upperBound="-1"
+        eType="ecore:EClass dc.ecore#//Coverage" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="name" value="coverage"/>
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rights" eType="ecore:EClass dc.ecore#//Rights"
-        containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rights" upperBound="-1"
+        eType="ecore:EClass dc.ecore#//Rights" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="name" value="rights"/>
         <details key="namespace" value="http://purl.org/dc/elements/1.1/"/>

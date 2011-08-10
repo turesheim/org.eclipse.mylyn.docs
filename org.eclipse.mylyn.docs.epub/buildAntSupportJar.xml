@@ -21,7 +21,7 @@
 	<target name="properties" if="eclipse.running">
 		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
 	</target>
-			
+				
 	<target name="lib/epub-ant.jar" description= "Creates the lib/epub-ant.jar" depends="init">
 		<property name="destdir" value="${temp.folder}/lib/epub-ant.bin"/>
 		<property name="target.platform.path" value="${eclipse.home}" />
@@ -42,6 +42,7 @@
 					<include name="plugins/org.eclipse.emf.validation*.jar"/>
 					<include name="plugins/org.apache.ant*.jar"/>
 					<include name="plugins/org.eclipse.ant.core*.jar"/>
+					<include name="plugins/org.eclipse.mylyn.wikitext*.jar"/>
 				</fileset>
 			</classpath>
 			<src path="src/"/>

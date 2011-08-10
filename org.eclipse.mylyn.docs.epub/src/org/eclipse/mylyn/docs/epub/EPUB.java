@@ -39,6 +39,7 @@ import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.mylyn.docs.epub.dc.Contributor;
+import org.eclipse.mylyn.docs.epub.dc.Coverage;
 import org.eclipse.mylyn.docs.epub.dc.Creator;
 import org.eclipse.mylyn.docs.epub.dc.DCFactory;
 import org.eclipse.mylyn.docs.epub.dc.DCType;
@@ -152,8 +153,8 @@ public class EPUB {
 			addTitle(null, null, "No title specified");
 		}
 		// Set the publication format
-		if (opfPackage.getMetadata().getFormat() == null) {
-			setFormat(null, "application/epub+zip");
+		if (opfPackage.getMetadata().getFormats().isEmpty()) {
+			addFormat(null, "application/epub+zip");
 		}
 	}
 
@@ -183,6 +184,13 @@ public class EPUB {
 			dc.setFileAs(fileAs);
 		}
 		opfPackage.getMetadata().getContributors().add(dc);
+		return dc;
+	}
+
+	public Coverage addCoverage(String id, Locale lang, String value) {
+		Coverage dc = DCFactory.eINSTANCE.createCoverage();
+		setDcLocalized(dc, id, lang, value);
+		opfPackage.getMetadata().getCoverages().add(dc);
 		return dc;
 	}
 
@@ -264,7 +272,24 @@ public class EPUB {
 	public Description addDescription(String id, Locale lang, String description) {
 		Description dc = DCFactory.eINSTANCE.createDescription();
 		setDcLocalized(dc, id, lang, description);
-		opfPackage.getMetadata().setDescription(dc);
+		opfPackage.getMetadata().getDescriptions().add(dc);
+		return dc;
+	}
+
+	/**
+	 * Sets the &quot;Dublin Core Format&quot; of the publication.
+	 * <p>
+	 * This property is optional.
+	 * </p>
+	 * 
+	 * @param value
+	 *            the format to add
+	 * @return the new format
+	 */
+	public Format addFormat(String id, String value) {
+		Format dc = DCFactory.eINSTANCE.createFormat();
+		setDcCommon(dc, id, value);
+		opfPackage.getMetadata().getFormats().add(dc);
 		return dc;
 	}
 
@@ -414,7 +439,7 @@ public class EPUB {
 	public Publisher addPublisher(String id, Locale lang, String publisher) {
 		Publisher dc = DCFactory.eINSTANCE.createPublisher();
 		setDcLocalized(dc, id, lang, publisher);
-		opfPackage.getMetadata().setPublisher(dc);
+		opfPackage.getMetadata().getPublishers().add(dc);
 		return dc;
 	}
 
@@ -445,7 +470,41 @@ public class EPUB {
 	public Relation addRelation(String id, Locale lang, String value) {
 		Relation dc = DCFactory.eINSTANCE.createRelation();
 		setDcLocalized(dc, id, lang, value);
-		opfPackage.getMetadata().setRelation(dc);
+		opfPackage.getMetadata().getRelations().add(dc);
+		return dc;
+	}
+
+	/**
+	 * Sets the &quot;Dublin Core Rights&quot; of the publication.
+	 * <p>
+	 * This property is optional.
+	 * </p>
+	 * 
+	 * @param text
+	 *            the rights text
+	 * @return the new rights element
+	 */
+	public Rights addRights(String id, Locale lang, String value) {
+		Rights dc = DCFactory.eINSTANCE.createRights();
+		setDcLocalized(dc, id, lang, value);
+		opfPackage.getMetadata().getRights().add(dc);
+		return dc;
+	}
+
+	/**
+	 * Sets the &quot;Dublin Core Source&quot; of the publication.
+	 * <p>
+	 * This property is optional.
+	 * </p>
+	 * 
+	 * @param text
+	 *            the source text
+	 * @return the new source element
+	 */
+	public Source addSource(String id, Locale lang, String value) {
+		Source dc = DCFactory.eINSTANCE.createSource();
+		setDcLocalized(dc, id, lang, value);
+		opfPackage.getMetadata().getSources().add(dc);
 		return dc;
 	}
 
@@ -568,6 +627,7 @@ public class EPUB {
 		}
 	}
 
+
 	/**
 	 * Implement to handle generation of table of contents.
 	 * 
@@ -603,7 +663,6 @@ public class EPUB {
 		}
 		return null;
 	}
-
 
 	protected Spine getSpine() {
 		if (opfPackage.getSpine() == null) {
@@ -704,23 +763,6 @@ public class EPUB {
 		this.path = file.getAbsolutePath();
 	}
 
-	/**
-	 * Sets the &quot;Dublin Core Format&quot; of the publication.
-	 * <p>
-	 * This property is optional.
-	 * </p>
-	 * 
-	 * @param value
-	 *            the format to add
-	 * @return the new format
-	 */
-	public Format setFormat(String id, String value) {
-		Format dc = DCFactory.eINSTANCE.createFormat();
-		setDcCommon(dc, id, value);
-		opfPackage.getMetadata().setFormat(dc);
-		return dc;
-	}
-
 	public void setGenerateToc(boolean generateToc) {
 		opfPackage.setGenerateTableOfContents(generateToc);
 	}
@@ -731,40 +773,6 @@ public class EPUB {
 
 	public void setIncludeReferencedResources(boolean op) {
 		opfPackage.setIncludeReferencedResources(op);
-	}
-
-	/**
-	 * Sets the &quot;Dublin Core Rights&quot; of the publication.
-	 * <p>
-	 * This property is optional.
-	 * </p>
-	 * 
-	 * @param text
-	 *            the rights text
-	 * @return the new rights element
-	 */
-	public Rights setRights(String id, Locale lang, String value) {
-		Rights dc = DCFactory.eINSTANCE.createRights();
-		setDcLocalized(dc, id, lang, value);
-		opfPackage.getMetadata().setRights(dc);
-		return dc;
-	}
-
-	/**
-	 * Sets the &quot;Dublin Core Source&quot; of the publication.
-	 * <p>
-	 * This property is optional.
-	 * </p>
-	 * 
-	 * @param text
-	 *            the source text
-	 * @return the new source element
-	 */
-	public Source setSource(String id, Locale lang, String value) {
-		Source dc = DCFactory.eINSTANCE.createSource();
-		setDcLocalized(dc, id, lang, value);
-		opfPackage.getMetadata().setSource(dc);
-		return dc;
 	}
 
 	/**

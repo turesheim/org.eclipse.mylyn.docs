@@ -54,6 +54,14 @@ public class EpubTask extends Task {
 		}
 	}
 
+	public void addConfiguredCover(CoverType item) {
+		epub.setCover(new File(item.image), item.value);
+	}
+
+	public void addConfiguredCoverage(CoverageType coverage) {
+		epub.addCoverage(coverage.id, coverage.lang, coverage.text);
+	}
+
 	public void addConfiguredCreator(CreatorType item) {
 		if (item.role == null) {
 			epub.addCreator(item.id, item.lang, item.name, null, item.fileAs);
@@ -62,15 +70,11 @@ public class EpubTask extends Task {
 					item.fileAs);
 		}
 	}
-
-	public void addConfiguredCover(CoverType item) {
-		epub.setCover(new File(item.image), item.value);
-	}
-
+	
 	public void addConfiguredDate(DateType item) {
 		epub.addDate(item.id, item.date, item.event);
 	}
-	
+
 	/**
 	 * The FileSet sub-element is used to add EPUB artifacts that are not a part
 	 * of the main text. This can be graphical items and styling (CSS).
@@ -83,7 +87,7 @@ public class EpubTask extends Task {
 	}
 
 	public void addConfiguredFormat(FormatType format) {
-		epub.setFormat(format.id, format.text);
+		epub.addFormat(format.id, format.text);
 	}
 
 	/**
@@ -125,12 +129,16 @@ public class EpubTask extends Task {
 		epub.addReference(reference.href, reference.title, type);
 	}
 
+	public void addConfiguredRelation(RelationType relation) {
+		epub.addRelation(relation.id, relation.lang, relation.text);
+	}
+
 	public void addConfiguredRights(RightsType rights) {
-		epub.setRights(rights.id, rights.lang, rights.text);
+		epub.addRights(rights.id, rights.lang, rights.text);
 	}
 
 	public void addConfiguredSource(SourceType source) {
-		epub.setSource(source.id, source.lang, source.text);
+		epub.addSource(source.id, source.lang, source.text);
 	}
 
 	public void addConfiguredSubject(SubjectType subject) {
@@ -212,6 +220,13 @@ public class EpubTask extends Task {
 	}
 
 	/**
+	 * @ant.not-required Automatically add referenced resources.
+	 */
+	public void setAutomaticAdd(boolean automatic) {
+		epub.setIncludeReferencedResources(automatic);
+	}
+
+	/**
 	 * 
 	 * 
 	 * @param file
@@ -227,13 +242,6 @@ public class EpubTask extends Task {
 
 	public void setWorkingFolder(File workingFolder) {
 		this.workingFolder = workingFolder;
-	}
-
-	/**
-	 * @ant.not-required Automatically add referenced resources.
-	 */
-	public void setAutomatic(boolean automatic) {
-		epub.setIncludeReferencedResources(automatic);
 	}
 
 	private void validate() {
