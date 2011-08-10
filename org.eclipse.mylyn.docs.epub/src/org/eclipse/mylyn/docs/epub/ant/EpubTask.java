@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.Task;
 import org.eclipse.mylyn.docs.epub.EPUB;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Scheme;
@@ -26,11 +26,13 @@ import org.eclipse.mylyn.docs.epub.opf.Type;
  * Assemble a new EPUB.
  * 
  * @author Torkild U. Resheim
- * @ant.task name="html-to-epub" category="control"
+ * 
+ * @ant.task name="epub" category="epub"
  */
-public class EpubTask extends MatchingTask {
+public class EpubTask extends Task {
 
-	EPUB epub = EPUB.getVersion2Instance();
+	private final EPUB epub = EPUB.getVersion2Instance();
+
 	private final ArrayList<FileSetType> filesets;
 
 	private TocType toc = null;
@@ -73,9 +75,10 @@ public class EpubTask extends MatchingTask {
 	 * The FileSet sub-element is used to add EPUB artifacts that are not a part
 	 * of the main text. This can be graphical items and styling (CSS).
 	 * 
-	 * @param set
+	 * @param fs
+	 *            the fileset to add
 	 */
-	public void addConfiguredFileSet(FileSetType fs) {
+	public void addConfiguredEPUBFileSet(FileSetType fs) {
 		filesets.add(fs);
 	}
 
@@ -153,7 +156,7 @@ public class EpubTask extends MatchingTask {
 		epub.addType(type.id, type.text);
 	}
 
-	private void addFilesets(){
+	private void addFilesets() {
 		for (FileSetType fs : filesets) {
 			if (fs.getProject() == null) {
 				log("Deleting fileset with no project specified;"
@@ -224,6 +227,13 @@ public class EpubTask extends MatchingTask {
 
 	public void setWorkingFolder(File workingFolder) {
 		this.workingFolder = workingFolder;
+	}
+
+	/**
+	 * @ant.not-required Automatically add referenced resources.
+	 */
+	public void setAutomatic(boolean automatic) {
+		epub.setIncludeReferencedResources(automatic);
 	}
 
 	private void validate() {

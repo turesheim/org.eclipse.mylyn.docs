@@ -3,7 +3,7 @@ package org.eclipse.mylyn.docs.epub.ant;
 import java.util.Locale;
 
 /**
- * @ant.type name="fileset" category="epub"
+ * @ant.type name="epubfileset" category="epub"
  */
 public class FileSetType extends org.apache.tools.ant.types.FileSet {
 
