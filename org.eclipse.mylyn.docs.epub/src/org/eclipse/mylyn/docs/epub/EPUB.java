@@ -875,7 +875,7 @@ public abstract class EPUB {
 				fw.append("    <style type=\"text/css\"> img { max-width: 100%; }</style>\n");
 				fw.append("  </head>\n");
 				fw.append("  <body>\n");
-				fw.append("    <div id=\"" + coverImage.getTitle() + "\">\n");
+				fw.append("    <div id=\"cover-image\">\n");
 				fw.append("      <img src=\"" + coverImage.getHref() + "\" alt=\"" + coverImage.getTitle() + "\"/>\n");
 				fw.append("    </div>\n");
 				fw.append("  </body>\n");
