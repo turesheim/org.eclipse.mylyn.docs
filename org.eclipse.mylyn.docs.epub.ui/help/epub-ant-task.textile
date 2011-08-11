@@ -330,7 +330,7 @@ p. The following types are allowed:
 |glossary|An alphabetical list of terms peculiar to the publication with definitions or explanations|
 |acknowledgements|Author’s statement acknowledging his use of the works of other authors|	
 |bibliography|A list of books or other material on a subject|	
-|colophon|A publisher’s emblem on a book|
+|colophon|A publisher's emblem on a book|
 |copyright-page|Subject to or controlled by copyright|	
 |dedication|To address or inscribe (a book, artistic performance, etc) to a person, cause, etc as a token of affection or respect.|
 |epigraph|A quotation at the beginning of a book, chapter, etc, suggesting its theme.|
