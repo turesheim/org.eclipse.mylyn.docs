@@ -138,7 +138,7 @@ public class TOCGenerator extends DefaultHandler {
 			if (attributes.getValue("id") != null) {
 				currentId = attributes.getValue("id");
 			} else {
-				currentId = Integer.toString(getPlayOrder());
+				currentId = null;
 			}
 		}
 	}
