@@ -114,6 +114,8 @@ public class EPUB {
 
 	protected File tocFile;
 
+	protected final boolean verbose = true;
+
 	protected EPUB() {
 		opfPackage = OPFFactory.eINSTANCE.createPackage();
 	}
@@ -394,6 +396,10 @@ public class EPUB {
 		item.setNoToc(noToc);
 		item.setMedia_type(type);
 		item.setFile(file.getAbsolutePath());
+		if (verbose) {
+			System.out.println("Adding " + file.getName() + " ("
+					+ item.getMedia_type() + ") to publication");
+		}
 		opfPackage.getManifest().getItems().add(item);
 		if (spine) {
 			Itemref ref = OPFFactory.eINSTANCE.createItemref();
@@ -577,7 +583,6 @@ public class EPUB {
 	 * @throws Exception
 	 */
 	public void assemble(File workingFolder) throws Exception {
-		System.out.println("Assembling EPUB file in " + workingFolder);
 		addCompulsoryData();
 		// Note that order is important here. Some methods may insert data into
 		// the EPUB structure. Hence the OPF must be written last.
@@ -599,7 +604,12 @@ public class EPUB {
 				throw new IOException("Could not create OEBPS folder in "
 						+ oepbsFolder.getAbsolutePath());
 			}
-			EPUBFileUtil.zip(new File(path), workingFolder);
+			File epubFile = new File(path);
+			EPUBFileUtil.zip(epubFile, workingFolder);
+			if (verbose) {
+				System.out.println("Assembled publication to \"" + epubFile
+						+ "\"");
+			}
 		} else {
 			throw new IOException("Could not create working folder in "
 					+ workingFolder.getAbsolutePath());
@@ -626,7 +636,6 @@ public class EPUB {
 			}
 		}
 	}
-
 
 	/**
 	 * Implement to handle generation of table of contents.
@@ -702,7 +711,7 @@ public class EPUB {
 				File relativePath = new File(EPUBFileUtil.getRelativePath(root,
 						image));
 				addItem(null, null, image, relativePath.getParent(), null,
-							false, false);
+						false, false);
 			}
 		}
 

@@ -105,9 +105,12 @@ class EPUB2 extends EPUB {
 				}
 			}
 			if (referencedItem != null && !referencedItem.isNoToc()) {
-				System.out.println("Generating table of contents from "
-						+ referencedItem.getFile());
-				FileReader fr = new FileReader(referencedItem.getFile());
+				File file = new File(referencedItem.getFile());
+				if (verbose) {
+					System.out.println("Populating table of contents from \""
+							+ file.getName() + "\".");
+				}
+				FileReader fr = new FileReader(file);
 				playOrder = TOCGenerator.parse(new InputSource(fr),
 						referencedItem.getHref(), ncxTOC, playOrder);
 			}
@@ -115,10 +118,14 @@ class EPUB2 extends EPUB {
 	}
 
 	/**
-	 * Writes the table of contents file in the specified folder
+	 * Writes the table of contents file in the specified folder using the NCX
+	 * format. If a table of contents file has not been specified an empty one
+	 * will be created (since it is required to have one). If in addition it has
+	 * been specified that the table of contents should be created – the content
+	 * files will be parsed and a TOC will be generated.
 	 * 
 	 * @param oepbsFolder
-	 *            the folder to create the file in.
+	 *            the folder to create the NCX file in
 	 * @throws IOException
 	 * @throws SAXException
 	 * @throws ParserConfigurationException
@@ -127,8 +134,6 @@ class EPUB2 extends EPUB {
 	protected void writeTableOfContents(File oepbsFolder) throws Exception {
 		File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator
 				+ "toc.ncx");
-		// A path to a table of contents have not been specified, so we will
-		// use data from our model to generate the file.
 		if (tocFile == null) {
 			ResourceSet resourceSet = new ResourceSetImpl();
 			// Register the packages to make it available during loading.
