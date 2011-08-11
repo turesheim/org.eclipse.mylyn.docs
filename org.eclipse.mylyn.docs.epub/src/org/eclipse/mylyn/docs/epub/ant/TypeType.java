@@ -11,11 +11,13 @@
 package org.eclipse.mylyn.docs.epub.ant;
 
 /**
+ * @author Torkild U. Resheim
  * @ant.type name="type" category="epub"
  */
 public class TypeType {
 
 	String id;
+
 	String text;
 
 	/**
@@ -31,5 +33,5 @@ public class TypeType {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 }

@@ -13,12 +13,15 @@ package org.eclipse.mylyn.docs.epub.ant;
 import java.util.Locale;
 
 /**
+ * @author Torkild U. Resheim
  * @ant.type name="source" category="epub"
  */
 public class SourceType {
 
 	String id;
+
 	Locale lang;
+
 	String text;
 
 	/**
@@ -27,7 +30,7 @@ public class SourceType {
 	public void addText(String text) {
 		this.text = text;
 	}
-	
+
 	/**
 	 * @ant.not-required
 	 */

@@ -49,12 +49,10 @@ public class EPUBFileUtil {
 			return "image/svg+xml";
 		}
 		// Use URLConnection or content type detection
-		String mimeType = URLConnection
-				.guessContentTypeFromName(file.getName());
+		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 		if (mimeType == null) {
 			try {
-				InputStream is = new BufferedInputStream(new FileInputStream(
-						file));
+				InputStream is = new BufferedInputStream(new FileInputStream(file));
 				mimeType = URLConnection.guessContentTypeFromStream(is);
 				is.close();
 			} catch (FileNotFoundException e) {
@@ -103,8 +101,7 @@ public class EPUBFileUtil {
 	 * @param segments
 	 * @see #getRelativePath(File, File)
 	 */
-	private static void getPathSegments(File root, File file,
-			ArrayList<String> segments) {
+	private static void getPathSegments(File root, File file, ArrayList<String> segments) {
 		if (root.equals(file)) {
 			return;
 		}
@@ -181,13 +178,11 @@ public class EPUBFileUtil {
 	 * @throws ZipException
 	 * @throws IOException
 	 */
-	public static void zip(File destination, File folder) throws ZipException,
-			IOException {
+	public static void zip(File destination, File folder) throws ZipException, IOException {
 		if (destination.exists()) {
 			throw new IOException("The destination zip-file already exists.");
 		}
-		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(
-				destination));
+		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(destination));
 		writeEPUBHeader(out);
 		zip(folder, folder, out);
 		out.close();
@@ -202,8 +197,7 @@ public class EPUBFileUtil {
 	 *            the output stream
 	 * @throws IOException
 	 */
-	private static void zip(File root, File folder, ZipOutputStream out)
-			throws IOException {
+	private static void zip(File root, File folder, ZipOutputStream out) throws IOException {
 		// Files first in order to make sure "metadata" is placed first in the
 		// zip file. We need that in order to support EPUB properly.
 		File[] files = folder.listFiles(new java.io.FileFilter() {

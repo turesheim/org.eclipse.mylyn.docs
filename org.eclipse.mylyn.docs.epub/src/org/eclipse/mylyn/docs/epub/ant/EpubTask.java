@@ -25,8 +25,8 @@ import org.eclipse.mylyn.docs.epub.opf.Type;
 /**
  * Assemble a new EPUB.
  * 
- * @author Torkild U. Resheim
  * 
+ * @author Torkild U. Resheim
  * @ant.task name="epub" category="epub"
  */
 public class EpubTask extends Task {
@@ -46,11 +46,9 @@ public class EpubTask extends Task {
 
 	public void addConfiguredContributor(ContributorType item) {
 		if (item.role == null) {
-			epub.addContributor(item.id, item.lang, item.name, null,
-					item.fileAs);
+			epub.addContributor(item.id, item.lang, item.name, null, item.fileAs);
 		} else {
-			epub.addContributor(item.id, item.lang, item.name,
-					Role.get(item.role), item.fileAs);
+			epub.addContributor(item.id, item.lang, item.name, Role.get(item.role), item.fileAs);
 		}
 	}
 
@@ -66,11 +64,10 @@ public class EpubTask extends Task {
 		if (item.role == null) {
 			epub.addCreator(item.id, item.lang, item.name, null, item.fileAs);
 		} else {
-			epub.addCreator(item.id, item.lang, item.name, Role.get(item.role),
-					item.fileAs);
+			epub.addCreator(item.id, item.lang, item.name, Role.get(item.role), item.fileAs);
 		}
 	}
-	
+
 	public void addConfiguredDate(DateType item) {
 		epub.addDate(item.id, item.date, item.event);
 	}
@@ -94,16 +91,14 @@ public class EpubTask extends Task {
 	 * @ant.required
 	 */
 	public void addConfiguredIdentifier(IdentifierType identifier) {
-		epub.addIdentifier(identifier.id, Scheme.getByName(identifier.scheme),
-				identifier.value);
+		epub.addIdentifier(identifier.id, Scheme.getByName(identifier.scheme), identifier.value);
 	}
 
 	/**
 	 * @ant.required
 	 */
 	public void addConfiguredItem(ItemType item) {
-		epub.addItem(item.id, item.lang, item.file, item.dest, item.type,
-				item.spine, item.noToc);
+		epub.addItem(item.id, item.lang, item.file, item.dest, item.type, item.spine, item.noToc);
 	}
 
 	/**
@@ -154,8 +149,7 @@ public class EpubTask extends Task {
 
 	public void addConfiguredToc(TocType toc) {
 		if (this.toc != null) {
-			throw new BuildException(
-					"Only one table of contents (toc) declaration is allowed.");
+			throw new BuildException("Only one table of contents (toc) declaration is allowed.");
 		}
 		this.toc = toc;
 	}
@@ -167,15 +161,13 @@ public class EpubTask extends Task {
 	private void addFilesets() {
 		for (FileSetType fs : filesets) {
 			if (fs.getProject() == null) {
-				log("Deleting fileset with no project specified;"
-						+ " assuming executing project", Project.MSG_VERBOSE);
+				log("Deleting fileset with no project specified;" + " assuming executing project", Project.MSG_VERBOSE);
 				fs = (FileSetType) fs.clone();
 				fs.setProject(getProject());
 			}
 			final File fsDir = fs.getDir();
 			if (fsDir == null) {
-				throw new BuildException(
-						"File or Resource without directory or file specified");
+				throw new BuildException("File or Resource without directory or file specified");
 			} else if (!fsDir.isDirectory()) {
 				throw new BuildException("Directory does not exist:" + fsDir);
 			}
@@ -190,7 +182,7 @@ public class EpubTask extends Task {
 			}
 
 		}
-		
+
 	}
 
 	@Override

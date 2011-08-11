@@ -14,15 +14,21 @@ import java.io.File;
 import java.util.Locale;
 
 /**
+ * @author Torkild U. Resheim
  * @ant.type name="item" category="epub"
  */
 public class ItemType {
 
 	String dest;
+
 	File file;
+
 	String id;
+
 	boolean noToc = false;
+
 	String page;
+
 	Locale lang;
 
 	public void setLang(Locale lang) {

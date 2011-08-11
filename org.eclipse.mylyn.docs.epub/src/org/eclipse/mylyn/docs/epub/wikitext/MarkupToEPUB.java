@@ -62,8 +62,7 @@ public class MarkupToEPUB {
 		// Create a temporary working folder
 		File workingFolder = File.createTempFile("wikitext_", null);
 		if (workingFolder.delete() && workingFolder.mkdirs()) {
-			File htmlFile = new File(workingFolder.getAbsolutePath()
-					+ File.separator + "markup.html");
+			File htmlFile = new File(workingFolder.getAbsolutePath() + File.separator + "markup.html");
 			FileWriter out = new FileWriter(htmlFile);
 			HtmlDocumentBuilder builder = new HtmlDocumentBuilder(out) {
 				@Override

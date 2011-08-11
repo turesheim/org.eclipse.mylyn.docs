@@ -34,15 +34,12 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class ImageScanner extends DefaultHandler {
 
-	public static List<File> parse(Item item)
-			throws ParserConfigurationException, SAXException, IOException {
+	public static List<File> parse(Item item) throws ParserConfigurationException, SAXException, IOException {
 		FileReader fr = new FileReader(item.getFile());
 		InputSource file = new InputSource(fr);
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setFeature("http://xml.org/sax/features/validation", false);
-		factory.setFeature(
-				"http://apache.org/xml/features/nonvalidating/load-external-dtd",
-				false);
+		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 		SAXParser parser = factory.newSAXParser();
 		String href = item.getHref();
 		ImageScanner scanner = new ImageScanner(item);
@@ -67,13 +64,11 @@ public class ImageScanner extends DefaultHandler {
 	}
 
 	@Override
-	public void characters(char[] ch, int start, int length)
-			throws SAXException {
+	public void characters(char[] ch, int start, int length) throws SAXException {
 	}
 
 	@Override
-	public void endElement(String uri, String localName, String qName)
-			throws SAXException {
+	public void endElement(String uri, String localName, String qName) throws SAXException {
 	}
 
 	/**
@@ -96,15 +91,13 @@ public class ImageScanner extends DefaultHandler {
 	}
 
 	@Override
-	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException {
+	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		// Handle inline image files
 		if (qName.equalsIgnoreCase("img")) {
 			String ref = getAttribute(attributes, "src");
 			if (ref != null) {
 				File source = new File(currentItem.getSourcePath());
-				File file = new File(source.getParentFile().getAbsolutePath()
-						+ File.separator + ref);
+				File file = new File(source.getParentFile().getAbsolutePath() + File.separator + ref);
 				files.add(file);
 			}
 		}
@@ -113,8 +106,7 @@ public class ImageScanner extends DefaultHandler {
 			String ref = getAttribute(attributes, "href");
 			if (ref != null) {
 				File source = new File(currentItem.getSourcePath());
-				File file = new File(source.getParentFile().getAbsolutePath()
-						+ File.separator + ref);
+				File file = new File(source.getParentFile().getAbsolutePath() + File.separator + ref);
 				String mimetype = EPUBFileUtil.getMimeType(file);
 				System.out.println(mimetype);
 				files.add(file);

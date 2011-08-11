@@ -107,12 +107,10 @@ class EPUB2 extends EPUB {
 			if (referencedItem != null && !referencedItem.isNoToc()) {
 				File file = new File(referencedItem.getFile());
 				if (verbose) {
-					System.out.println("Populating table of contents from \""
-							+ file.getName() + "\".");
+					System.out.println("Populating table of contents from \"" + file.getName() + "\".");
 				}
 				FileReader fr = new FileReader(file);
-				playOrder = TOCGenerator.parse(new InputSource(fr),
-						referencedItem.getHref(), ncxTOC, playOrder);
+				playOrder = TOCGenerator.parse(new InputSource(fr), referencedItem.getHref(), ncxTOC, playOrder);
 			}
 		}
 	}
@@ -132,13 +130,11 @@ class EPUB2 extends EPUB {
 	 */
 	@Override
 	protected void writeTableOfContents(File oepbsFolder) throws Exception {
-		File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator
-				+ "toc.ncx");
+		File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator + "toc.ncx");
 		if (tocFile == null) {
 			ResourceSet resourceSet = new ResourceSetImpl();
 			// Register the packages to make it available during loading.
-			resourceSet.getPackageRegistry().put(NCXPackage.eNS_URI,
-					NCXPackage.eINSTANCE);
+			resourceSet.getPackageRegistry().put(NCXPackage.eNS_URI, NCXPackage.eINSTANCE);
 			URI fileURI = URI.createFileURI(ncxFile.getAbsolutePath());
 			Resource resource = resourceSet.createResource(fileURI);
 			// We've been asked to generate a table of contents using pages
@@ -158,8 +154,8 @@ class EPUB2 extends EPUB {
 		// As we now have written the table of contents we must make sure it is
 		// in the manifest and referenced in the spine. We also want it to be
 		// the first element in the manifest.
-		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile,
-				null, "application/x-dtbncx+xml", false, false);
+		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, "application/x-dtbncx+xml", false,
+				false);
 		opfPackage.getManifest().getItems().move(0, item);
 	}
 
@@ -193,8 +189,8 @@ class EPUB2 extends EPUB {
 	 * able to create this factory without the Eclipse runtime.
 	 */
 	private void registerNCXResourceFactory() {
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(
-				TABLE_OF_CONTENTS_ID, new NCXResourceFactoryImpl() {
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(TABLE_OF_CONTENTS_ID,
+				new NCXResourceFactoryImpl() {
 					@Override
 					public Resource createResource(URI uri) {
 						NCXResourceImpl xmiResource = new NCXResourceImpl(uri) {

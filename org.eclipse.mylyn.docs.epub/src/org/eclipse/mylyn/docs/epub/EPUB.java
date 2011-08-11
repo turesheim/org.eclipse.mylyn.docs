@@ -134,10 +134,8 @@ public class EPUB {
 	 * </ul>
 	 */
 	private void addCompulsoryData() {
-		addDate(null, new java.util.Date(System.currentTimeMillis()),
-				"creation");
-		addContributor(null, null, "Eclipse Committers and Contributors",
-				Role.REDACTOR, null);
+		addDate(null, new java.util.Date(System.currentTimeMillis()), "creation");
+		addContributor(null, null, "Eclipse Committers and Contributors", Role.REDACTOR, null);
 		if (getIdentifier() == null) {
 			addIdentifier("uuid", Scheme.UUID, UUID.randomUUID().toString());
 			setIdentifierId("uuid");
@@ -175,8 +173,7 @@ public class EPUB {
 	 *            the language code or <code>null</code>
 	 * @return the new creator
 	 */
-	public Contributor addContributor(String id, Locale lang, String name,
-			Role role, String fileAs) {
+	public Contributor addContributor(String id, Locale lang, String name, Role role, String fileAs) {
 		Contributor dc = DCFactory.eINSTANCE.createContributor();
 		setDcLocalized(dc, id, lang, name);
 		if (role != null) {
@@ -212,8 +209,7 @@ public class EPUB {
 	 *            name to file the creator under or <code>null</code>
 	 * @return the new creator
 	 */
-	public Creator addCreator(String id, Locale lang, String name, Role role,
-			String fileAs) {
+	public Creator addCreator(String id, Locale lang, String name, Role role, String fileAs) {
 		Creator dc = DCFactory.eINSTANCE.createCreator();
 		setDcLocalized(dc, id, lang, name);
 		if (role != null) {
@@ -353,25 +349,20 @@ public class EPUB {
 	 *            whether or not to include in TOC when automatically generated
 	 * @return the new item
 	 */
-	public Item addItem(String id, Locale lang, File file, String dest,
-			String type, boolean spine, boolean noToc) {
+	public Item addItem(String id, Locale lang, File file, String dest, String type, boolean spine, boolean noToc) {
 		if (file == null || !file.exists()) {
-			throw new IllegalArgumentException("\"file\" "
-					+ file.getAbsolutePath() + " must exist.");
+			throw new IllegalArgumentException("\"file\" " + file.getAbsolutePath() + " must exist.");
 		}
 		if (file.isDirectory()) {
-			throw new IllegalArgumentException("\"file\" "
-					+ file.getAbsolutePath() + " must not be a directory.");
+			throw new IllegalArgumentException("\"file\" " + file.getAbsolutePath() + " must not be a directory.");
 		}
 		Item item = OPFFactory.eINSTANCE.createItem();
 		if (type == null) {
 			if (!spine) {
 				type = EPUBFileUtil.getMimeType(file);
 				if (type == null) {
-					throw new IllegalArgumentException(
-							"Could not automatically determine MIME type for file "
-									+ file
-									+ ". Please specify the correct value");
+					throw new IllegalArgumentException("Could not automatically determine MIME type for file " + file
+							+ ". Please specify the correct value");
 				}
 			} else {
 				type = DEFAULT_MIMETYPE;
@@ -380,12 +371,9 @@ public class EPUB {
 		if (id == null) {
 			String prefix = "";
 			if (!type.equals(DEFAULT_MIMETYPE)) {
-				prefix = (type.indexOf('/')) == -1 ? type : type.substring(0,
-						type.indexOf('/')) + "-";
+				prefix = (type.indexOf('/')) == -1 ? type : type.substring(0, type.indexOf('/')) + "-";
 			}
-			id = prefix
-					+ file.getName().substring(0,
-							file.getName().lastIndexOf('.'));
+			id = prefix + file.getName().substring(0, file.getName().lastIndexOf('.'));
 		}
 		item.setId(id);
 		if (dest == null) {
@@ -397,8 +385,7 @@ public class EPUB {
 		item.setMedia_type(type);
 		item.setFile(file.getAbsolutePath());
 		if (verbose) {
-			System.out.println("Adding " + file.getName() + " ("
-					+ item.getMedia_type() + ") to publication");
+			System.out.println("Adding " + file.getName() + " (" + item.getMedia_type() + ") to publication");
 		}
 		opfPackage.getManifest().getItems().add(item);
 		if (spine) {
@@ -423,10 +410,8 @@ public class EPUB {
 		return dc;
 	}
 
-	public org.eclipse.mylyn.docs.epub.opf.Meta addMeta(String name,
-			String content) {
-		org.eclipse.mylyn.docs.epub.opf.Meta opf = OPFFactory.eINSTANCE
-				.createMeta();
+	public org.eclipse.mylyn.docs.epub.opf.Meta addMeta(String name, String content) {
+		org.eclipse.mylyn.docs.epub.opf.Meta opf = OPFFactory.eINSTANCE.createMeta();
 		opf.setName(name);
 		opf.setContent(content);
 		opfPackage.getMetadata().getMetas().add(opf);
@@ -556,8 +541,7 @@ public class EPUB {
 	 * @return the new type
 	 */
 	public org.eclipse.mylyn.docs.epub.dc.Type addType(String id, String value) {
-		org.eclipse.mylyn.docs.epub.dc.Type dc = DCFactory.eINSTANCE
-				.createType();
+		org.eclipse.mylyn.docs.epub.dc.Type dc = DCFactory.eINSTANCE.createType();
 		setDcCommon(dc, id, value);
 		opfPackage.getMetadata().getTypes().add(dc);
 		return dc;
@@ -588,8 +572,7 @@ public class EPUB {
 		// the EPUB structure. Hence the OPF must be written last.
 		if (workingFolder.isDirectory() || workingFolder.mkdirs()) {
 			writeContainer(workingFolder);
-			File oepbsFolder = new File(workingFolder.getAbsolutePath()
-					+ File.separator + "OEBPS");
+			File oepbsFolder = new File(workingFolder.getAbsolutePath() + File.separator + "OEBPS");
 			if (oepbsFolder.mkdir()) {
 				if (opfPackage.isGenerateCoverHTML()) {
 					writeCoverHTML(oepbsFolder);
@@ -601,18 +584,15 @@ public class EPUB {
 				writeTableOfContents(oepbsFolder);
 				writeOPF(oepbsFolder);
 			} else {
-				throw new IOException("Could not create OEBPS folder in "
-						+ oepbsFolder.getAbsolutePath());
+				throw new IOException("Could not create OEBPS folder in " + oepbsFolder.getAbsolutePath());
 			}
 			File epubFile = new File(path);
 			EPUBFileUtil.zip(epubFile, workingFolder);
 			if (verbose) {
-				System.out.println("Assembled publication to \"" + epubFile
-						+ "\"");
+				System.out.println("Assembled publication to \"" + epubFile + "\"");
 			}
 		} else {
-			throw new IOException("Could not create working folder in "
-					+ workingFolder.getAbsolutePath());
+			throw new IOException("Could not create working folder in " + workingFolder.getAbsolutePath());
 		}
 		validate();
 	}
@@ -630,8 +610,7 @@ public class EPUB {
 		for (Item item : items) {
 			if (!item.isGenerated()) {
 				File source = new File(item.getFile());
-				File destination = new File(oepbsFolder.getAbsolutePath()
-						+ File.separator + item.getHref());
+				File destination = new File(oepbsFolder.getAbsolutePath() + File.separator + item.getHref());
 				EPUBFileUtil.copy(source, destination);
 			}
 		}
@@ -653,8 +632,7 @@ public class EPUB {
 	 * @return the main identifier or <code>null</code>
 	 */
 	protected Identifier getIdentifier() {
-		EList<Identifier> identifiers = opfPackage.getMetadata()
-				.getIdentifiers();
+		EList<Identifier> identifiers = opfPackage.getMetadata().getIdentifiers();
 		for (Identifier identifier : identifiers) {
 			if (identifier.getId().equals(opfPackage.getUniqueIdentifier())) {
 				return identifier;
@@ -691,8 +669,7 @@ public class EPUB {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	private void includeReferencedResources()
-			throws ParserConfigurationException, SAXException, IOException {
+	private void includeReferencedResources() throws ParserConfigurationException, SAXException, IOException {
 		EList<Item> manifestItems = opfPackage.getManifest().getItems();
 		// Compose a list of file references
 		HashMap<File, List<File>> references = new HashMap<File, List<File>>();
@@ -708,10 +685,8 @@ public class EPUB {
 		for (File root : references.keySet()) {
 			List<File> images = references.get(root);
 			for (File image : images) {
-				File relativePath = new File(EPUBFileUtil.getRelativePath(root,
-						image));
-				addItem(null, null, image, relativePath.getParent(), null,
-						false, false);
+				File relativePath = new File(EPUBFileUtil.getRelativePath(root, image));
+				addItem(null, null, image, relativePath.getParent(), null, false, false);
 			}
 		}
 
@@ -723,29 +698,27 @@ public class EPUB {
 	 * able to create this factory without the Eclipse runtime.
 	 */
 	protected void registerOPFResourceFactory() {
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(
-				"opf", new OPFResourceFactoryImpl() {
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("opf", new OPFResourceFactoryImpl() {
+			@Override
+			public Resource createResource(URI uri) {
+				OPFResourceImpl xmiResource = new OPFResourceImpl(uri) {
+
 					@Override
-					public Resource createResource(URI uri) {
-						OPFResourceImpl xmiResource = new OPFResourceImpl(uri) {
-
-							@Override
-							protected XMLHelper createXMLHelper() {
-								EPUBXMLHelperImp xmlHelper = new EPUBXMLHelperImp();
-								return xmlHelper;
-							}
-
-						};
-						return xmiResource;
+					protected XMLHelper createXMLHelper() {
+						EPUBXMLHelperImp xmlHelper = new EPUBXMLHelperImp();
+						return xmlHelper;
 					}
 
-				});
+				};
+				return xmiResource;
+			}
+
+		});
 	}
 
 	public void setCover(File image, String title) {
 		// Add the cover image to the manifest
-		Item item = addItem(COVER_IMAGE_ID, null, image, null, null, false,
-				true);
+		Item item = addItem(COVER_IMAGE_ID, null, image, null, null, false, true);
 		item.setTitle(title);
 		// Point to the cover using a meta tag
 		addMeta("cover", COVER_IMAGE_ID);
@@ -760,8 +733,7 @@ public class EPUB {
 		}
 	}
 
-	private void setDcLocalized(LocalizedDCType dc, String id, Locale lang,
-			String value) {
+	private void setDcLocalized(LocalizedDCType dc, String id, Locale lang, String value) {
 		setDcCommon(dc, id, value);
 		if (lang != null) {
 			dc.setLang(lang.toString());
@@ -817,8 +789,7 @@ public class EPUB {
 	 *         otherwise.
 	 */
 	private boolean validate() {
-		EValidator.Registry.INSTANCE.put(OPFPackage.eINSTANCE,
-				new EcoreValidator());
+		EValidator.Registry.INSTANCE.put(OPFPackage.eINSTANCE, new EcoreValidator());
 		BasicDiagnostic diagnostics = new BasicDiagnostic();
 		boolean valid = true;
 		for (EObject eo : opfPackage.eContents()) {
@@ -842,11 +813,9 @@ public class EPUB {
 	 *            the root folder
 	 */
 	private void writeContainer(File workingFolder) {
-		File metaFolder = new File(workingFolder.getAbsolutePath()
-				+ File.separator + "META-INF");
+		File metaFolder = new File(workingFolder.getAbsolutePath() + File.separator + "META-INF");
 		if (metaFolder.mkdir()) {
-			File containerFile = new File(metaFolder.getAbsolutePath()
-					+ File.separator + "container.xml");
+			File containerFile = new File(metaFolder.getAbsolutePath() + File.separator + "container.xml");
 			if (!containerFile.exists()) {
 				try {
 					FileWriter fw = new FileWriter(containerFile);
@@ -872,8 +841,7 @@ public class EPUB {
 	 */
 	private void writeCoverHTML(File oepbsFolder) throws IOException {
 		Item coverImage = getItemById(COVER_IMAGE_ID);
-		File coverFile = new File(oepbsFolder.getAbsolutePath()
-				+ File.separator + "cover-page.xhtml");
+		File coverFile = new File(oepbsFolder.getAbsolutePath() + File.separator + "cover-page.xhtml");
 		if (!coverFile.exists()) {
 			try {
 				FileWriter fw = new FileWriter(coverFile);
@@ -886,8 +854,7 @@ public class EPUB {
 				fw.append("  </head>\n");
 				fw.append("  <body>\n");
 				fw.append("    <div id=\"" + coverImage.getTitle() + "\">\n");
-				fw.append("      <img src=\"" + coverImage.getHref()
-						+ "\" alt=\"" + coverImage.getTitle() + "\"/>\n");
+				fw.append("      <img src=\"" + coverImage.getHref() + "\" alt=\"" + coverImage.getTitle() + "\"/>\n");
 				fw.append("    </div>\n");
 				fw.append("  </body>\n");
 				fw.append("</html>\n");
@@ -897,8 +864,7 @@ public class EPUB {
 			}
 		}
 		// Add the cover page item
-		Item coverPage = addItem(null, null, coverFile, null, DEFAULT_MIMETYPE,
-				false, false);
+		Item coverPage = addItem(null, null, coverFile, null, DEFAULT_MIMETYPE, false, false);
 		coverPage.setGenerated(true);
 
 	}
@@ -911,12 +877,10 @@ public class EPUB {
 	 * @throws IOException
 	 */
 	private void writeOPF(File oebpsFolder) throws IOException {
-		File opfFile = new File(oebpsFolder.getAbsolutePath() + File.separator
-				+ "content.opf");
+		File opfFile = new File(oebpsFolder.getAbsolutePath() + File.separator + "content.opf");
 		ResourceSet resourceSet = new ResourceSetImpl();
 		// Register the packages to make it available during loading.
-		resourceSet.getPackageRegistry().put(OPFPackage.eNS_URI,
-				OPFPackage.eINSTANCE);
+		resourceSet.getPackageRegistry().put(OPFPackage.eNS_URI, OPFPackage.eINSTANCE);
 		URI fileURI = URI.createFileURI(opfFile.getAbsolutePath());
 		Resource resource = resourceSet.createResource(fileURI);
 		resource.getContents().add(opfPackage);

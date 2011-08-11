@@ -11,11 +11,13 @@
 package org.eclipse.mylyn.docs.epub.ant;
 
 /**
+ * @author Torkild U. Resheim
  * @ant.type name="format" category="epub"
  */
 public class FormatType {
 
 	String id;
+
 	String text;
 
 	/**
@@ -24,7 +26,7 @@ public class FormatType {
 	public void addText(String text) {
 		this.text = text;
 	}
-	
+
 	/**
 	 * @ant.not-required
 	 */

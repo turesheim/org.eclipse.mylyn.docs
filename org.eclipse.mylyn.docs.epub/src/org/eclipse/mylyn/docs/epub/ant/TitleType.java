@@ -13,12 +13,15 @@ package org.eclipse.mylyn.docs.epub.ant;
 import java.util.Locale;
 
 /**
+ * @author Torkild U. Resheim
  * @ant.type name="title" category="epub"
  */
 public class TitleType {
 
 	String text;
+
 	Locale lang;
+
 	String id;
 
 	public void setId(String id) {

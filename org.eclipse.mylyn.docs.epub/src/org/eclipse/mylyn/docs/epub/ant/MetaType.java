@@ -10,13 +10,14 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.ant;
 
-
 /**
+ * @author Torkild U. Resheim
  * @ant.type name="meta" category="epub"
  */
 public class MetaType {
 
 	String name;
+
 	String content;
 
 	/**
@@ -26,8 +27,7 @@ public class MetaType {
 		this.name = name;
 	}
 
-
-		/**
+	/**
 	 * @ant.required
 	 */
 	public void setContent(String content) {

@@ -12,12 +12,15 @@
 package org.eclipse.mylyn.docs.epub.ant;
 
 /**
+ * @author Torkild U. Resheim
  * @ant.type name="identifier" category="epub"
  */
 public class IdentifierType {
 
 	String id;
+
 	String scheme;
+
 	String value;
 
 	/**
