@@ -193,7 +193,7 @@ public class EpubTask extends Task {
 			if (toc.generate) {
 				epub.setGenerateToc(true);
 			} else if (toc.file != null) {
-				epub.setTocFile(toc.file);
+				epub.setTableOfContents(toc.file);
 			}
 		}
 		try {

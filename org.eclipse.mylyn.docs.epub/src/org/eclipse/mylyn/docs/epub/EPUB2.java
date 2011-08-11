@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.mylyn.docs.epub.internal.EPUBFileUtil;
 import org.eclipse.mylyn.docs.epub.internal.EPUBXMLHelperImp;
 import org.eclipse.mylyn.docs.epub.internal.TOCGenerator;
 import org.eclipse.mylyn.docs.epub.ncx.DocTitle;
@@ -62,7 +61,32 @@ import org.xml.sax.SAXException;
  */
 class EPUB2 extends EPUB {
 
+	private static final String NCX_MIMETYPE = "application/x-dtbncx+xml";
+
 	private final Ncx ncxTOC;
+
+	/**
+	 * Creates a new EPUB.
+	 */
+	public EPUB2() {
+		super();
+		opfPackage.setVersion("2.0");
+		ncxTOC = NCXFactory.eINSTANCE.createNcx();
+		Metadata opfMetadata = OPFFactory.eINSTANCE.createMetadata();
+		opfPackage.setMetadata(opfMetadata);
+		Guide opfGuide = OPFFactory.eINSTANCE.createGuide();
+		opfPackage.setGuide(opfGuide);
+		Manifest opfManifest = OPFFactory.eINSTANCE.createManifest();
+		opfPackage.setManifest(opfManifest);
+		// Create the spine and set a reference to the table of contents
+		// item which will be added to the manifest on a later stage.
+		Spine opfSpine = OPFFactory.eINSTANCE.createSpine();
+		opfSpine.setToc(TABLE_OF_CONTENTS_ID);
+		opfPackage.setSpine(opfSpine);
+
+		registerNCXResourceFactory();
+		opfPackage.setGenerateTableOfContents(true);
+	}
 
 	/**
 	 * This mechanism will traverse the spine of the publication (which is
@@ -116,73 +140,6 @@ class EPUB2 extends EPUB {
 	}
 
 	/**
-	 * Writes the table of contents file in the specified folder using the NCX
-	 * format. If a table of contents file has not been specified an empty one
-	 * will be created (since it is required to have one). If in addition it has
-	 * been specified that the table of contents should be created – the content
-	 * files will be parsed and a TOC will be generated.
-	 * 
-	 * @param oepbsFolder
-	 *            the folder to create the NCX file in
-	 * @throws IOException
-	 * @throws SAXException
-	 * @throws ParserConfigurationException
-	 */
-	@Override
-	protected void writeTableOfContents(File oepbsFolder) throws Exception {
-		File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator + "toc.ncx");
-		if (tocFile == null) {
-			ResourceSet resourceSet = new ResourceSetImpl();
-			// Register the packages to make it available during loading.
-			resourceSet.getPackageRegistry().put(NCXPackage.eNS_URI, NCXPackage.eINSTANCE);
-			URI fileURI = URI.createFileURI(ncxFile.getAbsolutePath());
-			Resource resource = resourceSet.createResource(fileURI);
-			// We've been asked to generate a table of contents using pages
-			// contained in the spine.
-			if (opfPackage.isGenerateTableOfContents()) {
-				generateTableOfContents();
-			}
-			resource.getContents().add(ncxTOC);
-			Map<String, Object> options = new HashMap<String, Object>();
-			// NCX requires that we encode using UTF-8
-			options.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
-			options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
-			resource.save(options);
-		} else {
-			EPUBFileUtil.copy(tocFile, ncxFile);
-		}
-		// As we now have written the table of contents we must make sure it is
-		// in the manifest and referenced in the spine. We also want it to be
-		// the first element in the manifest.
-		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, "application/x-dtbncx+xml", false,
-				false);
-		opfPackage.getManifest().getItems().move(0, item);
-	}
-
-	/**
-	 * Creates a new EPUB.
-	 */
-	public EPUB2() {
-		super();
-		opfPackage.setVersion("2.0");
-		ncxTOC = NCXFactory.eINSTANCE.createNcx();
-		Metadata opfMetadata = OPFFactory.eINSTANCE.createMetadata();
-		opfPackage.setMetadata(opfMetadata);
-		Guide opfGuide = OPFFactory.eINSTANCE.createGuide();
-		opfPackage.setGuide(opfGuide);
-		Manifest opfManifest = OPFFactory.eINSTANCE.createManifest();
-		opfPackage.setManifest(opfManifest);
-		// Create the spine and set a reference to the table of contents
-		// item which will be added to the manifest on a later stage.
-		Spine opfSpine = OPFFactory.eINSTANCE.createSpine();
-		opfSpine.setToc(TABLE_OF_CONTENTS_ID);
-		opfPackage.setSpine(opfSpine);
-
-		registerNCXResourceFactory();
-		opfPackage.setGenerateTableOfContents(true);
-	}
-
-	/**
 	 * Registers a new resource factory for NCX data structures. This is
 	 * normally done through Eclipse extension points but we also need to be
 	 * able to create this factory without the Eclipse runtime.
@@ -205,6 +162,58 @@ class EPUB2 extends EPUB {
 					}
 
 				});
+	}
+
+	@Override
+	public void setTableOfContents(File ncxFile) {
+		// Add the file to the publication and make sure we use the table of
+		// contents identifier.
+		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, NCX_MIMETYPE, false, false);
+		// The table of contents file must be first.
+		opfPackage.getManifest().getItems().move(0, item);
+
+	}
+
+	/**
+	 * Writes the table of contents file in the specified folder using the NCX
+	 * format. If a table of contents file has not been specified an empty one
+	 * will be created (since it is required to have one). If in addition it has
+	 * been specified that the table of contents should be created, the content
+	 * files will be parsed and a TOC will be generated.
+	 * 
+	 * @param oepbsFolder
+	 *            the folder to create the NCX file in
+	 * @throws IOException
+	 * @throws SAXException
+	 * @throws ParserConfigurationException
+	 * @see {@link #setTableOfContents(File)}
+	 */
+	@Override
+	protected void writeTableOfContents(File oepbsFolder) throws Exception {
+		File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator + "toc.ncx");
+		if (getItemById(opfPackage.getSpine().getToc()) == null) {
+			ResourceSet resourceSet = new ResourceSetImpl();
+			// Register the packages to make it available during loading.
+			resourceSet.getPackageRegistry().put(NCXPackage.eNS_URI, NCXPackage.eINSTANCE);
+			URI fileURI = URI.createFileURI(ncxFile.getAbsolutePath());
+			Resource resource = resourceSet.createResource(fileURI);
+			// We've been asked to generate a table of contents using pages
+			// contained in the spine.
+			if (opfPackage.isGenerateTableOfContents()) {
+				generateTableOfContents();
+			}
+			resource.getContents().add(ncxTOC);
+			Map<String, Object> options = new HashMap<String, Object>();
+			// NCX requires that we encode using UTF-8
+			options.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
+			options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
+			resource.save(options);
+		}
+		// As we now have written the table of contents we must make sure it is
+		// in the manifest and referenced in the spine. We also want it to be
+		// the first element in the manifest.
+		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, NCX_MIMETYPE, false, false);
+		opfPackage.getManifest().getItems().move(0, item);
 	}
 
 }

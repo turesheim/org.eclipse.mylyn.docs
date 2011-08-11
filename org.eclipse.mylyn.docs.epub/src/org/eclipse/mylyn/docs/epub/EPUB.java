@@ -119,8 +119,6 @@ public abstract class EPUB {
 
 	protected String path;
 
-	protected File tocFile;
-
 	protected final boolean verbose = true;
 
 	protected EPUB() {
@@ -633,7 +631,8 @@ public abstract class EPUB {
 	}
 
 	/**
-	 * Implement to handle generation of table of contents.
+	 * Implement to handle generation of table of contents from the items added
+	 * to the <i>spine</i>.
 	 * 
 	 * @throws Exception
 	 */
@@ -655,6 +654,14 @@ public abstract class EPUB {
 		return null;
 	}
 
+	/**
+	 * Locates and returns an item from the manifest corresponding to the given
+	 * identifier.
+	 * 
+	 * @param id
+	 *            the identifier
+	 * @return the item
+	 */
 	protected Item getItemById(String id) {
 		EList<Item> items = opfPackage.getManifest().getItems();
 		for (Item item : items) {
@@ -665,15 +672,18 @@ public abstract class EPUB {
 		return null;
 	}
 
+	/**
+	 * Returns the publication spine.
+	 * 
+	 * @return the spine
+	 */
 	protected Spine getSpine() {
-		if (opfPackage.getSpine() == null) {
-		}
 		return opfPackage.getSpine();
 	}
 
 	/**
 	 * Iterates over all files in the manifest attempting to determine
-	 * referenced resources such as image files.
+	 * referenced resources such as image files and adds these to the manifest.
 	 * 
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
@@ -726,6 +736,16 @@ public abstract class EPUB {
 		});
 	}
 
+	/**
+	 * Convenience method for adding a cover to the publication. This method
+	 * will make sure the required actions are taken to provide a cover page for
+	 * all reading systems.
+	 * 
+	 * @param image
+	 *            the cover image (jpeg, png, svg or gif)
+	 * @param title
+	 *            title of the cover page
+	 */
 	public void setCover(File image, String title) {
 		// Add the cover image to the manifest
 		Item item = addItem(COVER_IMAGE_ID, null, image, null, null, false, true);
@@ -766,15 +786,7 @@ public abstract class EPUB {
 		opfPackage.setIncludeReferencedResources(op);
 	}
 
-	/**
-	 * Specifies the table of content file.
-	 * 
-	 * @param tocFile
-	 *            the file with the table of contents
-	 */
-	public void setTocFile(File tocFile) {
-		this.tocFile = tocFile;
-	}
+	public abstract void setTableOfContents(File tocFile);
 
 	/**
 	 * Represents a {@link java.util.Date} instance in a format defined by
@@ -902,7 +914,9 @@ public abstract class EPUB {
 	}
 
 	/**
-	 * Implement to handle writing of the table of contents.
+	 * Implement to handle writing of the table of contents. Note that this
+	 * method should do nothing if the table of contents has already been
+	 * specified using {@link #setTableOfContents(File)}.
 	 * 
 	 * @param oepbsFolder
 	 *            the folder to write in
