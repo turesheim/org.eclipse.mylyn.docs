@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  */
 class EPUB2 extends EPUB {
 
-	protected final Ncx ncxTOC;
+	private final Ncx ncxTOC;
 
 	/**
 	 * This mechanism will traverse the spine of the publication (which is
@@ -178,7 +178,6 @@ class EPUB2 extends EPUB {
 		opfSpine.setToc(TABLE_OF_CONTENTS_ID);
 		opfPackage.setSpine(opfSpine);
 
-		registerOPFResourceFactory();
 		registerNCXResourceFactory();
 		opfPackage.setGenerateTableOfContents(true);
 	}

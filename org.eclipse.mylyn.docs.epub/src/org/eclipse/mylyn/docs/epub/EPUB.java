@@ -82,11 +82,19 @@ import org.xml.sax.SAXException;
  * 
  * @author Torkild U. Resheim
  */
-public class EPUB {
+public abstract class EPUB {
 	// Rules of engagement:
 	// * Keep all data in the model, use "transient" for temporary variables
 	// * Do not create files before the final assemble
 
+	/** MIME-type of an EPUB file */
+	protected static final String PUBLICATION_MIMETYPE = "application/epub+zip";
+
+	protected static final String CREATION_DATE_ID = "creation";
+
+	protected static final String UUID_SCHEME = "uuid";
+
+	/** Publication identifier for the cover image item */
 	protected static final String COVER_IMAGE_ID = "cover-image";
 
 	protected static final String DEFAULT_MIMETYPE = "application/xhtml+xml";
@@ -103,8 +111,7 @@ public class EPUB {
 	 * @return an EPUB instance
 	 */
 	public static EPUB getVersion2Instance() {
-		EPUB2 epub = new EPUB2();
-		return epub;
+		return new EPUB2();
 	}
 
 	/** The root model element */
@@ -118,6 +125,7 @@ public class EPUB {
 
 	protected EPUB() {
 		opfPackage = OPFFactory.eINSTANCE.createPackage();
+		registerOPFResourceFactory();
 	}
 
 	/**
@@ -130,21 +138,21 @@ public class EPUB {
 	 * <li>A empty description if none has been specified.</li>
 	 * <li>Language "English" if none has been specified.</li>
 	 * <li>A dummy title if none has been specified.</li>
-	 * <li>The publication format if not specified.</li>
+	 * <li>The publication format if none has been specified.</li>
 	 * </ul>
 	 */
 	private void addCompulsoryData() {
-		addDate(null, new java.util.Date(System.currentTimeMillis()), "creation");
+		addDate(null, new java.util.Date(System.currentTimeMillis()), CREATION_DATE_ID);
 		addContributor(null, null, "Eclipse Committers and Contributors", Role.REDACTOR, null);
 		if (getIdentifier() == null) {
-			addIdentifier("uuid", Scheme.UUID, UUID.randomUUID().toString());
-			setIdentifierId("uuid");
+			addIdentifier(UUID_SCHEME, Scheme.UUID, UUID.randomUUID().toString());
+			setIdentifierId(UUID_SCHEME);
 		}
 		// Add empty subject
 		if (opfPackage.getMetadata().getSubjects().isEmpty()) {
 			addSubject(null, null, "");
 		}
-		// Add empty language
+		// Add English language
 		if (opfPackage.getMetadata().getLanguages().isEmpty()) {
 			addLanguage(null, Locale.ENGLISH.toString());
 		}
@@ -154,7 +162,7 @@ public class EPUB {
 		}
 		// Set the publication format
 		if (opfPackage.getMetadata().getFormats().isEmpty()) {
-			addFormat(null, "application/epub+zip");
+			addFormat(null, PUBLICATION_MIMETYPE);
 		}
 	}
 
@@ -186,6 +194,17 @@ public class EPUB {
 		return dc;
 	}
 
+	/**
+	 * Specifies a new &quot;coverage&quot; for the publication.
+	 * 
+	 * @param id
+	 *            an identifier or <code>null</code>
+	 * @param lang
+	 *            the language code or <code>null</code>
+	 * @param value
+	 *            value of the item
+	 * @return the new coverage
+	 */
 	public Coverage addCoverage(String id, Locale lang, String value) {
 		Coverage dc = DCFactory.eINSTANCE.createCoverage();
 		setDcLocalized(dc, id, lang, value);
@@ -275,10 +294,7 @@ public class EPUB {
 	}
 
 	/**
-	 * Sets the &quot;Dublin Core Format&quot; of the publication.
-	 * <p>
-	 * This property is optional.
-	 * </p>
+	 * Adds a publication format. (This property is optional.)
 	 * 
 	 * @param value
 	 *            the format to add
@@ -594,7 +610,7 @@ public class EPUB {
 		} else {
 			throw new IOException("Could not create working folder in " + workingFolder.getAbsolutePath());
 		}
-		validate();
+		validateModel();
 	}
 
 	/**
@@ -621,9 +637,7 @@ public class EPUB {
 	 * 
 	 * @throws Exception
 	 */
-	protected void generateTableOfContents() throws Exception {
-
-	}
+	protected abstract void generateTableOfContents() throws Exception;
 
 	/**
 	 * Returns the main identifier of the publication or <code>null</code> if it
@@ -641,7 +655,7 @@ public class EPUB {
 		return null;
 	}
 
-	private Item getItemById(String id) {
+	protected Item getItemById(String id) {
 		EList<Item> items = opfPackage.getManifest().getItems();
 		for (Item item : items) {
 			if (item.getId().equals(id)) {
@@ -655,10 +669,6 @@ public class EPUB {
 		if (opfPackage.getSpine() == null) {
 		}
 		return opfPackage.getSpine();
-	}
-
-	public File getTocFile() {
-		return tocFile;
 	}
 
 	/**
@@ -697,7 +707,7 @@ public class EPUB {
 	 * normally done through Eclipse extension points but we also need to be
 	 * able to create this factory without the Eclipse runtime.
 	 */
-	protected void registerOPFResourceFactory() {
+	private void registerOPFResourceFactory() {
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("opf", new OPFResourceFactoryImpl() {
 			@Override
 			public Resource createResource(URI uri) {
@@ -788,7 +798,7 @@ public class EPUB {
 	 * @return <code>true</code> if the model is valid, <code>false</code>
 	 *         otherwise.
 	 */
-	private boolean validate() {
+	private boolean validateModel() {
 		EValidator.Registry.INSTANCE.put(OPFPackage.eINSTANCE, new EcoreValidator());
 		BasicDiagnostic diagnostics = new BasicDiagnostic();
 		boolean valid = true;
@@ -898,7 +908,5 @@ public class EPUB {
 	 *            the folder to write in
 	 * @throws Exception
 	 */
-	protected void writeTableOfContents(File oepbsFolder) throws Exception {
-
-	}
+	protected abstract void writeTableOfContents(File oepbsFolder) throws Exception;
 }
