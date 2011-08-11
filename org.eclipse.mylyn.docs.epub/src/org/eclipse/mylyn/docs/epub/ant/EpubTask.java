@@ -82,7 +82,7 @@ public class EpubTask extends Task {
 	 * @param fs
 	 *            the fileset to add
 	 */
-	public void addConfiguredEPUBFileSet(FileSetType fs) {
+	public void addConfiguredFileSet(FileSetType fs) {
 		filesets.add(fs);
 	}
 
@@ -173,9 +173,6 @@ public class EpubTask extends Task {
 				fs.setProject(getProject());
 			}
 			final File fsDir = fs.getDir();
-			if (!(fsDir == null || !fsDir.exists())) {
-				continue;
-			}
 			if (fsDir == null) {
 				throw new BuildException(
 						"File or Resource without directory or file specified");
