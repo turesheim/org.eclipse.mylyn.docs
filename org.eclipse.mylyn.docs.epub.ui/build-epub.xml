@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Build EPUB of documentation" basedir="." default="build">
+<project name="Build EPUB of documentation" basedir="." default="build-epub">
 
 	<property name="wikitext.standalone" value="/Applications/Eclipse_3.7/plugins/" />
 	<property name="tempdir" location="${basedir}/build/temp" />
@@ -24,7 +24,7 @@
 			<fileset dir="${tempdir}" />
 		</delete>
 		<delete file="${epubfile}" failonerror="false" />
-		<!-- We use MediaWiki. Textile is way too limited -->
+		<!-- We should use MediaWiki. Textile is way too limited -->
 		<wikitext-to-html markupLanguage="Textile" xhtmlstrict="true">
 			<fileset dir="${srcdir}">
 				<include name="*.textile" />
@@ -40,15 +40,16 @@
 	</target>
 
 	<!-- contributor, date -->
-	<target name="build" depends="init">
-		<!-- <antstructure output="ant.dtd"/> -->
-		<epub identifierId="uuid" file="${epubfile}" workingFolder="${workdir}">
+	<target name="build-epub" depends="init">
+		<epub identifierId="uuid" file="${epubfile}" workingFolder="${workdir}" >
 			<language code="en" />
 			<identifier id="uuid" scheme="UUID">70ce7c20-8f9e-11e0-91e4-0800200c9a66</identifier>
 			<title>Building EPUBs</title>
 			<subject>Computing, Eclipse, Mylyn, EPUB</subject>
 			<publisher>Eclipse.Org</publisher>
 			<creator name="Torkild Ulvøy Resheim" fileAs="Resheim, Torkild Ulvøy" role="aut" />
+			<rights>Copyright (c) 2011, Torkild Ulvøy Resheim. Licensed under the Eclipse Public License version 1.0</rights>
+			<type>Technical article.</type>
 			<!-- For the EPUB logo - logo http://www.epubbooks.com/blog/630/official-epub-logo-released -->
 			<contributor name="Ralph Burkhardt" fileAs="Burkhardt, Ralph" role="art" />
 			<!-- The DejaVu Fonts - http://dejavu-fonts.org/wiki/License -->
