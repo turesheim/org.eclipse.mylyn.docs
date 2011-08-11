@@ -5,26 +5,32 @@ The **epub** "Ant":http://www.apache.org task is used to assemble an EPUB file f
 The following is an approximate DTD for the task: 
 
 bc.. 
-<!ELEMENT epub (publisher | date | contributor | creator | creator | toc | reference | language | identifier | fileset | subject | title | item | type | source | rights | meta | cover)*>
-<!ATTLIST html-to-epub
+
+<!ELEMENT epub (identifier | type | subject | reference | creator | meta | publisher | source | language | rights | contributor | format | cover | toc | item | date | title | fileset)*>
+<!ATTLIST epub
           id ID #IMPLIED
           taskname CDATA #IMPLIED
           identifierid CDATA #IMPLIED
           file CDATA #IMPLIED
           description CDATA #IMPLIED
-          workingfolder CDATA #IMPLIED>
+          workingfolder CDATA #IMPLIED
+          automaticAdd %boolean; #IMPLIED>
+
 p. 
-* The **identifierid** is a reference to an identifier added using the **identifier** element. 
+* **id** - item identifier
+* **taskname** - name to use for task when logging
+* **identifierid** - reference to an identifier added using the **identifier** element. 
 * **file** - path to the resulting EPUB file.
-* **description** - short description of the EPUB file.
+* **description** - description of the task.
 * **workingfolder** - optionally used to specify the folder used for assembling the EPUB. If not specified a temporary folder will be used and deleted when the processing has completed.
+* **automaticAdd** - optionally used to automatically include referenced items in the finished publication. When setting this to **true** there should be no need to explicitly add for instance image files.
 
 h2. Adding "header" information
 
 Certain elements are required in the header of the publication. These include the title of the publication, the identifier and the language code as shown in the minimal example above. It is possible to add more than one element of some types.
 
 The following elements can be used:
-|_. id |_. Required |_. Description (test)|
+|_. id |_. Required |_. Description |
 |"title":#Publicationtitle|yes|The publication title|
 |"identifier":#Publicationidentifiers|yes|The publication identifier|
 |"language":#Languagespecification|yes|The publication language|
@@ -34,7 +40,6 @@ The following elements can be used:
 |"contributor":#ContributorsandCreators|no|One or more contributors|
 |"date":#Dates|no|One or more dates|
 |"cover":#Cover|no|The cover page|
-
 
 h3. Publication title
 
@@ -51,11 +56,10 @@ h3. Publication identifiers
 p. The recommended best practice is to identify the resource by means of a string or number conforming to a formal identification system. These include but are not limited to the "Uniform Resource Identifier":http://en.wikipedia.org/wiki/Uniform_Resource_Identifier, the "Digital Object Identifier":http://en.wikipedia.org/wiki/Digital_object_identifier (DOI) and the "International Standard Book Number":http://en.wikipedia.org/wiki/International_Standard_Book_Number (ISBN).
 
 bc.. 
-<!ELEMENT identifier EMPTY>
+<!ELEMENT identifier (#PCDATA)>
 <!ATTLIST identifier
           id ID #IMPLIED
-          scheme CDATA #IMPLIED
-          value CDATA #IMPLIED>
+          scheme CDATA #IMPLIED>
 
 p. If an identifier is not specified, one will be generated based on a random "UUID":http://en.wikipedia.org/wiki/Universally_unique_identifier.
 
@@ -73,7 +77,7 @@ p.
 * **id** - optional unique identifier.
 * **code** - the language code.
 
-p. If a language is not specified it will be set to "en" for English.
+p. If a language is not specified it will be set to "en" for generic English.
 
 h3. Publisher
  
@@ -105,7 +109,7 @@ bc..
 <!ELEMENT contributor EMPTY>
 <!ATTLIST contributor
           id ID #IMPLIED
-          fileas CDATA #IMPLIED
+          fileAs CDATA #IMPLIED
           name CDATA #IMPLIED
           lang CDATA #IMPLIED
           role CDATA #IMPLIED>
@@ -113,14 +117,14 @@ bc..
 <!ELEMENT creator EMPTY>
 <!ATTLIST creator
           id ID #IMPLIED
-          fileas CDATA #IMPLIED
+          fileAs CDATA #IMPLIED
           name CDATA #IMPLIED
           lang CDATA #IMPLIED
           role CDATA #IMPLIED>
-          
+
 p. 
 * **id** - optional unique identifier.
-* **fileas** - optional filing specification.
+* **fileAs** - optional filing specification.
 * **name** - name of the creator or contributor.
 * **lang** - optional language code.
 * **role** - optional MARC relator code.
@@ -174,15 +178,13 @@ p. type includes terms describing general categories, functions, genres, or aggr
 p. Type includes terms describing general categories, functions, genres, or aggregation levels for content. Recommended best practice is to select a value from a controlled vocabulary (for example, the DCMI Type Vocabulary [DCT1]). To describe the physical or digital manifestation of the resource, use the FORMAT element.
 
 bc.. 
-<!ELEMENT publisher EMPTY>
-<!ATTLIST publisher
-          id ID #IMPLIED
-          lang CDATA #IMPLIED
-          text CDATA #IMPLIED>
+<!ELEMENT type (#PCDATA)>
+<!ATTLIST type
+          id ID #IMPLIED>
 
 h3. Formats
 
-p. Use to specify the format of the publication. Typically this is the MIME type or the software, hardware, or other equipment needed. The epub task will always set the format to "application/epub+zip" unless another format is specified.
+p. Use to specify the format of the publication. Typically this is the MIME type or the software, hardware, or other equipment needed. The epub task will always set the format to "application/epub+zip" unless a different format is specified.
 
 bc.. 
 <!ELEMENT format (#PCDATA)>
@@ -219,13 +221,33 @@ p. The extent or scope of the publication’s content. The advised best practice
 
 p. Typically, Coverage will include spatial location (a place name or geographic coordinates), temporal period (a period label, date, or date range) or jurisdiction (such as a named administrative entity). Recommended best practice is to select a value from a controlled vocabulary (for example, the Thesaurus of Geographic Names [TGN]) and to use, where appropriate, named places or time periods in preference to numeric identifiers such as sets of coordinates or date ranges.
 
+bc.. 
+<!ELEMENT coverage (#PCDATA)>
+<!ATTLIST coverage
+          id ID #IMPLIED
+          lang CDATA #IMPLIED>
+
+
 h3. Relation
           
 p. Recommended best practice is to identify the referenced resource by means of a string or number conforming to a formal identification system.
 
+bc.. 
+<!ELEMENT relation (#PCDATA)>
+<!ATTLIST relation
+          id ID #IMPLIED
+          lang CDATA #IMPLIED>
+
 h3. Meta
           
 p. This type is used to express arbitrary metadata beyond the data described by the Dublin Core specification.
+
+bc.. 
+<!ELEMENT meta EMPTY>
+<!ATTLIST meta
+          id ID #IMPLIED
+          name CDATA #IMPLIED
+          content CDATA #IMPLIED>
 
 h3. Cover
           
@@ -235,7 +257,7 @@ bc..
           image CDATA #IMPLIED
           title CDATA #IMPLIED>
 
-p. Adds a cover page.
+p. Adds a cover page using the supplied image file.
 
 h2. Adding content
 
@@ -330,6 +352,6 @@ bc..
 
 p. Exactly one **toc** element is used to declare a table of contents. There are two ways of doing this. Either by pointing to a readily prepared __ncx__  file using the **file** attribute or by setting **generate** to **true**. This will iterate through all the elements in the spine and figure out the table of contents based on the header elements. 
 
-If the **file** attribute is used the task will automatically do the house-keeping. The file will be copied into the OEPBS folder of the publication, it will be placed first in the content declaration and properly referenced.
+p. If the **file** attribute is used the task will automatically do the house-keeping. The file will be copied into the OEPBS folder of the publication, it will be placed first in the content declaration and properly referenced.
 
-
+p. If this element is not used - a table of contents will still be generated in order to satisfy EPUB requirements. However it will be empty.
