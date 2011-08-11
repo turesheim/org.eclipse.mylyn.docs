@@ -45,6 +45,6 @@ bc..
 
 p. This method will produce a cover page that will work with all the tested reading systems; including Calibre, iBooks, Adobe Digital Editions and Kindle (after converting to MOBI using Calibre).
 
-!./kindle-cover.jpg(The cover of this book as it is rendered on a Kindle 2.)!
+!kindle-cover.jpg(The cover of this book as it is rendered on a Kindle 2.)!
 
 p. The end result can be something like the illustration above.
