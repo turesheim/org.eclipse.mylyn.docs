@@ -1,19 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mylyn Docs ePUB Support
+Bundle-Name: EPUB Core
 Bundle-SymbolicName: org.eclipse.mylyn.docs.epub;singleton:=true
 Bundle-Version: 0.8.0.qualifier
 Bundle-Vendor: Torkild U. Resheim
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Require-Bundle: org.eclipse.emf;bundle-version="[2.6.0,3.0.0)",
- org.eclipse.emf.ecore;bundle-version="[2.6.0,3.0.0)",
- org.eclipse.emf.ecore.xmi;bundle-version="[2.5.0,3.0.0)",
- org.apache.ant;bundle-version="[1.7.0,2.0.0)",
+Require-Bundle: org.eclipse.emf.ecore.xmi;bundle-version="[2.5.0,3.0.0)",
  org.eclipse.emf.validation;bundle-version="[1.4.0,2.0.0)",
- org.eclipse.ant.core;bundle-version="[3.2.0,4.0.0)",
  org.eclipse.mylyn.wikitext.core;bundle-version="[1.5.0,2.0.0)"
 Export-Package: org.eclipse.mylyn.docs.epub;uses:="org.eclipse.mylyn.docs.epub.dc,org.eclipse.mylyn.docs.epub.opf,org.eclipse.mylyn.docs.epub.ncx",
- org.eclipse.mylyn.docs.epub.ant;uses:="org.eclipse.mylyn.docs.epub,org.apache.tools.ant.types,org.apache.tools.ant",
  org.eclipse.mylyn.docs.epub.dc;uses:="org.eclipse.emf.ecore.util,org.eclipse.emf.ecore,org.eclipse.mylyn.docs.epub.opf",
  org.eclipse.mylyn.docs.epub.dc.impl;
   uses:="org.eclipse.emf.ecore.util,

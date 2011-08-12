@@ -33,6 +33,7 @@
 			<classpath>
 				<dirset dir="${basedir}/..">
 					<include name="org.eclipse.mylyn.docs.epub/bin"/>
+					<include name="org.eclipse.mylyn.docs.epub.ant/bin"/>
 				</dirset>
 				
 				<fileset dir="${target.platform.path}">
@@ -46,7 +47,6 @@
 				</fileset>
 			</classpath>
 			<src path="src/"/>
-			<src path="src-gen/"/>
 		</javac>
 		<!-- copy the *.class files to the jar location -->
 		<copy todir="${destdir}" failonerror="true" overwrite="false">
