@@ -21,5 +21,11 @@
          </command>
       </menuContribution>
    </extension>
+	<extension point="org.eclipse.help.toc">
+		<toc file="help/introduction-toc.xml" primary="false"/>
+		<toc file="help/epub-ant-task-toc.xml" primary="false"/>
+		<toc file="help/examples-toc.xml" primary="false"/>
+		<toc file="toc.xml" primary="true"/>
+	</extension>
 
 </plugin>

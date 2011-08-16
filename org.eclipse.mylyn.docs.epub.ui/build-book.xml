@@ -77,9 +77,9 @@
 			<reference href="copyright.html" type="copyright-page" title="Copyright" />
 			<toc generate="true" />
 			<fileset dir="${srcdir}">
-				<include name="images/*.gif" />
-				<include name="images/*.png" />
-				<include name="images/*.jpg" />
+				<include name="*.gif" />
+				<include name="*.png" />
+				<include name="*.jpg" />
 				<include name="fonts/*.otf" />
 			</fileset>
 		</epub>

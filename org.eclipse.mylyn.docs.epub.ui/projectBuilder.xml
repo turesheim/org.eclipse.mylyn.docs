@@ -3,10 +3,12 @@
 	
 	<target name="all" description="Build everything">
 		<ant antfile="build-book.xml"/>
+		<ant antfile="build-docs.xml"/>
 	</target>
 	
 	<target name="clean">
-		<delete file="Building_EPUBs.epub" failonerror="false"/>
+		<delete dir="help" failonerror="false" />
+		<delete file="Building_EPUBs.epub" failonerror="false" />
 	</target>
 
 </project>

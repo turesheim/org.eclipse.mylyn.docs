@@ -7,14 +7,14 @@ p. Correctly adding a cover to a publication can be a bit awkward as different r
 bc.. 
 <cover image="cover.jpg" title="My Title"/> 
 
-p. Simply point to the file in question and this EPUB tooling will take care of the rest. There is of course another, more laborious way: 
+p. Simply point to the file in question and this EPUB tooling will take care of the rest. There is of course another, more laborious way allowing more control. The procedure is as follows: 
 
 # Add a cover image to the publication
 # Add a HTML file using the image
 # Reference the HTML file
 # Add a meta element pointing to the image
 
-p. Assuming the cover image is ready we will add it using the **item** element as this:
+p. Assuming the cover image is at hand we will add it using the **item** element as this:
 
 bc.. 
 <item file="images/cover.jpg" id="cover-image" type="image/jpg" spine="false" />
