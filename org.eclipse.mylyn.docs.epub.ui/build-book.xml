@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Build EPUB of documentation" basedir="." default="build-epub">
+<!--
+    Copyright (c) 2011 Torkild U. Resheim and others
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+    
+    Contributors:
+        Torkild U. Resheim - initial API and implementation
+ -->
+<project name="org.eclipse.mylyn.docs.epub.ui.docs" basedir="." default="plugin-book">
 
 	<property name="wikitext.standalone" value="/Applications/Eclipse_3.7/plugins/" />
 	<property name="tempdir" location="${basedir}/build/temp" />
 	<property name="workdir" location="${basedir}/build/work" />
-	<property name="srcdir" location="${basedir}/help" />
+	<property name="srcdir" location="${basedir}/docs" />
 	<property name="epubfile" location="${basedir}/Building_EPUBs.epub" />
 
 	<path id="epub.classpath">
@@ -25,8 +35,7 @@
 			<fileset dir="${tempdir}" />
 		</delete>
 		<delete file="${epubfile}" failonerror="false" />
-		<!-- We should use MediaWiki. Textile is way too limited -->
-		<wikitext-to-html markupLanguage="Textile" xhtmlstrict="true">
+		<wikitext-to-html markupLanguage="Textile" xhtmlstrict="true" >
 			<fileset dir="${srcdir}">
 				<include name="*.textile" />
 			</fileset>
@@ -41,7 +50,7 @@
 	</target>
 
 	<!-- contributor, date -->
-	<target name="build-epub" depends="init">
+	<target name="plugin-book" depends="init">
 		<epub identifierId="uuid" file="${epubfile}" workingFolder="${workdir}" >
 			<language code="en" />
 			<identifier id="uuid" scheme="UUID">70ce7c20-8f9e-11e0-91e4-0800200c9a66</identifier>
@@ -55,25 +64,23 @@
 			<contributor name="Ralph Burkhardt" fileAs="Burkhardt, Ralph" role="art" />
 			<!-- The DejaVu Fonts - http://dejavu-fonts.org/wiki/License -->
 			<contributor name="Bitstream" fileAs="Bitstream" role="art" />
-			<cover image="${srcdir}/cover.jpg">Cover page</cover>
+			<cover image="${srcdir}/epub/cover.jpg">Cover page</cover>
 			<item file="${srcdir}/title-page.html"/>
 			<item file="${tempdir}/copyright.html" />
 			<item file="${tempdir}/introduction.html" />
 			<item file="${tempdir}/epub-format.html" />
 			<item file="${tempdir}/epub-ant-task.html" />
 			<item file="${tempdir}/examples.html" />
-			<item file="${srcdir}/style.css" type="text/css" spine="false" />
+			<item file="${srcdir}/epub/style.css" type="text/css" spine="false" />
 			<reference href="title-page.html" type="title-page" title="Building EPUBs" />
 			<reference href="introduction.html" type="preface" title="Introduction" />
 			<reference href="copyright.html" type="copyright-page" title="Copyright" />
 			<toc generate="true" />
 			<fileset dir="${srcdir}">
-				<include name="*.gif" />
-				<include name="*.png" />
-				<include name="*.otf" />
-				<include name="*.jpg" />
-				<!-- Cover image is already included using the "cover" element -->
-				<exclude name="cover.jpg" />
+				<include name="images/*.gif" />
+				<include name="images/*.png" />
+				<include name="images/*.jpg" />
+				<include name="fonts/*.otf" />
 			</fileset>
 		</epub>
 	</target>

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Build Mylyn/Docs EPUB Documentation" default="all" basedir=".">   
+<project name="Build Mylyn Docs EPUB Documentation and Book" default="all" basedir=".">   
 	
 	<target name="all" description="Build everything">
-		<ant antfile="build-epub.xml"/>
-	</target>	
+		<ant antfile="build-book.xml"/>
+	</target>
+	
+	<target name="clean">
+		<delete file="Building_EPUBs.epub" failonerror="false"/>
+	</target>
 
 </project>
