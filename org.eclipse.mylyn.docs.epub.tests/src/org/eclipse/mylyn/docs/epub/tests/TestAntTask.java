@@ -19,31 +19,32 @@ import org.apache.tools.ant.BuildFileTest;
 import com.adobe.epubcheck.api.EpubCheck;
 
 /**
- * Tests for the <b>markup-to-epub</b> ANT task.
+ * Tests for the <b>epub</b> ANT task.
  * 
  * @author Torkild U. Resheim
  */
 public class TestAntTask extends BuildFileTest {
 
-	private static final String EPUB_FILE_PATH = "test/alice-in-wonderland.epub";
+	static ClassLoader classLoader;
+
+	private static final String ALICE_FILE_PATH = "test/ant/alice-in-wonderland.epub";
+
+	private static final String DOC_FILE_PATH = "../org.eclipse.mylyn.docs.epub.ui/Building_EPUBs.epub";
 
 	public TestAntTask(String s) {
 		super(s);
 		classLoader = getClass().getClassLoader();
 	}
 
-	private File getFile() {
-		return new File(getProjectDir().getAbsolutePath() + File.separator
-				+ EPUB_FILE_PATH); 
-	}
-
-	private void assertEpub() {
-		EpubCheck checker = new EpubCheck(getFile());
+	private void assertEpub(String file) {
+		EpubCheck checker = new EpubCheck(getFile(file));
 		Assert.assertTrue(checker.validate());
 	}
-	
- static ClassLoader classLoader;
-		
+
+	private File getFile(String file) {
+		return new File(getProjectDir().getAbsolutePath() + File.separator + file);
+	}
+
 	@Override
 	public void setUp() {
 		configureProject("ant-test.xml");
@@ -51,16 +52,22 @@ public class TestAntTask extends BuildFileTest {
 	}
 
 	/**
-	 * Creates a an empty EPUB file and tests whether it's structure can be
-	 * validated.
+	 * Creates "Alice in Wonderland" using the Ant task and tests it using the
+	 * epub validator.
 	 */
-	public void testItem() {
-		// executeTarget("init");
-		// executeTarget("test.item");
-		File file = new File("prof77.epub");
-		EpubCheck checker = new EpubCheck(file);
-		System.out.println(file.getAbsolutePath());
-		Assert.assertTrue(checker.validate());
-		// assertEpub();
+	public void testPublication() {
+		executeTarget("init");
+		executeTarget("test.publication");
+		assertEpub(ALICE_FILE_PATH);
+	}
+
+	/**
+	 * Tests the "Building EPUBs" book (generated using the Ant task) using the
+	 * epub validator. This book is assembled by building the
+	 * "org.eclipse.mylyn.docs.epub.ui" bundle. The book contents is converted
+	 * from Textile markup to HTML using WikiText.
+	 */
+	public void testDoc() {
+		assertEpub(DOC_FILE_PATH);
 	}
 }

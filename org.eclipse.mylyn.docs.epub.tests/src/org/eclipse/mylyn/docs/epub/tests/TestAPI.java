@@ -113,7 +113,7 @@ public class TestAPI {
 		epub.addTitle(null, null, "Alice in Wonderland");
 		epub.addSubject(null, null, "Young Readers");
 		epub.addSubject(null, null, "Fantasy");
-		epub.setSource(null, null, "Project Gutenberg");
+		epub.addSource(null, null, "Project Gutenberg");
 		epub.addCreator(null, null, "Lewis Carroll", Role.AUTHOR,
 				"Carroll, Lewis");
 		epub.addItem(getFile("alice-in-wonderland/chapter-001.xhtml"));

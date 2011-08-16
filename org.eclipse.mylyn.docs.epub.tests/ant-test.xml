@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Test markup-to-epub" basedir="." default="test.item">
+<project name="Test markup-to-epub" basedir=".">
 	<property name="testdir" location="${basedir}/test/ant" />
 	<property name="srcdir" location="${basedir}/alice-in-wonderland" />
 
@@ -23,7 +23,8 @@
 		<mkdir dir="${testdir}" />
 	</target>
 
-	<target name="test.item">	
+	<!-- Assembles a complete publication. This is tested using epubcheck -->
+	<target name="test.publication">	
 		<epub identifierId="uuid" file="${testdir}/alice-in-wonderland.epub" workingFolder="${testdir}/work">			
 			<title>Alice in Wonderland</title>
 			<language code="en" />
@@ -31,6 +32,7 @@
 			<subject>Young readers</subject>
 			<subject>Fantasy</subject>
 			<creator fileAs="Carrol, Lewis" role="aut" name="Lewis Carroll"/>
+			<creator fileAs="Robinson, Gordon" role="ill" name="Gordon Robinson"/>
 			<publisher>Eclipse.Org</publisher>
 			<date event="original-publication" date="1916" />
 			<source>Project Gutenberg</source>
@@ -49,8 +51,8 @@
 			<item file="${srcdir}/chapter-010.xhtml"/>
 			<item file="${srcdir}/css/titlepage.css" dest="css" type="text/css" spine="false" />
 			<item file="${srcdir}/css/book.css" dest="css" type="text/css" spine="false" />
-			<reference href="title.xhtml" type="title-page" title="Cover Page"/>
-			<reference href="title.xhtml" type="cover" title="Cover Page"/>
+			<cover image="${srcdir}/images/bookcover.jpg"/>
+			<reference href="title.xhtml" type="title-page" title="Title Page"/>
 			<fileset dir="${srcdir}/images" dest="images">
 				<include name="*.jpg" />
 			</fileset>
