@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -31,39 +32,19 @@ import java.util.zip.ZipOutputStream;
  */
 public class EPUBFileUtil {
 
-	private static final String MIMETYPE = "application/epub+zip";
+	static final int BUFFERSIZE = 2048;
+
+	private static final String MIMETYPE_EPUB = "application/epub+zip";
 
 	/**
-	 * Attempts to figure out the MIME-type for the file.
+	 * Copies the contents of <i>source</i> to the new <i>destination</i> file.
 	 * 
-	 * @param file
-	 *            the file to determine MIME-type for
-	 * @return the MIME-type or <code>null</code>
+	 * @param source
+	 *            the source file
+	 * @param destination
+	 *            the destination file
+	 * @throws IOException
 	 */
-	public static String getMimeType(File file) {
-		// These are not detected or correctly detected by URLConnection
-		if (file.getName().endsWith(".otf")) {
-			return "font/opentype";
-		}
-		if (file.getName().endsWith(".svg")) {
-			return "image/svg+xml";
-		}
-		// Use URLConnection or content type detection
-		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-		if (mimeType == null) {
-			try {
-				InputStream is = new BufferedInputStream(new FileInputStream(file));
-				mimeType = URLConnection.guessContentTypeFromStream(is);
-				is.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return mimeType;
-	}
-
 	public static void copy(File source, File destination) throws IOException {
 		destination.getParentFile().mkdirs();
 		FileInputStream from = null;
@@ -89,6 +70,37 @@ public class EPUBFileUtil {
 				} catch (IOException e) {
 				}
 		}
+	}
+
+	/**
+	 * Attempts to figure out the MIME-type for the file.
+	 * 
+	 * @param file
+	 *            the file to determine MIME-type for
+	 * @return the MIME-type or <code>null</code>
+	 */
+	public static String getMimeType(File file) {
+		// These are not (correctly) detected by URLConnection
+		if (file.getName().endsWith(".otf")) {
+			return "font/opentype";
+		}
+		if (file.getName().endsWith(".svg")) {
+			return "image/svg+xml";
+		}
+		// Use URLConnection or content type detection
+		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+		if (mimeType == null) {
+			try {
+				InputStream is = new BufferedInputStream(new FileInputStream(file));
+				mimeType = URLConnection.guessContentTypeFromStream(is);
+				is.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return mimeType;
 	}
 
 	/**
@@ -143,16 +155,67 @@ public class EPUBFileUtil {
 	}
 
 	/**
+	 * Unpacks the given <i>epubfile</i> to the <i>destination</i> directory.
+	 * This method will also validate the first item contained in the EPUB (see
+	 * {@link #writeEPUBHeader(ZipOutputStream)}).
+	 * 
+	 * @param epubfile
+	 *            the EPUB file
+	 * @param destination
+	 *            the destination folder
+	 * @throws IOException
+	 *             if the operation was unsuccessful
+	 */
+	public static void unzip(File epubfile, File destination) throws IOException {
+		if (!destination.exists()) {
+			if (!destination.mkdirs()) {
+				throw new IOException("Could not create directory for EPUB contents");
+			}
+		}
+		ZipInputStream in = new ZipInputStream(new FileInputStream(epubfile));
+		byte[] buf = new byte[BUFFERSIZE];
+		ZipEntry entry = null;
+		boolean checkFirstItem = true;
+		while ((entry = in.getNextEntry()) != null) {
+			// for each entry to be extracted
+			String entryName = entry.getName();
+			File newFile = new File(destination.getAbsolutePath() + File.separator + entryName);
+			if (entry.isDirectory()) {
+				newFile.mkdirs();
+				continue;
+			}
+			int n;
+			FileOutputStream fileoutputstream = new FileOutputStream(newFile);
+			while ((n = in.read(buf, 0, BUFFERSIZE)) > -1) {
+				fileoutputstream.write(buf, 0, n);
+			}
+			fileoutputstream.close();
+			in.closeEntry();
+			if (checkFirstItem) {
+				if (!entryName.equals("mimetype")) {
+					throw new IOException("Invalid EPUB file. First item must be \"mimetype\"");
+				}
+				String type = new String(buf);
+				if (!type.trim().equals(MIMETYPE_EPUB)) {
+					throw new IOException("Invalid EPUB file. Expected \"" + MIMETYPE_EPUB + "\"");
+				}
+				checkFirstItem = false;
+			}
+		}
+	}
+
+	/**
 	 * A correctly formatted EPUB file must contain an uncompressed entry named
-	 * "mimetype" that is placed at the beginning. This method will create this
-	 * file.
+	 * <b>mimetype</b> that is placed at the beginning. The contents of this
+	 * file must be the ASCII-encoded string <b>application/epub+zip</b>. This
+	 * method will create this file.
 	 * 
 	 * @param zos
 	 *            the zip output stream to write to.
 	 * @throws IOException
 	 */
 	public static void writeEPUBHeader(ZipOutputStream zos) throws IOException {
-		byte[] bytes = MIMETYPE.getBytes("ASCII");
+		byte[] bytes = MIMETYPE_EPUB.getBytes("ASCII");
 		ZipEntry mimetype = new ZipEntry("mimetype");
 		mimetype.setMethod(ZipOutputStream.STORED);
 		mimetype.setSize(bytes.length);
@@ -205,7 +268,7 @@ public class EPUBFileUtil {
 				return !pathname.isDirectory();
 			}
 		});
-		byte[] tmpBuf = new byte[1024];
+		byte[] tmpBuf = new byte[BUFFERSIZE];
 
 		for (int i = 0; i < files.length; i++) {
 			FileInputStream in = new FileInputStream(files[i].getAbsolutePath());
