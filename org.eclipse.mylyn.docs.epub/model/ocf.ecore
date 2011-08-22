@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ocf"
+    nsURI="">
+  <eClassifiers xsi:type="ecore:EClass" name="Container">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="container"/>
+      <details key="namespace" value="urn:oasis:names:tc:opendocument:xmlns:container"/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RootFiles">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rootfile" lowerBound="1"
+        upperBound="-1" eType="#//RootFile"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RootFile">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="full-path" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="media-type" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>
