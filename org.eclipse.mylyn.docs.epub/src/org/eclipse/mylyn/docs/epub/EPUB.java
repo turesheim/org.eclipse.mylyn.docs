@@ -16,7 +16,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -29,14 +28,7 @@ import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EEnum;
-import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -618,15 +610,24 @@ public abstract class EPUB {
 		validateModel();
 	}
 
-	public void unpack(File epubFile, File workingFolder) throws Exception {
-		EPUBFileUtil.unzip(epubFile, workingFolder);
-		File oebpsFolder = new File(workingFolder.getAbsolutePath() + File.separator + "OEBPS");
+	/**
+	 * Unpacks the given EPUB file into the specified destination and populates
+	 * the data model with the content.
+	 * 
+	 * @param epubFile
+	 *            the EPUB file to unpack
+	 * @param destination
+	 *            the destination folder
+	 * @throws Exception
+	 */
+	public void unpack(File epubFile, File destination) throws Exception {
+		EPUBFileUtil.unzip(epubFile, destination);
+		File oebpsFolder = new File(destination.getAbsolutePath() + File.separator + "OEBPS");
 		File opfFile = new File(oebpsFolder.getAbsolutePath() + File.separator + "content.opf");
 		readOPF(opfFile);
 		if (verbose) {
-			System.out.println("Publication unpacked at " + workingFolder.getAbsolutePath());
+			System.out.println("Publication unpacked at " + destination.getAbsolutePath());
 		}
-		System.out.println(opfPackage);
 	}
 
 	/**
@@ -728,35 +729,6 @@ public abstract class EPUB {
 			}
 		}
 
-	}
-
-	private void debugPrintPackage(EPackage ePackage) {
-		for (Iterator iter = ePackage.getEClassifiers().iterator(); iter.hasNext();) {
-			EClassifier classifier = (EClassifier) iter.next();
-			System.out.println(classifier.getName());
-			System.out.print("  ");
-			if (classifier instanceof EClass) {
-				EClass eClass = (EClass) classifier;
-				for (Iterator ai = eClass.getEAllAttributes().iterator(); ai.hasNext();) {
-					EAttribute attribute = (EAttribute) ai.next();
-					System.out.print(attribute.getName() + " ");
-				}
-				if (!eClass.getEAttributes().isEmpty() && !eClass.getEReferences().isEmpty()) {
-					System.out.println();
-					System.out.print(" ");
-				}
-				for (Iterator ri = eClass.getEReferences().iterator(); ri.hasNext();) {
-					EReference reference = (EReference) ri.next();
-					System.out.print(reference.getName() + " ");
-				}
-			} else if (classifier instanceof EEnum) {
-				EEnum eEnum = (EEnum) classifier;
-				for (Iterator ei = eEnum.getELiterals().iterator(); ei.hasNext();) {
-					EEnumLiteral literal = (EEnumLiteral) ei.next();
-					System.out.println(literal.getName() + " ");
-				}
-			}
-		}
 	}
 
 	/**
