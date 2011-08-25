@@ -198,9 +198,9 @@ public class EpubTask extends Task {
 		}
 		try {
 			if (workingFolder == null) {
-				epub.assemble();
+				epub.pack();
 			} else {
-				epub.assemble(workingFolder);
+				epub.pack(workingFolder);
 			}
 
 		} catch (Exception e) {
