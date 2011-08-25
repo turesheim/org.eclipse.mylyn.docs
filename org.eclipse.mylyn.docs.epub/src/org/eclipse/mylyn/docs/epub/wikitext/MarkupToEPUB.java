@@ -90,7 +90,7 @@ public class MarkupToEPUB {
 
 	public void parseAndAssemble(File markup, File file) throws Exception {
 		EPUB epub = parse(markup, file);
-		epub.assemble();
+		epub.pack();
 	}
 
 	public String getBookTitle() {

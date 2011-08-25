@@ -139,13 +139,18 @@ class EPUB2 extends EPUB {
 		}
 	}
 
+	/** Identifier of the table of contents file */
+	protected static final String TABLE_OF_CONTENTS_ID = "ncx";
+
+	protected static final String NCX_FILE_SUFFIX = "ncx";
+
 	/**
 	 * Registers a new resource factory for NCX data structures. This is
 	 * normally done through Eclipse extension points but we also need to be
 	 * able to create this factory without the Eclipse runtime.
 	 */
 	private void registerNCXResourceFactory() {
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(TABLE_OF_CONTENTS_ID,
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(NCX_FILE_SUFFIX,
 				new NCXResourceFactoryImpl() {
 					@Override
 					public Resource createResource(URI uri) {

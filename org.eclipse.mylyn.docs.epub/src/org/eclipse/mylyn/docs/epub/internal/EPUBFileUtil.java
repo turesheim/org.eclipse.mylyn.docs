@@ -204,6 +204,7 @@ public class EPUBFileUtil {
 		}
 	}
 
+
 	/**
 	 * A correctly formatted EPUB file must contain an uncompressed entry named
 	 * <b>mimetype</b> that is placed at the beginning. The contents of this

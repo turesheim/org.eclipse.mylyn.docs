@@ -16,6 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -28,7 +29,14 @@ import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -38,6 +46,7 @@ import org.eclipse.emf.ecore.util.EcoreValidator;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
 import org.eclipse.mylyn.docs.epub.dc.Contributor;
 import org.eclipse.mylyn.docs.epub.dc.Coverage;
 import org.eclipse.mylyn.docs.epub.dc.Creator;
@@ -68,7 +77,6 @@ import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.eclipse.mylyn.docs.epub.opf.Spine;
 import org.eclipse.mylyn.docs.epub.opf.Type;
-import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceFactoryImpl;
 import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceImpl;
 import org.xml.sax.SAXException;
 
@@ -87,6 +95,8 @@ public abstract class EPUB {
 	// * Keep all data in the model, use "transient" for temporary variables
 	// * Do not create files before the final assemble
 
+	private static final String OPF_FILE_SUFFIX = "opf";
+
 	/** MIME-type of an EPUB file */
 	protected static final String PUBLICATION_MIMETYPE = "application/epub+zip";
 
@@ -98,9 +108,6 @@ public abstract class EPUB {
 	protected static final String COVER_IMAGE_ID = "cover-image";
 
 	protected static final String DEFAULT_MIMETYPE = "application/xhtml+xml";
-
-	/** Identifier of the table of contents file */
-	protected static final String TABLE_OF_CONTENTS_ID = "ncx";
 
 	/** The encoding to use in XML files */
 	protected static final String XML_ENCODING = "UTF-8";
@@ -566,10 +573,10 @@ public abstract class EPUB {
 	 * 
 	 * @throws Exception
 	 */
-	public void assemble() throws Exception {
+	public void pack() throws Exception {
 		File workingFolder = File.createTempFile("epub_", null);
 		if (workingFolder.delete() && workingFolder.mkdirs()) {
-			assemble(workingFolder);
+			pack(workingFolder);
 		}
 		workingFolder.deleteOnExit();
 	}
@@ -580,35 +587,46 @@ public abstract class EPUB {
 	 * @param workingFolder
 	 * @throws Exception
 	 */
-	public void assemble(File workingFolder) throws Exception {
+	public void pack(File workingFolder) throws Exception {
 		addCompulsoryData();
 		// Note that order is important here. Some methods may insert data into
 		// the EPUB structure. Hence the OPF must be written last.
 		if (workingFolder.isDirectory() || workingFolder.mkdirs()) {
 			writeContainer(workingFolder);
-			File oepbsFolder = new File(workingFolder.getAbsolutePath() + File.separator + "OEBPS");
-			if (oepbsFolder.mkdir()) {
+			File oebpsFolder = new File(workingFolder.getAbsolutePath() + File.separator + "OEBPS");
+			if (oebpsFolder.mkdir()) {
 				if (opfPackage.isGenerateCoverHTML()) {
-					writeCoverHTML(oepbsFolder);
+					writeCoverHTML(oebpsFolder);
 				}
 				if (opfPackage.isIncludeReferencedResources()) {
 					includeReferencedResources();
 				}
-				copyContent(oepbsFolder);
-				writeTableOfContents(oepbsFolder);
-				writeOPF(oepbsFolder);
+				copyContent(oebpsFolder);
+				writeTableOfContents(oebpsFolder);
+				writeOPF(oebpsFolder);
 			} else {
-				throw new IOException("Could not create OEBPS folder in " + oepbsFolder.getAbsolutePath());
+				throw new IOException("Could not create OEBPS folder in " + oebpsFolder.getAbsolutePath());
 			}
 			File epubFile = new File(path);
 			EPUBFileUtil.zip(epubFile, workingFolder);
 			if (verbose) {
-				System.out.println("Assembled publication to \"" + epubFile + "\"");
+				System.out.println("Publication packed to \"" + epubFile + "\"");
 			}
 		} else {
 			throw new IOException("Could not create working folder in " + workingFolder.getAbsolutePath());
 		}
 		validateModel();
+	}
+
+	public void unpack(File epubFile, File workingFolder) throws Exception {
+		EPUBFileUtil.unzip(epubFile, workingFolder);
+		File oebpsFolder = new File(workingFolder.getAbsolutePath() + File.separator + "OEBPS");
+		File opfFile = new File(oebpsFolder.getAbsolutePath() + File.separator + "content.opf");
+		readOPF(opfFile);
+		if (verbose) {
+			System.out.println("Publication unpacked at " + workingFolder.getAbsolutePath());
+		}
+		System.out.println(opfPackage);
 	}
 
 	/**
@@ -712,28 +730,65 @@ public abstract class EPUB {
 
 	}
 
+	private void debugPrintPackage(EPackage ePackage) {
+		for (Iterator iter = ePackage.getEClassifiers().iterator(); iter.hasNext();) {
+			EClassifier classifier = (EClassifier) iter.next();
+			System.out.println(classifier.getName());
+			System.out.print("  ");
+			if (classifier instanceof EClass) {
+				EClass eClass = (EClass) classifier;
+				for (Iterator ai = eClass.getEAllAttributes().iterator(); ai.hasNext();) {
+					EAttribute attribute = (EAttribute) ai.next();
+					System.out.print(attribute.getName() + " ");
+				}
+				if (!eClass.getEAttributes().isEmpty() && !eClass.getEReferences().isEmpty()) {
+					System.out.println();
+					System.out.print(" ");
+				}
+				for (Iterator ri = eClass.getEReferences().iterator(); ri.hasNext();) {
+					EReference reference = (EReference) ri.next();
+					System.out.print(reference.getName() + " ");
+				}
+			} else if (classifier instanceof EEnum) {
+				EEnum eEnum = (EEnum) classifier;
+				for (Iterator ei = eEnum.getELiterals().iterator(); ei.hasNext();) {
+					EEnumLiteral literal = (EEnumLiteral) ei.next();
+					System.out.println(literal.getName() + " ");
+				}
+			}
+		}
+	}
+
 	/**
 	 * Registers a new resource factory for OPF data structures. This is
 	 * normally done through Eclipse extension points but we also need to be
 	 * able to create this factory without the Eclipse runtime.
 	 */
 	private void registerOPFResourceFactory() {
-		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("opf", new OPFResourceFactoryImpl() {
-			@Override
-			public Resource createResource(URI uri) {
-				OPFResourceImpl xmiResource = new OPFResourceImpl(uri) {
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(OPF_FILE_SUFFIX,
+				new XMLResourceFactoryImpl() {
 
 					@Override
-					protected XMLHelper createXMLHelper() {
-						EPUBXMLHelperImp xmlHelper = new EPUBXMLHelperImp();
-						return xmlHelper;
+					public Resource createResource(URI uri) {
+						OPFResourceImpl xmiResource = new OPFResourceImpl(uri) {
+
+							@Override
+							protected XMLHelper createXMLHelper() {
+								EPUBXMLHelperImp xmlHelper = new EPUBXMLHelperImp();
+								return xmlHelper;
+							}
+
+						};
+						Map<Object, Object> loadOptions = xmiResource.getDefaultLoadOptions();
+						Map<Object, Object> saveOptions = xmiResource.getDefaultSaveOptions();
+						saveOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
+						loadOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
+						loadOptions.put(XMLResource.OPTION_LAX_FEATURE_PROCESSING, Boolean.TRUE);
+						saveOptions.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
+						return xmiResource;
 					}
 
-				};
-				return xmiResource;
-			}
-
-		});
+				});
 	}
 
 	/**
@@ -902,15 +957,25 @@ public abstract class EPUB {
 		File opfFile = new File(oebpsFolder.getAbsolutePath() + File.separator + "content.opf");
 		ResourceSet resourceSet = new ResourceSetImpl();
 		// Register the packages to make it available during loading.
-		resourceSet.getPackageRegistry().put(OPFPackage.eNS_URI, OPFPackage.eINSTANCE);
 		URI fileURI = URI.createFileURI(opfFile.getAbsolutePath());
 		Resource resource = resourceSet.createResource(fileURI);
 		resource.getContents().add(opfPackage);
-		Map<String, Object> options = new HashMap<String, Object>();
-		// OPF requires that we encode using UTF-8
-		options.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
-		options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
-		resource.save(options);
+		resource.save(null);
+	}
+
+	/**
+	 * Reads the <b>content.opf</b> file.
+	 * 
+	 * @param opfFile
+	 *            the file to read.
+	 * @throws IOException
+	 */
+	private void readOPF(File opfFile) throws IOException {
+		ResourceSet resourceSet = new ResourceSetImpl();
+		URI fileURI = URI.createFileURI(opfFile.getAbsolutePath());
+		Resource resource = resourceSet.createResource(fileURI);
+		resource.load(null);
+		opfPackage = (Package) resource.getContents().get(0);
 	}
 
 	/**
@@ -923,4 +988,8 @@ public abstract class EPUB {
 	 * @throws Exception
 	 */
 	protected abstract void writeTableOfContents(File oepbsFolder) throws Exception;
+
+	public Package getOpfPackage() {
+		return opfPackage;
+	}
 }
