@@ -775,10 +775,11 @@ public abstract class EPUB {
 	 */
 	public void setCover(File image, String title) {
 		// Add the cover image to the manifest
-		Item item = addItem(COVER_IMAGE_ID, null, image, null, null, false, true);
+		Item item = addItem(COVER_IMAGE_ID, null, image, null, null, true, true);
 		item.setTitle(title);
 		// Point to the cover using a meta tag
 		addMeta("cover", COVER_IMAGE_ID);
+		addReference(item.getHref(), title, Type.COVER);
 		opfPackage.setGenerateCoverHTML(true);
 
 	}
