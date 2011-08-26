@@ -1,11 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2011 Torkild U. Resheim.
+ * 
+ * All rights reserved. This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Torkild U. Resheim - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.Locale;
-import java.util.UUID;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -13,9 +23,12 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.Assert;
 
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.diff.service.DiffService;
+import org.eclipse.emf.compare.match.metamodel.MatchModel;
+import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.mylyn.docs.epub.EPUB;
 import org.eclipse.mylyn.docs.epub.opf.Role;
-import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.eclipse.mylyn.docs.epub.opf.Type;
 import org.junit.After;
 import org.junit.Before;
@@ -28,10 +41,18 @@ import org.xml.sax.SAXException;
 
 import com.adobe.epubcheck.api.EpubCheck;
 
+/**
+ * 
+ * @author Torkild U. Resheim
+ * 
+ */
 public class TestAPI {
-	private EPUB epub;
-	private File epubFile;
-	private File workingFolder;
+
+	private File testRoot;
+
+	private File packingFolder;
+
+	private File unPackingFolder;
 
 	private void delete(File f) throws IOException {
 		if (f.isDirectory()) {
@@ -44,7 +65,7 @@ public class TestAPI {
 	}
 
 	private boolean fileExists(String filename) {
-		String path = workingFolder.getAbsolutePath() + File.separator
+		String path = packingFolder.getAbsolutePath() + File.separator
 				+ "OEBPS" + File.separator + filename;
 		File file = new File(path);
 		return file.exists();
@@ -54,12 +75,19 @@ public class TestAPI {
 		return new File(path);
 	}
 
+	/**
+	 * Reads the OPF into a DOM for further analysis.
+	 * 
+	 * @return the DOM document element
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
 	private Element readOPF() throws ParserConfigurationException,
 			SAXException, IOException {
-		File fXmlFile = new File(workingFolder.getAbsolutePath()
+		File fXmlFile = new File(packingFolder.getAbsolutePath()
 				+ File.separator + "OEBPS" + File.separator + "content.opf");
 		Assert.assertEquals(true, fXmlFile.exists());
-		System.out.println(fXmlFile);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(fXmlFile);
@@ -69,12 +97,10 @@ public class TestAPI {
 
 	@Before
 	public void setUp() throws Exception {
-		workingFolder = getFile("test/api/work");
-		delete(workingFolder);
-		epubFile = getFile("test/api/alice-in-wonderland.epub");
-		epubFile.delete();
-		epub = EPUB.getVersion2Instance();
-		epub.setFile(epubFile);
+		packingFolder = getFile("test/api/pack");
+		unPackingFolder = getFile("test/api/unpack");
+		testRoot = getFile("test/api/");
+		delete(testRoot);
 	}
 
 	@After
@@ -105,33 +131,48 @@ public class TestAPI {
 		}
 	}
 
-	// @Test
-	public void testEPUB() throws Exception {
+	@Test
+	public void testPackSimpleEPUB() throws Exception {
+		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
+		createSimpleEPUB(epubfile);
+		EpubCheck checker = new EpubCheck(epubfile);
+		Assert.assertTrue(checker.validate());
+	}
+
+	/**
+	 * Creates a very simple EPUB file with some metadata and one single page.
+	 * 
+	 * @return the new EPUB file
+	 * @throws URISyntaxException
+	 * @throws Exception
+	 */
+	private EPUB createSimpleEPUB(File epubfile) throws URISyntaxException, Exception {
+		EPUB epub = EPUB.getVersion2Instance();
+		epub.setFile(epubfile);
 		epub.setIdentifierId("uuid");
 		epub.addLanguage(null, "en");
-		epub.addDate(null, "1916", "original-publication");
-		epub.addTitle(null, null, "Alice in Wonderland");
-		epub.addSubject(null, null, "Young Readers");
-		epub.addSubject(null, null, "Fantasy");
-		epub.addSource(null, null, "Project Gutenberg");
-		epub.addCreator(null, null, "Lewis Carroll", Role.AUTHOR,
-				"Carroll, Lewis");
-		epub.addItem(getFile("alice-in-wonderland/chapter-001.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-002.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-003.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-004.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-005.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-006.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-007.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-008.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-009.xhtml"));
-		epub.addItem(getFile("alice-in-wonderland/chapter-010.xhtml"));
-		epub.addReference("title.xhtml", "Cover Page", Type.COVER);
-		epub.addIdentifier("uuid", Scheme.UUID, UUID.randomUUID().toString());
+		epub.addTitle(null, null, "Mylyn Docs Test EPUB");
+		epub.addSubject(null, null, "Testing");
+		epub.addSource(null, null, "Eclipse");
+		epub.addPublisher(null, null, "Eclipse.org");
+		epub.addCreator(null, null, "Torkild U. Resheim", Role.AUTHOR, "Resheim, Torkild U.");
+		epub.addItem(getFile("testdata/plain-page.xhtml"));
 		epub.setGenerateToc(true);
-		epub.assemble(workingFolder);
-		EpubCheck checker = new EpubCheck(epubFile);
-		Assert.assertTrue(checker.validate());
+		epub.pack(packingFolder);
+		return epub;
+	}
+
+	@Test
+	public void testUnpackSimpleEPUB() throws Exception {
+		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
+		EPUB epub1 = createSimpleEPUB(epubfile);
+		EPUB epub2 = EPUB.getVersion2Instance();
+		epub2.unpack(epubfile, unPackingFolder);
+		System.out.println(epub1.getOpfPackage().getManifest().getItems().get(0).getHref());
+		MatchModel match = MatchService.doMatch(epub1.getOpfPackage(), epub2.getOpfPackage(),
+				Collections.<String, Object> emptyMap());
+		// Something fishy going on here.
+		DiffModel diff = DiffService.doDiff(match, false);
 	}
 
 	/**
@@ -146,15 +187,20 @@ public class TestAPI {
 	 */
 	@Test
 	public void testSerializationContributors() throws Exception {
+		EPUB epub = EPUB.getVersion2Instance();
+		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
+		epub.setFile(epubfile);
 		Role[] roles = Role.values();
 		for (Role role : roles) {
 			epub.addContributor(role.getLiteral(), Locale.ENGLISH,
 					"Nomen Nescio", role, "Nescio, Nomen");
 		}
-		epub.assemble(workingFolder);
+		epub.pack(packingFolder);
 		Element doc = readOPF();
 		Node guide = doc.getElementsByTagName("opf:metadata").item(0);
 		Node node = guide.getFirstChild(); // Discard first TEXT node
+		node = discard(node); // title
+		node = discard(node); // subject
 		String[] ids = new String[] { "id", "xml:lang", "opf:role",
 				"opf:file-as" };
 		for (Role role : roles) {
@@ -162,11 +208,22 @@ public class TestAPI {
 			String[] values = new String[] { role.getLiteral(),
 					Locale.ENGLISH.getLanguage(),
 					role.getLiteral(), "Nescio, Nomen" };
-			Assert.assertEquals("dc:contributor", node.getNodeName());
-			Assert.assertEquals("Nomen Nescio", node.getFirstChild()
-					.getNodeValue());
+			assertNode(node, "dc:contributor", "Nomen Nescio");
 			testAttributes(node, ids, values);
 			node = node.getNextSibling(); // Discard next TEXT node
+		}
+	}
+
+	private Node discard(Node node) {
+		node = node.getNextSibling(); // Discard element node
+		node = node.getNextSibling(); // Discard TEXT node
+		return node;
+	}
+
+	private void assertNode(Node node, String name, String value) {
+		Assert.assertEquals(name, node.getNodeName());
+		if (value != null) {
+			Assert.assertEquals(value, node.getFirstChild().getNodeValue());
 		}
 	}
 
@@ -182,12 +239,15 @@ public class TestAPI {
 	 */
 	@Test
 	public void testSerializationCreators() throws Exception {
+		EPUB epub = EPUB.getVersion2Instance();
+		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
+		epub.setFile(epubfile);
 		Role[] roles = Role.values();
 		for (Role role : roles) {
 			epub.addCreator(role.getLiteral(), Locale.ENGLISH,
 					"Nomen Nescio", role, "Nescio, Nomen");
 		}
-		epub.assemble(workingFolder);
+		epub.pack(packingFolder);
 		Element doc = readOPF();
 		Node guide = doc.getElementsByTagName("opf:metadata").item(0);
 		Node node = guide.getFirstChild(); // Discard first TEXT node
@@ -218,8 +278,10 @@ public class TestAPI {
 	 */
 	@Test
 	public void testSerializationEmpty() throws Exception {
-		// epub.addReference("title.xhtml", "Cover Page", Type.COVER);
-		epub.assemble(workingFolder);
+		EPUB epub = EPUB.getVersion2Instance();
+		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
+		epub.setFile(epubfile);
+		epub.pack(packingFolder);
 		Element doc = readOPF();
 		Assert.assertEquals("opf:package", doc.getNodeName());
 		NodeList nl = doc.getChildNodes();
@@ -257,12 +319,15 @@ public class TestAPI {
 	 */
 	@Test
 	public void testSerializationReferences() throws Exception {
+		EPUB epub = EPUB.getVersion2Instance();
+		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
+		epub.setFile(epubfile);
 		Type[] types = Type.values();
 		for (Type type : types) {
 			epub.addReference(type.getLiteral() + ".xhtml", type.getName(),
 					type);
 		}
-		epub.assemble(workingFolder);
+		epub.pack(packingFolder);
 		Element doc = readOPF();
 		Node guide = doc.getElementsByTagName("opf:guide").item(0);
 		Node ref = guide.getFirstChild(); // Discard first TEXT node

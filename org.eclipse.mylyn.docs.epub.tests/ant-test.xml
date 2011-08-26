@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Test markup-to-epub" basedir=".">
 	<property name="testdir" location="${basedir}/test/ant" />
-	<property name="srcdir" location="${basedir}/alice-in-wonderland" />
+	<property name="srcdir" location="${basedir}/testdata" />
 
 	<path id="java.class.path">
 		<pathelement path="${java.class.path}" />
@@ -9,6 +9,7 @@
 
 	<path id="epub-classpath">
 		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub/bin/" />
+		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub.ant/bin/" />
 	</path>
 
 	<taskdef classpathref="epub-classpath" resource="org/eclipse/mylyn/docs/epub/ant/tasks.properties" />
@@ -23,39 +24,15 @@
 		<mkdir dir="${testdir}" />
 	</target>
 
-	<!-- Assembles a complete publication. This is tested using epubcheck -->
 	<target name="test.publication">	
-		<epub identifierId="uuid" file="${testdir}/alice-in-wonderland.epub" workingFolder="${testdir}/work">			
-			<title>Alice in Wonderland</title>
+		<epub identifierId="uuid" file="${testdir}/simple.epub" workingFolder="${testdir}/work">			
+			<title>Mylyn Docs Test EPUB</title>
 			<language code="en" />
 			<identifier id="uuid" scheme="UUID">urn:uuid:15bcb770-882d-11e0-9d78-0800200c9a66</identifier>
-			<subject>Young readers</subject>
-			<subject>Fantasy</subject>
-			<creator fileAs="Carrol, Lewis" role="aut" name="Lewis Carroll"/>
-			<creator fileAs="Robinson, Gordon" role="ill" name="Gordon Robinson"/>
-			<publisher>Eclipse.Org</publisher>
-			<date event="original-publication" date="1916" />
-			<source>Project Gutenberg</source>
-			<rights>This EPUB eBook is released under the Eclipse Public License version 1.0.</rights>
-			<item file="${srcdir}/title.xhtml" spine="true" noToc="true"/>
-			<item file="${srcdir}/epubbooksinfo.xhtml" spine="true" noToc="true" />
-			<item file="${srcdir}/chapter-001.xhtml"/>
-			<item file="${srcdir}/chapter-002.xhtml"/>
-			<item file="${srcdir}/chapter-003.xhtml"/>
-			<item file="${srcdir}/chapter-004.xhtml"/>
-			<item file="${srcdir}/chapter-005.xhtml"/>
-			<item file="${srcdir}/chapter-006.xhtml"/>
-			<item file="${srcdir}/chapter-007.xhtml"/>
-			<item file="${srcdir}/chapter-008.xhtml"/>
-			<item file="${srcdir}/chapter-009.xhtml"/>
-			<item file="${srcdir}/chapter-010.xhtml"/>
-			<item file="${srcdir}/css/titlepage.css" dest="css" type="text/css" spine="false" />
-			<item file="${srcdir}/css/book.css" dest="css" type="text/css" spine="false" />
-			<cover image="${srcdir}/images/bookcover.jpg"/>
-			<reference href="title.xhtml" type="title-page" title="Title Page"/>
-			<fileset dir="${srcdir}/images" dest="images">
-				<include name="*.jpg" />
-			</fileset>
+			<subject>Testing</subject>
+			<creator fileAs="Resheim, Torkild U." role="aut" name="Torkild U. Resheim"/>
+			<publisher>Eclipse.org</publisher>
+			<item file="${srcdir}/plain-page.xhtml" />
 		</epub>
 	</target>
 

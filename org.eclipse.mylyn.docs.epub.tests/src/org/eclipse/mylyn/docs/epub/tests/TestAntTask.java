@@ -27,7 +27,7 @@ public class TestAntTask extends BuildFileTest {
 
 	static ClassLoader classLoader;
 
-	private static final String ALICE_FILE_PATH = "test/ant/alice-in-wonderland.epub";
+	private static final String SIMPLE_FILE_PATH = "test/ant/simple.epub";
 
 	private static final String DOC_FILE_PATH = "../org.eclipse.mylyn.docs.epub.ui/Building_EPUBs.epub";
 
@@ -52,13 +52,13 @@ public class TestAntTask extends BuildFileTest {
 	}
 
 	/**
-	 * Creates "Alice in Wonderland" using the Ant task and tests it using the
-	 * epub validator.
+	 * Creates a simple book using the Ant task and tests it using the epub
+	 * validator.
 	 */
-	public void testPublication() {
+	public void testSimplePublication() {
 		executeTarget("init");
 		executeTarget("test.publication");
-		assertEpub(ALICE_FILE_PATH);
+		assertEpub(SIMPLE_FILE_PATH);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class TestAntTask extends BuildFileTest {
 	 * "org.eclipse.mylyn.docs.epub.ui" bundle. The book contents is converted
 	 * from Textile markup to HTML using WikiText.
 	 */
-	public void testDoc() {
+	public void testDocumentationBook() {
 		assertEpub(DOC_FILE_PATH);
 	}
 }
