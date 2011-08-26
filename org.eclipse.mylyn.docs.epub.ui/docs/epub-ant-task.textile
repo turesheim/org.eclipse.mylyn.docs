@@ -25,11 +25,11 @@ p.
 * **file** - path to the resulting EPUB file.
 * **description** - description of the task.
 * **workingfolder** - optionally used to specify the folder used for assembling the EPUB. If not specified a temporary folder will be used and deleted when the processing has completed.
-* **automaticAdd** - optionally used to automatically include referenced items in the finished publication. When setting this to **true** there should be no need to explicitly add for instance image files.
+* **automaticAdd** - optionally used to automatically include referenced items in the finished publication. When setting this to **true** there should be no need to explicitly add for instance referenced image files.
 
 h2. Adding "header" information
 
-Certain elements are required in the header of the publication. These include the title of the publication, the identifier and the language code as shown in the minimal example above. It is possible to add more than one element of some types.
+Certain elements are required in the header of the publication. These include the title of the publication, the identifier and the language code. It is possible to add more than one element of some types.
 
 The following elements can be used:
 |_. id |_. Required |_. Description |
@@ -63,7 +63,7 @@ bc..
           id ID #IMPLIED
           scheme CDATA #IMPLIED>
 
-p. If an identifier is not specified, one will be generated based on a random "UUID":http://en.wikipedia.org/wiki/Universally_unique_identifier.
+p. If an identifier is not specified, one will be generated based using a random "UUID":http://en.wikipedia.org/wiki/Universally_unique_identifier.
 
 h3. Language specification
 
@@ -95,7 +95,7 @@ p.
 
 h3. Publication subject
 
-p. Typically, the subject will be represented using keywords, key phrases, or classification codes.
+p. The subject will typically be represented using keywords, key phrases, or classification codes.
 
 bc.. 
 <!ELEMENT subject (#PCDATA)>
@@ -105,7 +105,7 @@ bc..
 
 h3. Contributors and Creators
 
-p. Examples of a contributor and creator include a person, an organization, or a service. Typically, the name should be used to indicate the entity. 
+p. Examples of a contributor and creator include a person, an organization, or a service. 
 
 bc.. 
 <!ELEMENT contributor EMPTY>
