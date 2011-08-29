@@ -767,9 +767,14 @@ public abstract class EPUB {
 						};
 						Map<Object, Object> loadOptions = xmiResource.getDefaultLoadOptions();
 						Map<Object, Object> saveOptions = xmiResource.getDefaultSaveOptions();
+						// We use extended metadata
 						saveOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
 						loadOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
+						// Required in order to correctly read in attributes
 						loadOptions.put(XMLResource.OPTION_LAX_FEATURE_PROCESSING, Boolean.TRUE);
+						// Treat "href" attributes as features
+						loadOptions.put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE, Boolean.TRUE);
+						// UTF-8 encoding is required per specification
 						saveOptions.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
 						return xmiResource;
 					}
