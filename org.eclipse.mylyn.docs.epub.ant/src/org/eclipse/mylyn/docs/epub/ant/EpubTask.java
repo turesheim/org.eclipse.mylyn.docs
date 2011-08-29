@@ -39,6 +39,8 @@ public class EpubTask extends Task {
 
 	private File workingFolder;
 
+	private File epubFile;
+
 	public EpubTask() {
 		super();
 		filesets = new ArrayList<FileSetType>();
@@ -198,9 +200,9 @@ public class EpubTask extends Task {
 		}
 		try {
 			if (workingFolder == null) {
-				epub.pack();
+				epub.pack(epubFile);
 			} else {
-				epub.pack(workingFolder);
+				epub.pack(epubFile, workingFolder);
 			}
 
 		} catch (Exception e) {
@@ -222,7 +224,7 @@ public class EpubTask extends Task {
 	 *            path to the generated EPUB file.
 	 */
 	public void setFile(File file) {
-		epub.setFile(file);
+		this.epubFile = file;
 	}
 
 	public void setIdentifierId(String identifierId) {

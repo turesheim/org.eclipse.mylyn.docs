@@ -148,7 +148,6 @@ public class TestAPI {
 	 */
 	private EPUB createSimpleEPUB(File epubfile) throws URISyntaxException, Exception {
 		EPUB epub = EPUB.getVersion2Instance();
-		epub.setFile(epubfile);
 		epub.setIdentifierId("uuid");
 		epub.addLanguage(null, "en");
 		epub.addTitle(null, null, "Mylyn Docs Test EPUB");
@@ -158,7 +157,7 @@ public class TestAPI {
 		epub.addCreator(null, null, "Torkild U. Resheim", Role.AUTHOR, "Resheim, Torkild U.");
 		epub.addItem(getFile("testdata/plain-page.xhtml"));
 		epub.setGenerateToc(true);
-		epub.pack(packingFolder);
+		epub.pack(epubfile, packingFolder);
 		return epub;
 	}
 
@@ -189,13 +188,12 @@ public class TestAPI {
 	public void testSerializationContributors() throws Exception {
 		EPUB epub = EPUB.getVersion2Instance();
 		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
-		epub.setFile(epubfile);
 		Role[] roles = Role.values();
 		for (Role role : roles) {
 			epub.addContributor(role.getLiteral(), Locale.ENGLISH,
 					"Nomen Nescio", role, "Nescio, Nomen");
 		}
-		epub.pack(packingFolder);
+		epub.pack(epubfile, packingFolder);
 		Element doc = readOPF();
 		Node guide = doc.getElementsByTagName("opf:metadata").item(0);
 		Node node = guide.getFirstChild(); // Discard first TEXT node
@@ -241,13 +239,12 @@ public class TestAPI {
 	public void testSerializationCreators() throws Exception {
 		EPUB epub = EPUB.getVersion2Instance();
 		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
-		epub.setFile(epubfile);
 		Role[] roles = Role.values();
 		for (Role role : roles) {
 			epub.addCreator(role.getLiteral(), Locale.ENGLISH,
 					"Nomen Nescio", role, "Nescio, Nomen");
 		}
-		epub.pack(packingFolder);
+		epub.pack(epubfile, packingFolder);
 		Element doc = readOPF();
 		Node guide = doc.getElementsByTagName("opf:metadata").item(0);
 		Node node = guide.getFirstChild(); // Discard first TEXT node
@@ -280,8 +277,7 @@ public class TestAPI {
 	public void testSerializationEmpty() throws Exception {
 		EPUB epub = EPUB.getVersion2Instance();
 		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
-		epub.setFile(epubfile);
-		epub.pack(packingFolder);
+		epub.pack(epubfile, packingFolder);
 		Element doc = readOPF();
 		Assert.assertEquals("opf:package", doc.getNodeName());
 		NodeList nl = doc.getChildNodes();
@@ -321,13 +317,12 @@ public class TestAPI {
 	public void testSerializationReferences() throws Exception {
 		EPUB epub = EPUB.getVersion2Instance();
 		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
-		epub.setFile(epubfile);
 		Type[] types = Type.values();
 		for (Type type : types) {
 			epub.addReference(type.getLiteral() + ".xhtml", type.getName(),
 					type);
 		}
-		epub.pack(packingFolder);
+		epub.pack(epubfile, packingFolder);
 		Element doc = readOPF();
 		Node guide = doc.getElementsByTagName("opf:guide").item(0);
 		Node ref = guide.getFirstChild(); // Discard first TEXT node
