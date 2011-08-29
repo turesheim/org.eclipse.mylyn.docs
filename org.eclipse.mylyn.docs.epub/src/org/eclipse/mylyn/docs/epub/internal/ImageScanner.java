@@ -92,24 +92,34 @@ public class ImageScanner extends DefaultHandler {
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+
 		// Handle inline image files
 		if (qName.equalsIgnoreCase("img")) {
 			String ref = getAttribute(attributes, "src");
 			if (ref != null) {
+				String t = ref.toLowerCase();
+				if (t.startsWith("http://") || t.startsWith("https://")) {
+					return;
+				}
 				File source = new File(currentItem.getSourcePath());
 				File file = new File(source.getParentFile().getAbsolutePath() + File.separator + ref);
 				files.add(file);
 			}
 		}
+
 		// Also handle links to image files
 		if (qName.equalsIgnoreCase("a")) {
 			String ref = getAttribute(attributes, "href");
 			if (ref != null) {
+				String t = ref.toLowerCase();
+				if (t.startsWith("#") || t.startsWith("http://") || t.startsWith("https://")) {
+					return;
+				}
 				File source = new File(currentItem.getSourcePath());
 				File file = new File(source.getParentFile().getAbsolutePath() + File.separator + ref);
-				String mimetype = EPUBFileUtil.getMimeType(file);
-				System.out.println(mimetype);
-				files.add(file);
+				if (!file.isDirectory()) {
+					files.add(file);
+				}
 			}
 		}
 	}
