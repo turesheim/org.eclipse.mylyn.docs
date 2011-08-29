@@ -97,9 +97,9 @@ public abstract class EPUB {
 	protected static final String UUID_SCHEME = "uuid";
 
 	/** Publication identifier for the cover image item */
-	protected static final String COVER_IMAGE_ID = "cover-image";
+	public static final String COVER_IMAGE_ID = "cover-image";
 
-	protected static final String DEFAULT_MIMETYPE = "application/xhtml+xml";
+	protected static final String XHTML_MIMETYPE = "application/xhtml+xml";
 
 	/** The encoding to use in XML files */
 	protected static final String XML_ENCODING = "UTF-8";
@@ -115,8 +115,6 @@ public abstract class EPUB {
 
 	/** The root model element */
 	protected Package opfPackage;
-
-	protected String path;
 
 	protected final boolean verbose = true;
 
@@ -378,12 +376,12 @@ public abstract class EPUB {
 							+ ". Please specify the correct value");
 				}
 			} else {
-				type = DEFAULT_MIMETYPE;
+				type = XHTML_MIMETYPE;
 			}
 		}
 		if (id == null) {
 			String prefix = "";
-			if (!type.equals(DEFAULT_MIMETYPE)) {
+			if (!type.equals(XHTML_MIMETYPE)) {
 				prefix = (type.indexOf('/')) == -1 ? type : type.substring(0, type.indexOf('/')) + "-";
 			}
 			id = prefix + file.getName().substring(0, file.getName().lastIndexOf('.'));
@@ -565,12 +563,12 @@ public abstract class EPUB {
 	 * 
 	 * @throws Exception
 	 */
-	public void pack() throws Exception {
+	public void pack(File epubFile) throws Exception {
 		File workingFolder = File.createTempFile("epub_", null);
-		if (workingFolder.delete() && workingFolder.mkdirs()) {
-			pack(workingFolder);
-		}
 		workingFolder.deleteOnExit();
+		if (workingFolder.delete() && workingFolder.mkdirs()) {
+			pack(epubFile, workingFolder);
+		}
 	}
 
 	/**
@@ -579,7 +577,7 @@ public abstract class EPUB {
 	 * @param workingFolder
 	 * @throws Exception
 	 */
-	public void pack(File workingFolder) throws Exception {
+	public void pack(File epubFile, File workingFolder) throws Exception {
 		addCompulsoryData();
 		// Note that order is important here. Some methods may insert data into
 		// the EPUB structure. Hence the OPF must be written last.
@@ -599,7 +597,6 @@ public abstract class EPUB {
 			} else {
 				throw new IOException("Could not create OEBPS folder in " + oebpsFolder.getAbsolutePath());
 			}
-			File epubFile = new File(path);
 			EPUBFileUtil.zip(epubFile, workingFolder);
 			if (verbose) {
 				System.out.println("Publication packed to \"" + epubFile + "\"");
@@ -627,6 +624,14 @@ public abstract class EPUB {
 		readOPF(opfFile);
 		if (verbose) {
 			System.out.println("Publication unpacked at " + destination.getAbsolutePath());
+		}
+	}
+
+	public void unpack(File epubFile) throws Exception {
+		File workingFolder = File.createTempFile("epub_", null);
+		workingFolder.deleteOnExit();
+		if (workingFolder.delete() && workingFolder.mkdirs()) {
+			unpack(epubFile, workingFolder);
 		}
 	}
 
@@ -681,7 +686,7 @@ public abstract class EPUB {
 	 *            the identifier
 	 * @return the item
 	 */
-	protected Item getItemById(String id) {
+	public Item getItemById(String id) {
 		EList<Item> items = opfPackage.getManifest().getItems();
 		for (Item item : items) {
 			if (item.getId().equals(id)) {
@@ -713,12 +718,15 @@ public abstract class EPUB {
 		// Compose a list of file references
 		HashMap<File, List<File>> references = new HashMap<File, List<File>>();
 		for (Item item : manifestItems) {
-			if (item.getSourcePath() != null) {
-				File source = new File(item.getSourcePath());
-				references.put(source, ImageScanner.parse(item));
-			} else {
-				File source = new File(item.getFile());
-				references.put(source, ImageScanner.parse(item));
+			// Only parse XHTML-files and files that are not generated
+			if (item.getMedia_type().equals(XHTML_MIMETYPE) && !item.isGenerated()) {
+				if (item.getSourcePath() != null) {
+					File source = new File(item.getSourcePath());
+					references.put(source, ImageScanner.parse(item));
+				} else {
+					File source = new File(item.getFile());
+					references.put(source, ImageScanner.parse(item));
+				}
 			}
 		}
 		for (File root : references.keySet()) {
@@ -737,6 +745,12 @@ public abstract class EPUB {
 	 * able to create this factory without the Eclipse runtime.
 	 */
 	private void registerOPFResourceFactory() {
+		// Register package so that it is available even without the Eclipse
+		// runtime
+		@SuppressWarnings("unused")
+		OPFPackage packageInstance = OPFPackage.eINSTANCE;
+
+		// Register the file suffix
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(OPF_FILE_SUFFIX,
 				new XMLResourceFactoryImpl() {
 
@@ -775,11 +789,10 @@ public abstract class EPUB {
 	 */
 	public void setCover(File image, String title) {
 		// Add the cover image to the manifest
-		Item item = addItem(COVER_IMAGE_ID, null, image, null, null, true, true);
+		Item item = addItem(COVER_IMAGE_ID, null, image, null, null, false, true);
 		item.setTitle(title);
 		// Point to the cover using a meta tag
 		addMeta("cover", COVER_IMAGE_ID);
-		addReference(item.getHref(), title, Type.COVER);
 		opfPackage.setGenerateCoverHTML(true);
 
 	}
@@ -796,10 +809,6 @@ public abstract class EPUB {
 		if (lang != null) {
 			dc.setLang(lang.toString());
 		}
-	}
-
-	public void setFile(File file) {
-		this.path = file.getAbsolutePath();
 	}
 
 	public void setGenerateToc(boolean generateToc) {
@@ -914,8 +923,9 @@ public abstract class EPUB {
 			}
 		}
 		// Add the cover page item
-		Item coverPage = addItem(null, null, coverFile, null, DEFAULT_MIMETYPE, false, false);
+		Item coverPage = addItem(null, null, coverFile, null, XHTML_MIMETYPE, true, false);
 		coverPage.setGenerated(true);
+		addReference(coverPage.getHref(), coverImage.getTitle(), Type.COVER);
 
 	}
 

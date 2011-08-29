@@ -11,8 +11,10 @@
 package org.eclipse.mylyn.docs.epub.wikitext;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 
 import org.eclipse.mylyn.docs.epub.EPUB;
@@ -42,6 +44,7 @@ public class MarkupToEPUB {
 		this.markupLanguage = markupLanguage;
 	}
 
+
 	/**
 	 * Parses the markup file and populates the EPUB data model — but does not
 	 * assemble the resulting EPUB file. This is left to the consumer which may
@@ -49,16 +52,20 @@ public class MarkupToEPUB {
 	 * 
 	 * @param markup
 	 *            the WikiText markup file
-	 * @param file
-	 *            the resulting EPUB file
 	 * @return the EPUB instance
 	 * @throws Exception
 	 */
-	public EPUB parse(File markup, File file) throws Exception {
+	public EPUB parse(File markup) throws Exception {
+		EPUB epub = EPUB.getVersion2Instance();
+		parse(epub, markup);
+		return epub;
+
+	}
+
+	public void parse(EPUB epub, File markupFile) throws IOException, FileNotFoundException {
 		if (markupLanguage == null) {
 			throw new IllegalStateException("must set markupLanguage"); //$NON-NLS-1$
 		}
-		EPUB epub = EPUB.getVersion2Instance();
 		// Create a temporary working folder
 		File workingFolder = File.createTempFile("wikitext_", null);
 		if (workingFolder.delete() && workingFolder.mkdirs()) {
@@ -75,22 +82,19 @@ public class MarkupToEPUB {
 
 			markupParser.setBuilder(builder);
 			markupParser.setMarkupLanguage(markupLanguage);
-			markupParser.parse(new FileReader(markup));
+			markupParser.parse(new FileReader(markupFile));
 			// Convert the generated HTML to EPUB
 			epub.setGenerateToc(true);
 			epub.setIncludeReferencedResources(true);
 			Item item = epub.addItem(htmlFile);
-			item.setSourcePath(markup.getAbsolutePath());
-			epub.setFile(file);
+			item.setSourcePath(markupFile.getAbsolutePath());
 		}
 		workingFolder.deleteOnExit();
-		return epub;
-
 	}
 
-	public void parseAndAssemble(File markup, File file) throws Exception {
-		EPUB epub = parse(markup, file);
-		epub.pack();
+	public void assemble(File markupFile, File epubFile) throws Exception {
+		EPUB epub = parse(markupFile);
+		epub.pack(epubFile);
 	}
 
 	public String getBookTitle() {
