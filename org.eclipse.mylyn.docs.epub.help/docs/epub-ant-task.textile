@@ -63,7 +63,7 @@ bc..
           id ID #IMPLIED
           scheme CDATA #IMPLIED>
 
-p. If an identifier is not specified, one will be generated based using a random "UUID":http://en.wikipedia.org/wiki/Universally_unique_identifier.
+p. If an identifier is not specified, one will be generated based using a random "UUID":http://en.wikipedia.org/wiki/Universally_unique_identifier. However it is probably a good idea to specify an identifier. Reading systems may use this field as intended and replace older versions of the publication when a newer is added to the library.
 
 h3. Language specification
 
@@ -135,6 +135,8 @@ Optionally one can specify **fileas** to indicate a formal way of filing the ent
 
 bc.. 
 <creator name="Nomen Nescio" file-as="Nescio, Nomen" role="aut/>
+
+p. This tooling will automatically add "Eclipse Committers and Contributors" in the redactor role.
 
 p. In **role** "MARC relator codes":http://www.loc.gov/marc/relators/ are used for indicating the role of the entity. The complete list is quite long. Some of the more typical are:
 

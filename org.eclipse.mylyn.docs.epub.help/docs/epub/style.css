@@ -24,27 +24,27 @@ code strong em, code em strong, pre strong em, pre em strong, tt strong em, tt e
   font-style: italic;
   font-family: "DejaVu Sans Mono Bold Oblique", monospace;
   color: #3a587a;
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 code em, em code, pre em, em pre, tt em, em tt {
   font-style: italic;
   font-family: "DejaVu Sans Mono Oblique", monospace;
   color: #3a587a;
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 code strong, strong code, pre strong, strong pre, tt strong, strong tt {
   font-weight: bold;
   font-family: "DejaVu Sans Mono Bold", monospace;
   color: #3a587a;
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 code, pre, tt { 
   font-family: "DejaVu Sans Mono", monospace;
   color: #3a587a;
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 /*
