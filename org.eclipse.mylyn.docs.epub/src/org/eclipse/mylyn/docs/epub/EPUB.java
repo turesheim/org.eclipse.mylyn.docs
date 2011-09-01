@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -90,7 +91,7 @@ public abstract class EPUB {
 	private static final String OPF_FILE_SUFFIX = "opf";
 
 	/** MIME-type of an EPUB file */
-	protected static final String PUBLICATION_MIMETYPE = "application/epub+zip";
+	protected static final String MIMETYPE_EPUB = "application/epub+zip";
 
 	protected static final String CREATION_DATE_ID = "creation";
 
@@ -99,7 +100,7 @@ public abstract class EPUB {
 	/** Publication identifier for the cover image item */
 	public static final String COVER_IMAGE_ID = "cover-image";
 
-	protected static final String XHTML_MIMETYPE = "application/xhtml+xml";
+	protected static final String MIMETYPE_XHTML = "application/xhtml+xml";
 
 	/** The encoding to use in XML files */
 	protected static final String XML_ENCODING = "UTF-8";
@@ -157,7 +158,7 @@ public abstract class EPUB {
 		}
 		// Set the publication format
 		if (opfPackage.getMetadata().getFormats().isEmpty()) {
-			addFormat(null, PUBLICATION_MIMETYPE);
+			addFormat(null, MIMETYPE_EPUB);
 		}
 	}
 
@@ -376,12 +377,12 @@ public abstract class EPUB {
 							+ ". Please specify the correct value");
 				}
 			} else {
-				type = XHTML_MIMETYPE;
+				type = MIMETYPE_XHTML;
 			}
 		}
 		if (id == null) {
 			String prefix = "";
-			if (!type.equals(XHTML_MIMETYPE)) {
+			if (!type.equals(MIMETYPE_XHTML)) {
 				prefix = (type.indexOf('/')) == -1 ? type : type.substring(0, type.indexOf('/')) + "-";
 			}
 			id = prefix + file.getName().substring(0, file.getName().lastIndexOf('.'));
@@ -542,6 +543,22 @@ public abstract class EPUB {
 	}
 
 	/**
+	 * Returns a list of all CSS stylesheets declared in the manifest.
+	 * 
+	 * @return a list of all stylesheets
+	 */
+	public List<Item> getStylesheets() {
+		ArrayList<Item> stylesheets = new ArrayList<Item>();
+		EList<Item> items = opfPackage.getManifest().getItems();
+		for (Item item : items) {
+			if (item.getMedia_type().equals(EPUBFileUtil.MIMETYPE_CSS)) {
+				stylesheets.add(item);
+			}
+		}
+		return stylesheets;
+	}
+
+	/**
 	 * Adds a new &quot;Dublin Core Type&quot; to the publication.
 	 * <p>
 	 * This property is optional.
@@ -583,19 +600,19 @@ public abstract class EPUB {
 		// the EPUB structure. Hence the OPF must be written last.
 		if (workingFolder.isDirectory() || workingFolder.mkdirs()) {
 			writeContainer(workingFolder);
-			File oebpsFolder = new File(workingFolder.getAbsolutePath() + File.separator + "OEBPS");
-			if (oebpsFolder.mkdir()) {
+			File rootFolder = new File(workingFolder.getAbsolutePath() + File.separator + "OEBPS");
+			if (rootFolder.mkdir()) {
 				if (opfPackage.isGenerateCoverHTML()) {
-					writeCoverHTML(oebpsFolder);
+					writeCoverHTML(rootFolder);
 				}
 				if (opfPackage.isIncludeReferencedResources()) {
 					includeReferencedResources();
 				}
-				copyContent(oebpsFolder);
-				writeTableOfContents(oebpsFolder);
-				writeOPF(oebpsFolder);
+				copyContent(rootFolder);
+				writeTableOfContents(rootFolder);
+				writeOPF(rootFolder);
 			} else {
-				throw new IOException("Could not create OEBPS folder in " + oebpsFolder.getAbsolutePath());
+				throw new IOException("Could not create OEBPS folder in " + rootFolder.getAbsolutePath());
 			}
 			EPUBFileUtil.zip(epubFile, workingFolder);
 			if (verbose) {
@@ -619,36 +636,54 @@ public abstract class EPUB {
 	 */
 	public void unpack(File epubFile, File destination) throws Exception {
 		EPUBFileUtil.unzip(epubFile, destination);
-		File oebpsFolder = new File(destination.getAbsolutePath() + File.separator + "OEBPS");
-		File opfFile = new File(oebpsFolder.getAbsolutePath() + File.separator + "content.opf");
+		File rootFolder = new File(destination.getAbsolutePath() + File.separator + "OEBPS");
+		File opfFile = new File(rootFolder.getAbsolutePath() + File.separator + "content.opf");
 		readOPF(opfFile);
 		if (verbose) {
 			System.out.println("Publication unpacked at " + destination.getAbsolutePath());
 		}
 	}
 
-	public void unpack(File epubFile) throws Exception {
+	/**
+	 * Returns a list of all root folders contained in the publication.
+	 * Typically root files are arranged as shown below with for instance one
+	 * publication per language.
+	 * <ul>
+	 * <li>./OEBPS_en/content.opf</li>
+	 * <li>./OEBPS_no/content.opf</li>
+	 * </ul>
+	 * 
+	 * <b>Note that the current implementation only supports one root file.</b>
+	 * 
+	 * @return a list of root folders
+	 */
+	public String[] getRootFolder() {
+		return new String[] { "OEBPS" };
+	}
+
+	public File unpack(File epubFile) throws Exception {
 		File workingFolder = File.createTempFile("epub_", null);
 		workingFolder.deleteOnExit();
 		if (workingFolder.delete() && workingFolder.mkdirs()) {
 			unpack(epubFile, workingFolder);
 		}
+		return workingFolder;
 	}
 
 	/**
 	 * Copies all items part of the publication into the OEPBS folder unless the
 	 * item in question will be generated.
 	 * 
-	 * @param oepbsFolder
+	 * @param rootFolder
 	 *            the folder to copy into.
 	 * @throws IOException
 	 */
-	private void copyContent(File oepbsFolder) throws IOException {
+	private void copyContent(File rootFolder) throws IOException {
 		EList<Item> items = opfPackage.getManifest().getItems();
 		for (Item item : items) {
 			if (!item.isGenerated()) {
 				File source = new File(item.getFile());
-				File destination = new File(oepbsFolder.getAbsolutePath() + File.separator + item.getHref());
+				File destination = new File(rootFolder.getAbsolutePath() + File.separator + item.getHref());
 				EPUBFileUtil.copy(source, destination);
 			}
 		}
@@ -719,7 +754,7 @@ public abstract class EPUB {
 		HashMap<File, List<File>> references = new HashMap<File, List<File>>();
 		for (Item item : manifestItems) {
 			// Only parse XHTML-files and files that are not generated
-			if (item.getMedia_type().equals(XHTML_MIMETYPE) && !item.isGenerated()) {
+			if (item.getMedia_type().equals(MIMETYPE_XHTML) && !item.isGenerated()) {
 				if (item.getSourcePath() != null) {
 					File source = new File(item.getSourcePath());
 					references.put(source, ImageScanner.parse(item));
@@ -899,13 +934,13 @@ public abstract class EPUB {
 
 	/**
 	 * 
-	 * @param oepbsFolder
+	 * @param rootFolder
 	 * @throws IOException
 	 * 
 	 */
-	private void writeCoverHTML(File oepbsFolder) throws IOException {
+	private void writeCoverHTML(File rootFolder) throws IOException {
 		Item coverImage = getItemById(COVER_IMAGE_ID);
-		File coverFile = new File(oepbsFolder.getAbsolutePath() + File.separator + "cover-page.xhtml");
+		File coverFile = new File(rootFolder.getAbsolutePath() + File.separator + "cover-page.xhtml");
 		if (!coverFile.exists()) {
 			try {
 				FileWriter fw = new FileWriter(coverFile);
@@ -928,7 +963,7 @@ public abstract class EPUB {
 			}
 		}
 		// Add the cover page item
-		Item coverPage = addItem(null, null, coverFile, null, XHTML_MIMETYPE, true, false);
+		Item coverPage = addItem(null, null, coverFile, null, MIMETYPE_XHTML, true, false);
 		coverPage.setGenerated(true);
 		addReference(coverPage.getHref(), coverImage.getTitle(), Type.COVER);
 
@@ -937,12 +972,12 @@ public abstract class EPUB {
 	/**
 	 * Writes the <b>content.opf</b> file.
 	 * 
-	 * @param oebpsFolder
+	 * @param rootFolder
 	 *            the folder where to write the file.
 	 * @throws IOException
 	 */
-	private void writeOPF(File oebpsFolder) throws IOException {
-		File opfFile = new File(oebpsFolder.getAbsolutePath() + File.separator + "content.opf");
+	private void writeOPF(File rootFolder) throws IOException {
+		File opfFile = new File(rootFolder.getAbsolutePath() + File.separator + "content.opf");
 		ResourceSet resourceSet = new ResourceSetImpl();
 		// Register the packages to make it available during loading.
 		URI fileURI = URI.createFileURI(opfFile.getAbsolutePath());
@@ -971,11 +1006,11 @@ public abstract class EPUB {
 	 * method should do nothing if the table of contents has already been
 	 * specified using {@link #setTableOfContents(File)}.
 	 * 
-	 * @param oepbsFolder
+	 * @param rootFolder
 	 *            the folder to write in
 	 * @throws Exception
 	 */
-	protected abstract void writeTableOfContents(File oepbsFolder) throws Exception;
+	protected abstract void writeTableOfContents(File rootFolder) throws Exception;
 
 	public Package getOpfPackage() {
 		return opfPackage;

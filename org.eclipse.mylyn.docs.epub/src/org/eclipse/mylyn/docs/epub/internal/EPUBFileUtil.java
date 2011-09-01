@@ -34,6 +34,8 @@ public class EPUBFileUtil {
 
 	static final int BUFFERSIZE = 2048;
 
+	public final static String MIMETYPE_CSS = "text/css";
+
 	private static final String MIMETYPE_EPUB = "application/epub+zip";
 
 	/**
