@@ -10,28 +10,17 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.ui.commands;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.mylyn.docs.epub.wikitext.MarkupToEPUB;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.mylyn.docs.epub.ui.ConvertFromMarkupWizard;
 import org.eclipse.mylyn.wikitext.ui.commands.AbstractMarkupResourceHandler;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
-/**
- * Handler that is used to convert files containing wiki markup into EPUB.
- * 
- * @author Torkild U. Resheim
- * @since 1.0
- */
 public class ConvertMarkupToEPUB extends AbstractMarkupResourceHandler {
 
 	@Override
@@ -49,49 +38,12 @@ public class ConvertMarkupToEPUB extends AbstractMarkupResourceHandler {
 			}
 		}
 
-		final MarkupToEPUB markupToEPUB = new MarkupToEPUB();
-		markupToEPUB.setMarkupLanguage(markupLanguage);
-		markupToEPUB.setBookTitle(name);
+		ConvertFromMarkupWizard wizard = new ConvertFromMarkupWizard();
+		wizard.init(file, newFile, markupLanguage);
+		// Instantiates the wizard container with the wizard and opens it
+		WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
+		dialog.create();
+		dialog.open();
 
-		try {
-
-			IRunnableWithProgress runnable = new IRunnableWithProgress() {
-				public void run(IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException {
-					try {
-						if (newFile.exists()) {
-							newFile.delete(true, monitor);
-						}
-						markupToEPUB.parseAndAssemble(file.getLocation().toFile(), newFile
-								.getLocation()
-								.toFile());
-						newFile.refreshLocal(IResource.DEPTH_ONE, monitor);
-					} catch (Exception e) {
-						throw new InvocationTargetException(e);
-					}
-				}
-			};
-			try {
-				PlatformUI.getWorkbench().getProgressService()
-						.busyCursorWhile(runnable);
-			} catch (InterruptedException e) {
-				return;
-			} catch (InvocationTargetException e) {
-				throw e.getCause();
-			}
-		} catch (Throwable e) {
-			StringWriter message = new StringWriter();
-			PrintWriter out = new PrintWriter(message);
-			out.println(Messages.ConvertMarkupToEPUB_cannotConvert
-					+ e.getMessage());
-			out.println(Messages.ConvertMarkupToEPUB_detailsFollow);
-			e.printStackTrace(out);
-			out.close();
-
-			MessageDialog.openError(PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow().getShell(),
-					Messages.ConvertMarkupToEPUB_cannotCompleteOperation,
-					message.toString());
-		}
 	}
 }

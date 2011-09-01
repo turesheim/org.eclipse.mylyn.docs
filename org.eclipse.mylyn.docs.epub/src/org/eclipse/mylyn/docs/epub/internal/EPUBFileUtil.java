@@ -25,6 +25,8 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.eclipse.mylyn.docs.epub.EPUB;
+
 /**
  * Various EPUB file related utilities.
  * 
@@ -33,10 +35,6 @@ import java.util.zip.ZipOutputStream;
 public class EPUBFileUtil {
 
 	static final int BUFFERSIZE = 2048;
-
-	public final static String MIMETYPE_CSS = "text/css";
-
-	private static final String MIMETYPE_EPUB = "application/epub+zip";
 
 	/**
 	 * Copies the contents of <i>source</i> to the new <i>destination</i> file.
@@ -88,6 +86,9 @@ public class EPUBFileUtil {
 		}
 		if (file.getName().endsWith(".svg")) {
 			return "image/svg+xml";
+		}
+		if (file.getName().endsWith(".css")) {
+			return "text/css";
 		}
 		// Use URLConnection or content type detection
 		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
@@ -198,8 +199,8 @@ public class EPUBFileUtil {
 					throw new IOException("Invalid EPUB file. First item must be \"mimetype\"");
 				}
 				String type = new String(buf);
-				if (!type.trim().equals(MIMETYPE_EPUB)) {
-					throw new IOException("Invalid EPUB file. Expected \"" + MIMETYPE_EPUB + "\"");
+				if (!type.trim().equals(EPUB.MIMETYPE_EPUB)) {
+					throw new IOException("Invalid EPUB file. Expected \"" + EPUB.MIMETYPE_EPUB + "\"");
 				}
 				checkFirstItem = false;
 			}
@@ -218,7 +219,7 @@ public class EPUBFileUtil {
 	 * @throws IOException
 	 */
 	public static void writeEPUBHeader(ZipOutputStream zos) throws IOException {
-		byte[] bytes = MIMETYPE_EPUB.getBytes("ASCII");
+		byte[] bytes = EPUB.MIMETYPE_EPUB.getBytes("ASCII");
 		ZipEntry mimetype = new ZipEntry("mimetype");
 		mimetype.setMethod(ZipOutputStream.STORED);
 		mimetype.setSize(bytes.length);

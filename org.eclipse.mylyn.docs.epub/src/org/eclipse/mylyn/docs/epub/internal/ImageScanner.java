@@ -101,7 +101,6 @@ public class ImageScanner extends DefaultHandler {
 				if (t.startsWith("http://") || t.startsWith("https://")) {
 					return;
 				}
-				System.out.println(currentItem + " > " + currentItem.getSourcePath());
 				File source = new File(currentItem.getSourcePath());
 				File file = new File(source.getParentFile().getAbsolutePath() + File.separator + ref);
 				files.add(file);

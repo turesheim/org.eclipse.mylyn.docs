@@ -9,7 +9,7 @@
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.docs.epub.ui.commands;
+package org.eclipse.mylyn.docs.epub.ui;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -17,11 +17,17 @@ import org.eclipse.osgi.util.NLS;
  * @author Torkild U. Resheim
  */
 class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.mylyn.docs.epub.ui.commands.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.mylyn.docs.epub.ui.messages"; //$NON-NLS-1$
 
-	public static String ConvertMarkupToEPUB_fileExistsOverwrite;
+	public static String AbstractMarkupResourceHandler_markupLanguageMappingFailed;
 
-	public static String ConvertMarkupToEPUB_overwrite;
+	public static String AbstractMarkupResourceHandler_unexpectedError;
+
+	public static String ConvertMarkupToEPUB_cannotCompleteOperation;
+
+	public static String ConvertMarkupToEPUB_cannotConvert;
+
+	public static String ConvertMarkupToEPUB_detailsFollow;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

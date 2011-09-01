@@ -16,11 +16,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 
 import org.eclipse.mylyn.docs.epub.EPUB;
 import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
+import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder.Stylesheet;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
@@ -77,7 +79,17 @@ public class MarkupToEPUB {
 					return super.createFormattingXmlStreamWriter(out);
 				}
 			};
+
+			List<Item> stylesheets = epub.getItemsByMIMEType(EPUB.MIMETYPE_CSS);
+			for (Item item : stylesheets) {
+				File file = new File(item.getFile());
+				Stylesheet css = new Stylesheet(file);
+				builder.addCssStylesheet(css);
+				System.out.println(item.getFile());
+			}
+
 			builder.setXhtmlStrict(true);
+
 			MarkupParser markupParser = new MarkupParser();
 
 			markupParser.setBuilder(builder);

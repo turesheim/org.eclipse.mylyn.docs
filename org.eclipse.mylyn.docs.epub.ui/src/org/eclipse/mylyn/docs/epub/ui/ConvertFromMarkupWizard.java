@@ -1,5 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2011 Torkild U. Resheim.
+ * 
+ * All rights reserved. This program and the accompanying materials are made
+ * available under the terms of the Eclipse Public License v1.0 which
+ * accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Torkild U. Resheim - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.ui;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -17,39 +28,48 @@ import org.eclipse.ui.PlatformUI;
 
 public class ConvertFromMarkupWizard extends Wizard {
 
-	private IFile markupFile;
+	private EPUB2Bean bean;
+
+	EPUB epub;
 
 	private IFile epubFile;
+
+	private IFile markupFile;
 
 	private MarkupLanguage markupLanguage;
 
 	private MainPage page;
 
-	private EPUB2Bean bean;
-
 	public ConvertFromMarkupWizard() {
-		setWindowTitle("New Wizard");
+		setWindowTitle("Create new publication");
 	}
 
-	EPUB epub;
 
 	@Override
 	public void addPages() {
 		epub = EPUB.getVersion2Instance();
+		File workingFolder = null;
 		if (epubFile.exists()) {
 			try {
-				epub.unpack(epubFile.getLocation().toFile());
+				workingFolder = epub.unpack(epubFile.getLocation().toFile());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		bean = new EPUB2Bean(epub, markupFile.getLocation().toFile());
+		bean = new EPUB2Bean(epub, markupFile.getLocation().toFile(), epubFile.getLocation().toFile(), workingFolder);
 		page = new MainPage(bean);
 		addPage(page);
 	}
 
+	public void init(IFile markupFile, IFile epubFile, MarkupLanguage markupLanguage) {
+		this.markupFile = markupFile;
+		this.epubFile = epubFile;
+		this.markupLanguage = markupLanguage;
+	}
+
 	@Override
 	public boolean performFinish() {
+
 		final MarkupToEPUB markupToEPUB = new MarkupToEPUB();
 		markupToEPUB.setMarkupLanguage(markupLanguage);
 		try {
@@ -89,12 +109,6 @@ public class ConvertFromMarkupWizard extends Wizard {
 					Messages.ConvertMarkupToEPUB_cannotCompleteOperation, message.toString());
 		}
 		return true;
-	}
-
-	public void init(IFile markupFile, IFile epubFile, MarkupLanguage markupLanguage) {
-		this.markupFile = markupFile;
-		this.epubFile = epubFile;
-		this.markupLanguage = markupLanguage;
 	}
 
 }
