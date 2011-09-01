@@ -25,7 +25,7 @@
 			generateJavaCode="true" 
 			model="${basedir}/model/epub2.ecore" 
 			genmodel="${basedir}/model/epub2.genmodel" 
-			modelproject="org.eclipse.mylyn.docs.epub" 
+			modelproject="org.eclipse.mylyn.docs.epub.core" 
 			modelprojectfragmentpath="src-gen" />
 	</target>
 

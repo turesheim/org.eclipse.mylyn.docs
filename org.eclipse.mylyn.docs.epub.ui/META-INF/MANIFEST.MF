@@ -6,7 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Torkild U. Resheim
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.6.0,4.0.0)",
- org.eclipse.mylyn.docs.epub;bundle-version="[0.8.0,1.0.0)",
+ org.eclipse.mylyn.docs.epub.core;bundle-version="[0.8.0,1.0.0)",
  org.eclipse.mylyn.wikitext.ui;bundle-version="[1.5.0,2.0.0)",
  org.eclipse.mylyn.wikitext.core;bundle-version="[1.5.0,2.0.0)",
  org.eclipse.core.resources;bundle-version="[3.6.0,4.0.0)",

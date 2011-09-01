@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.mylyn.docs.epub/src-gen"
-    modelPluginID="org.eclipse.mylyn.docs.epub" modelName="OPF-2.0.1" nonNLSMarkers="true"
-    runtimeCompatibility="true" testsDirectory="/org.eclipse.mylyn.docs.epub.tests/src-gen"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.mylyn.docs.epub.core/src-gen"
+    modelPluginID="org.eclipse.mylyn.docs.epub.core" modelName="OPF-2.0.1" modelPluginClass=""
+    nonNLSMarkers="true" runtimeCompatibility="true" testsDirectory="/org.eclipse.mylyn.docs.epub.tests/src-gen"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="5.0" copyrightFields="false"
     publicConstructors="true" runtimeVersion="2.6" language="en" interfaceNamePattern="">
   <foreignModel>opf.ecore</foreignModel>
@@ -276,17 +276,17 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/titles"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/creators"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/subjects"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/description"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/publisher"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/descriptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/publishers"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/contributors"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/dates"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/types"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/format"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/formats"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/identifiers"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/source"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/sources"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/languages"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/relation"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/coverage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/relations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/coverages"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/rights"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference opf.ecore#//Metadata/metas"/>
     </genClasses>
