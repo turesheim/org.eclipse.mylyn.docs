@@ -40,6 +40,12 @@ public class ItemType {
 
 	String type;
 
+	public boolean linear;
+
+	public void setLinear(boolean linear) {
+		this.linear = linear;
+	}
+
 	/**
 	 * @ant.not-required
 	 */

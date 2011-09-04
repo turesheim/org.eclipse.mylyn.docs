@@ -100,7 +100,7 @@ public class EpubTask extends Task {
 	 * @ant.required
 	 */
 	public void addConfiguredItem(ItemType item) {
-		epub.addItem(item.id, item.lang, item.file, item.dest, item.type, item.spine, item.noToc);
+		epub.addItem(item.id, item.lang, item.file, item.dest, item.type, item.spine, item.linear, item.noToc);
 	}
 
 	/**
@@ -180,7 +180,7 @@ public class EpubTask extends Task {
 				filename = filename.substring(filename.lastIndexOf("/") + 1);
 				File base = ds.getBasedir();
 				File found = new File(base, includedFiles[i]);
-				epub.addItem(null, fs.lang, found, fs.dest, null, false, false);
+				epub.addItem(null, fs.lang, found, fs.dest, null, false, true, false);
 			}
 
 		}
