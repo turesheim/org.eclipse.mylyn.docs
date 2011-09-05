@@ -173,7 +173,7 @@ class EPUB2 extends EPUB {
 	public void setTableOfContents(File ncxFile) {
 		// Add the file to the publication and make sure we use the table of
 		// contents identifier.
-		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, NCX_MIMETYPE, false, false);
+		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, NCX_MIMETYPE, false, false, false);
 		// The table of contents file must be first.
 		opfPackage.getManifest().getItems().move(0, item);
 
@@ -217,7 +217,7 @@ class EPUB2 extends EPUB {
 		// As we now have written the table of contents we must make sure it is
 		// in the manifest and referenced in the spine. We also want it to be
 		// the first element in the manifest.
-		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, NCX_MIMETYPE, false, false);
+		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, NCX_MIMETYPE, false, false, false);
 		opfPackage.getManifest().getItems().move(0, item);
 	}
 

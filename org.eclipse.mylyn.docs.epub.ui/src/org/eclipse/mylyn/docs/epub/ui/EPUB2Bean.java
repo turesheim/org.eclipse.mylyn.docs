@@ -265,7 +265,7 @@ class EPUB2Bean {
 
 	public void setStyleSheet(String css) {
 		epub.getOpfPackage().getManifest().getItems().remove(epub.getItemsByMIMEType(EPUB.MIMETYPE_CSS));
-		epub.addItem(STYLING_ID, null, new File(css), null, null, false, true);
+		epub.addItem(STYLING_ID, null, new File(css), null, null, false, false, true);
 	}
 
 	public void setSubject(String subject) {

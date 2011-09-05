@@ -14,10 +14,12 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
@@ -69,7 +71,10 @@ public class ConvertFromMarkupWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
-
+		List<Diagnostic> problems = epub.validate();
+		for (Diagnostic diagnostic : problems) {
+			System.out.println(diagnostic.getMessage());
+		}
 		final MarkupToEPUB markupToEPUB = new MarkupToEPUB();
 		markupToEPUB.setMarkupLanguage(markupLanguage);
 		try {

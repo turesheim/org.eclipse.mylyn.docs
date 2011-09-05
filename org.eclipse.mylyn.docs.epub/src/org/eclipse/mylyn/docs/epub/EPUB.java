@@ -88,6 +88,8 @@ public abstract class EPUB {
 	// * Keep all data in the model, use "transient" for temporary variables
 	// * Do not create files before the final assemble
 
+	private static final String COVER_ID = "cover";
+
 	/** Publication identifier for the cover image item */
 	public static final String COVER_IMAGE_ID = "cover-image";
 
@@ -334,7 +336,7 @@ public abstract class EPUB {
 	 * @return
 	 */
 	public Item addItem(File file) {
-		return addItem(null, null, file, null, null, true, false);
+		return addItem(null, null, file, null, null, true, true, false);
 	}
 
 	/**
@@ -359,11 +361,13 @@ public abstract class EPUB {
 	 *            MIME file type
 	 * @param spine
 	 *            whether or not to add the item to the spine
+	 * @param linear
 	 * @param noToc
 	 *            whether or not to include in TOC when automatically generated
 	 * @return the new item
 	 */
-	public Item addItem(String id, Locale lang, File file, String dest, String type, boolean spine, boolean noToc) {
+	public Item addItem(String id, Locale lang, File file, String dest, String type, boolean spine, boolean linear,
+			boolean noToc) {
 		if (file == null || !file.exists()) {
 			throw new IllegalArgumentException("\"file\" " + file.getAbsolutePath() + " must exist.");
 		}
@@ -404,6 +408,9 @@ public abstract class EPUB {
 		opfPackage.getManifest().getItems().add(item);
 		if (spine) {
 			Itemref ref = OPFFactory.eINSTANCE.createItemref();
+			if (!linear) {
+				ref.setLinear("no");
+			}
 			ref.setIdref(id);
 			getSpine().getSpineItems().add(ref);
 		}
@@ -698,7 +705,7 @@ public abstract class EPUB {
 			List<File> images = references.get(root);
 			for (File image : images) {
 				File relativePath = new File(EPUBFileUtil.getRelativePath(root, image));
-				addItem(null, null, image, relativePath.getParent(), null, false, false);
+				addItem(null, null, image, relativePath.getParent(), null, false, false, false);
 			}
 		}
 
@@ -750,7 +757,7 @@ public abstract class EPUB {
 		} else {
 			throw new IOException("Could not create working folder in " + workingFolder.getAbsolutePath());
 		}
-		validateModel();
+		validate();
 	}
 
 	/**
@@ -823,10 +830,10 @@ public abstract class EPUB {
 	 */
 	public void setCover(File image, String title) {
 		// Add the cover image to the manifest
-		Item item = addItem(COVER_IMAGE_ID, null, image, null, null, false, true);
+		Item item = addItem(COVER_IMAGE_ID, null, image, null, null, false, false, true);
 		item.setTitle(title);
 		// Point to the cover using a meta tag
-		addMeta("cover", COVER_IMAGE_ID);
+		addMeta(COVER_ID, COVER_IMAGE_ID);
 		opfPackage.setGenerateCoverHTML(true);
 
 	}
@@ -910,21 +917,14 @@ public abstract class EPUB {
 	 * @return <code>true</code> if the model is valid, <code>false</code>
 	 *         otherwise.
 	 */
-	private boolean validateModel() {
+	public List<Diagnostic> validate() {
 		EValidator.Registry.INSTANCE.put(OPFPackage.eINSTANCE, new EcoreValidator());
 		BasicDiagnostic diagnostics = new BasicDiagnostic();
-		boolean valid = true;
 		for (EObject eo : opfPackage.eContents()) {
 			Map<Object, Object> context = new HashMap<Object, Object>();
-			valid &= Diagnostician.INSTANCE.validate(eo, diagnostics, context);
+			Diagnostician.INSTANCE.validate(eo, diagnostics, context);
 		}
-		if (!valid) {
-			List<Diagnostic> problems = diagnostics.getChildren();
-			for (Diagnostic diagnostic : problems) {
-				System.err.println(diagnostic.getMessage());
-			}
-		}
-		return valid;
+		return diagnostics.getChildren();
 	}
 
 	/**
@@ -986,10 +986,20 @@ public abstract class EPUB {
 			}
 		}
 		// Add the cover page item
-		Item coverPage = addItem(null, null, coverFile, null, MIMETYPE_XHTML, true, false);
+		Item coverPage = addItem(COVER_ID, null, coverFile, null, MIMETYPE_XHTML, true, false, false);
 		coverPage.setGenerated(true);
 		addReference(coverPage.getHref(), coverImage.getTitle(), Type.COVER);
-
+		// Move the cover page first in the spine.
+		EList<Itemref> spine = opfPackage.getSpine().getSpineItems();
+		Itemref cover = null;
+		for (Itemref itemref : spine) {
+			if (itemref.getIdref().equals(COVER_ID)) {
+				cover = itemref;
+			}
+		}
+		if (cover != null) {
+			spine.move(0, cover);
+		}
 	}
 
 	/**
