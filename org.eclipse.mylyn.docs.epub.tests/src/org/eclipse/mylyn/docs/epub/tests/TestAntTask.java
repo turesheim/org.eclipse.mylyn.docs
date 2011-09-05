@@ -11,6 +11,8 @@
 package org.eclipse.mylyn.docs.epub.tests;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import junit.framework.Assert;
 
@@ -29,7 +31,7 @@ public class TestAntTask extends BuildFileTest {
 
 	private static final String SIMPLE_FILE_PATH = "test/ant/simple.epub";
 
-	private static final String DOC_FILE_PATH = "../org.eclipse.mylyn.docs.epub.ui/Building_EPUBs.epub";
+	private static final String DOC_FILE_PATH = "../org.eclipse.mylyn.docs.epub.help/Building_EPUBs.epub";
 
 	public TestAntTask(String s) {
 		super(s);
@@ -37,8 +39,13 @@ public class TestAntTask extends BuildFileTest {
 	}
 
 	private void assertEpub(String file) {
-		EpubCheck checker = new EpubCheck(getFile(file));
-		Assert.assertTrue(checker.validate());
+		File f = getFile(file);
+		assertTrue("Missing publication " + file, f.exists());
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		EpubCheck checker = new EpubCheck(f, pw);
+		boolean ok = checker.validate();
+		Assert.assertTrue(sw.getBuffer().toString().trim(), ok);
 	}
 
 	private File getFile(String file) {
