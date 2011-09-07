@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.mylyn.docs.epub.ant.feature"
-      label="EPUB Ant support"
+      label="%featureName"
       version="0.8.0.qualifier"
-      provider-name="Torkild U. Resheim"
+      provider-name="%providerName"
+      plugin="%featureName"
       license-feature="org.eclipse.mylyn_feature"
       license-feature-version="3.6.0.v20110608-1400">
 
    <description>
-      Apache Ant support for building EPUBs.
+      %description
    </description>
 
    <copyright>
-      Copyright (c) 2011 Torkild U. Resheim
+      %copyright
    </copyright>
 
    <license url="http://www.example.com/license">
