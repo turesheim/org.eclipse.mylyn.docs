@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.util.FeatureMapUtil.FeatureEList;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.mylyn.docs.epub.EPUB;
 import org.eclipse.mylyn.docs.epub.dc.Creator;
+import org.eclipse.mylyn.docs.epub.dc.Date;
 import org.eclipse.mylyn.docs.epub.dc.Identifier;
 import org.eclipse.mylyn.docs.epub.dc.Language;
 import org.eclipse.mylyn.docs.epub.dc.Rights;
@@ -276,6 +277,31 @@ class EPUB2Bean {
 	public void setTitle(String title) {
 		epub.getOpfPackage().getMetadata().getTitles().clear();
 		epub.addTitle(null, null, title);
+	}
+
+	public void setPublicationDate(String date){
+		epub.getOpfPackage().getMetadata().getDates().clear();
+		epub.addDate(null, date, "publication");
+	}
+
+	@SuppressWarnings("rawtypes")
+	public String getPublicationDate() {
+		EList<Date> dates = epub.getOpfPackage().getMetadata().getDates();
+		if (dates.size() > 0) {
+			for (Date date : dates) {
+				if (date.getEvent().equals("publication")) {
+					FeatureMap fm = date.getMixed();
+				Object o = fm.get(TEXT, false);
+				if (o instanceof FeatureEList) {
+					if (((FeatureEList) o).size() > 0) {
+						return ((FeatureEList) o).get(0).toString();
+					}
+				}
+				}
+			}
+		}
+		return EMPTY_STRING;
+
 	}
 
 	public Map<String, String> getLocales() {

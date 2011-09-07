@@ -62,6 +62,8 @@ public class MainPage extends WizardPage {
 
 	private Combo combo;
 
+	private DateTime dateTime;
+
 	/**
 	 * Create the wizard.
 	 * 
@@ -113,7 +115,7 @@ public class MainPage extends WizardPage {
 		Label lblNewLabel_1 = new Label(grpRequiredDetails, SWT.NONE);
 		lblNewLabel_1.setText("Date:");
 
-		DateTime dateTime = new DateTime(grpRequiredDetails, SWT.BORDER | SWT.LONG);
+		dateTime = new DateTime(grpRequiredDetails, SWT.BORDER | SWT.LONG);
 
 		Label lblIdentifier = new Label(grpRequiredDetails, SWT.NONE);
 		lblIdentifier.setText("Identifier:");
@@ -247,6 +249,10 @@ public class MainPage extends WizardPage {
 				.observeText(styleSheetText, SWT.Modify);
 		IObservableValue beanStyleSheetObserveValue = PojoObservables.observeValue(bean, "styleSheet");
 		bindingContext.bindValue(styleSheetTextObserveTextObserveWidget, beanStyleSheetObserveValue, null, null);
+		//
+		IObservableValue dateTimeObserveSelectionObserveWidget = SWTObservables.observeSelection(dateTime);
+		IObservableValue beanPublicationDateObserveValue = PojoObservables.observeValue(bean, "publicationDate");
+		bindingContext.bindValue(dateTimeObserveSelectionObserveWidget, beanPublicationDateObserveValue, null, null);
 		//
 		return bindingContext;
 	}
