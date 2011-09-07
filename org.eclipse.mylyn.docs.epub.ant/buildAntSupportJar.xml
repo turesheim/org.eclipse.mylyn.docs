@@ -32,7 +32,7 @@
 		<javac target="1.5" source="1.5" destdir="${destdir}" failonerror="false" verbose="false" debug="on">
 			<classpath>
 				<dirset dir="${basedir}/..">
-					<include name="org.eclipse.mylyn.docs.epub/bin"/>
+					<include name="org.eclipse.mylyn.docs.epub.core/bin"/>
 					<include name="org.eclipse.mylyn.docs.epub.ant/bin"/>
 				</dirset>
 				

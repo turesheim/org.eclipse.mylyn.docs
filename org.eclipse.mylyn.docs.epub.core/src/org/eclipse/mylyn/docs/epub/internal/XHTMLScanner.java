@@ -20,7 +20,7 @@ import org.xml.sax.ext.DefaultHandler2;
  * 
  * @author Torkild U. Resheim
  */
-public abstract class HTMLScanner extends DefaultHandler2 {
+public abstract class XHTMLScanner extends DefaultHandler2 {
 
 	/** Buffer holding element text */
 	protected StringBuilder buffer = null;
@@ -32,7 +32,7 @@ public abstract class HTMLScanner extends DefaultHandler2 {
 
 	protected boolean insideHead;
 
-	public HTMLScanner() {
+	public XHTMLScanner() {
 		super();
 		buffer = new StringBuilder();
 	}

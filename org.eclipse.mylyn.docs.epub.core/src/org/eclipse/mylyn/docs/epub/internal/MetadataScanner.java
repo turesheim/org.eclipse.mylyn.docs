@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
  * @see http://dublincore.org/documents/dc-html/
  * @see http://dublincore.org/documents/dcq-html/ (obsolete)
  */
-public final class MetadataScanner extends HTMLScanner {
+public final class MetadataScanner extends XHTMLScanner {
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {

@@ -24,7 +24,6 @@ import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This type is a SAX parser that will read a XHTML file and create a list of
@@ -32,7 +31,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * 
  * @author Torkild U. Resheim
  */
-public class ImageScanner extends DefaultHandler {
+public class ImageScanner extends XHTMLScanner {
 
 	public static List<File> parse(Item item) throws ParserConfigurationException, SAXException, IOException {
 		FileReader fr = new FileReader(item.getFile());
@@ -63,13 +62,6 @@ public class ImageScanner extends DefaultHandler {
 		currentItem = item;
 	}
 
-	@Override
-	public void characters(char[] ch, int start, int length) throws SAXException {
-	}
-
-	@Override
-	public void endElement(String uri, String localName, String qName) throws SAXException {
-	}
 
 	/**
 	 * Case-insensitive method for obtaining an attribute.

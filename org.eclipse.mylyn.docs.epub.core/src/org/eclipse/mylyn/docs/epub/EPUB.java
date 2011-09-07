@@ -595,6 +595,8 @@ public abstract class EPUB {
 	 */
 	protected abstract void generateTableOfContents() throws Exception;
 
+	protected abstract void validateContents() throws Exception;
+
 	/**
 	 * Returns the main identifier of the publication or <code>null</code> if it
 	 * could not be determined.
@@ -745,6 +747,7 @@ public abstract class EPUB {
 					includeReferencedResources();
 				}
 				copyContent(rootFolder);
+				validateContents();
 				writeTableOfContents(rootFolder);
 				writeOPF(rootFolder);
 			} else {

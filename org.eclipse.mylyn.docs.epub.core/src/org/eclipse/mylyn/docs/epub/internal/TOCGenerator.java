@@ -96,16 +96,17 @@ public class TOCGenerator extends DefaultHandler {
 		if (level > 0) {
 			recording = false;
 			NavPoint np = createNavPoint(buffer.toString());
+			// Determine the parent header
 			NavPoint h = headers[level - 1];
-
 			while (level > 1 && h == null) {
 				level--;
 				if (level == 1) {
+					h = headers[0];
 					break;
 				}
 				h = headers[level - 1];
 			}
-
+			// Add to the parent header or to the root
 			if (level > 1) {
 				h.getNavPoint().add(np);
 			} else {
@@ -143,6 +144,19 @@ public class TOCGenerator extends DefaultHandler {
 		}
 	}
 
+	/**
+	 * 
+	 * @param file
+	 * @param href
+	 * @param ncx
+	 *            the NCX
+	 * @param playOrder
+	 *            initial play order
+	 * @return
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws IOException
+	 */
 	public static int parse(InputSource file, String href, Ncx ncx, int playOrder) throws ParserConfigurationException,
 			SAXException, IOException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();

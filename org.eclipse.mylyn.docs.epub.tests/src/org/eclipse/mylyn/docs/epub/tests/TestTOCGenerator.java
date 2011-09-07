@@ -86,6 +86,9 @@ public class TestTOCGenerator {
 		TOCGenerator.parse(new InputSource(new StringReader(html)), "test.html",
 				ncx,0);
 		EList<NavPoint> points = ncx.getNavMap().getNavPoint();
+		for (NavPoint navPoint : points) {
+			System.out.println(navPoint);
+		}
 		Assert.assertEquals(3,points.size());
 	}
 	

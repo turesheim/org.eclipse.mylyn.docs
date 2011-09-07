@@ -27,6 +27,8 @@ import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.mylyn.docs.epub.internal.EPUBXMLHelperImp;
+import org.eclipse.mylyn.docs.epub.internal.OPS2Validator;
+import org.eclipse.mylyn.docs.epub.internal.OPS2Validator.Mode;
 import org.eclipse.mylyn.docs.epub.internal.TOCGenerator;
 import org.eclipse.mylyn.docs.epub.ncx.DocTitle;
 import org.eclipse.mylyn.docs.epub.ncx.Head;
@@ -137,6 +139,32 @@ class EPUB2 extends EPUB {
 				playOrder = TOCGenerator.parse(new InputSource(fr), referencedItem.getHref(), ncxTOC, playOrder);
 			}
 		}
+	}
+
+	@Override
+	protected void validateContents() throws Exception {
+		EList<Itemref> spineItems = getSpine().getSpineItems();
+		EList<Item> manifestItems = opfPackage.getManifest().getItems();
+		for (Itemref itemref : spineItems) {
+			Item referencedItem = null;
+			String id = itemref.getIdref();
+			// Find the manifest item that is referenced
+			for (Item item : manifestItems) {
+				if (item.getId().equals(id)) {
+					referencedItem = item;
+					break;
+				}
+			}
+			if (referencedItem != null && !referencedItem.isNoToc()) {
+				File file = new File(referencedItem.getFile());
+				if (verbose) {
+					System.out.println("Validating contents in \"" + file.getName() + "\".");
+				}
+				FileReader fr = new FileReader(file);
+				OPS2Validator.parse(new InputSource(fr), referencedItem.getHref(), Mode.WARN);
+			}
+		}
+
 	}
 
 	/** Identifier of the table of contents file */
