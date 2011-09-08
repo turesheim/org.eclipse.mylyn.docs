@@ -25,26 +25,19 @@ public class ItemType {
 
 	String id;
 
+	Locale lang;
+
+	/** Default is that items are in reading order */
+	public boolean linear = true;
+
 	boolean noToc = false;
 
 	String page;
-
-	Locale lang;
-
-	public void setLang(Locale lang) {
-		this.lang = lang;
-	}
 
 	/** Default is to add the item to the spine */
 	boolean spine = true;
 
 	String type;
-
-	public boolean linear;
-
-	public void setLinear(boolean linear) {
-		this.linear = linear;
-	}
 
 	/**
 	 * @ant.not-required
@@ -68,6 +61,14 @@ public class ItemType {
 	 */
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public void setLang(Locale lang) {
+		this.lang = lang;
+	}
+
+	public void setLinear(boolean linear) {
+		this.linear = linear;
 	}
 
 	/**
