@@ -959,8 +959,11 @@ public abstract class EPUB {
 	}
 
 	/**
+	 * Writes a XHTML-file for the cover image. This is added to the publication
+	 * and all required references set.
 	 * 
 	 * @param rootFolder
+	 *            the publication root folder
 	 * @throws IOException
 	 * 
 	 */
@@ -968,6 +971,7 @@ public abstract class EPUB {
 		Item coverImage = getItemById(COVER_IMAGE_ID);
 		File coverFile = new File(rootFolder.getAbsolutePath() + File.separator + "cover-page.xhtml");
 		if (!coverFile.exists()) {
+
 			try {
 				FileWriter fw = new FileWriter(coverFile);
 				fw.append("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n");
@@ -975,11 +979,26 @@ public abstract class EPUB {
 				fw.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n");
 				fw.append("  <head>\n");
 				fw.append("    <title>" + coverImage.getTitle() + "</title>\n");
-				fw.append("    <style type=\"text/css\"> img { max-width: 100%; }</style>\n");
+				fw.append("    <style type=\"text/css\">");
+				fw.append("      #cover-body {\n");
+				fw.append("        margin: 0px;\n");
+				fw.append("        text-align: center;\n");
+				fw.append("        background-color: #222222;\n");
+				fw.append("      }\n");
+				fw.append("      #cover-block {\n");
+				fw.append("        height: 100%;\n");
+				fw.append("        margin-top: 0;\n");
+				fw.append("      }\n");
+				fw.append("      #cover-image {\n");
+				fw.append("        height: 100%;\n");
+				fw.append("        text-align: center;\n");
+				fw.append("        max-width: 100%;\n");
+				fw.append("      }\n");
+				fw.append("    </style>\n");
 				fw.append("  </head>\n");
-				fw.append("  <body>\n");
-				fw.append("    <div id=\"cover-image\">\n");
-				fw.append("      <img src=\"" + coverImage.getHref() + "\" alt=\"" + coverImage.getTitle() + "\"/>\n");
+				fw.append("  <body id=\"cover-body\">\n");
+				fw.append("    <div id=\"cover-block\">\n");
+				fw.append("      <img id=\"cover-image\" src=\"" + coverImage.getHref() + "\" alt=\"" + coverImage.getTitle() + "\"/>\n");
 				fw.append("    </div>\n");
 				fw.append("  </body>\n");
 				fw.append("</html>\n");
