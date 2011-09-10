@@ -71,11 +71,10 @@ public class MainPage extends WizardPage {
 	 */
 	public MainPage() {
 		super("wizardPage");
-		setMessage("Create an EPUB publication using the selected WikiText markup file.");
+		setMessage("Define properties for the resulting EPUB file.");
 		setImageDescriptor(ResourceManager.getPluginImageDescriptor("org.eclipse.mylyn.docs.epub.ui",
 				"icons/wizard-banner.png"));
-		setTitle("Create EPUB");
-		setDescription("Wizard Page description");
+		setTitle("EPUB Properties");
 	}
 
 	public MainPage(EPUB2Bean bean) {
