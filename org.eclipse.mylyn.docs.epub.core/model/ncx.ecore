@@ -181,14 +181,14 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Head">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="group" unique="false" upperBound="-1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="groups" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="group"/>
         <details key="name" value="group:0"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="smilCustomTest" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="smilCustomTests" upperBound="-1"
         eType="#//SmilCustomTest" volatile="true" transient="true" derived="true"
         containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
@@ -198,8 +198,9 @@
         <details key="group" value="#group:0"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="meta" upperBound="-1" eType="#//Meta"
-        volatile="true" transient="true" derived="true" containment="true" resolveProxies="false">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metas" upperBound="-1"
+        eType="#//Meta" volatile="true" transient="true" derived="true" containment="true"
+        resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
         <details key="name" value="meta"/>
@@ -331,7 +332,7 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NavList">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="navInfo" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="navInfos" upperBound="-1"
         eType="#//NavInfo" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -339,7 +340,7 @@
         <details key="namespace" value="##targetNamespace"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="navLabel" lowerBound="1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="navLabels" lowerBound="1"
         upperBound="-1" eType="#//NavLabel" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -347,7 +348,7 @@
         <details key="namespace" value="##targetNamespace"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="navTarget" lowerBound="1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="navTargets" lowerBound="1"
         upperBound="-1" eType="#//NavTarget" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -370,7 +371,7 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NavMap">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="navInfo" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="navInfos" upperBound="-1"
         eType="#//NavInfo" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -378,7 +379,7 @@
         <details key="namespace" value="##targetNamespace"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="navLabel" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="navLabels" upperBound="-1"
         eType="#//NavLabel" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -386,7 +387,7 @@
         <details key="namespace" value="##targetNamespace"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="navPoint" lowerBound="1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="navPoints" lowerBound="1"
         upperBound="-1" eType="#//NavPoint" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -418,7 +419,7 @@
         <details key="namespace" value="##targetNamespace"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="navPoint" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="navPoints" upperBound="-1"
         eType="#//NavPoint" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -448,7 +449,7 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NavTarget">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="navLabel" lowerBound="1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="navLabels" lowerBound="1"
         upperBound="-1" eType="#//NavLabel" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -511,7 +512,7 @@
         <details key="namespace" value="##targetNamespace"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="docAuthor" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="docAuthors" upperBound="-1"
         eType="#//DocAuthor" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -535,7 +536,7 @@
         <details key="namespace" value="##targetNamespace"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="navList" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="navLists" upperBound="-1"
         eType="#//NavList" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -572,7 +573,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="OverrideObject" instanceClassName="org.eclipse.emf.common.util.Enumerator"/>
   <eClassifiers xsi:type="ecore:EClass" name="PageList">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="navInfo" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="navInfos" upperBound="-1"
         eType="#//NavInfo" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -580,7 +581,7 @@
         <details key="namespace" value="##targetNamespace"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="navLabel" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="navLabels" upperBound="-1"
         eType="#//NavLabel" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -588,7 +589,7 @@
         <details key="namespace" value="##targetNamespace"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="pageTarget" lowerBound="1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pageTargets" lowerBound="1"
         upperBound="-1" eType="#//PageTarget" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="element"/>
@@ -611,7 +612,7 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PageTarget">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="navLabel" lowerBound="1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="navLabels" lowerBound="1"
         upperBound="-1" eType="#//NavLabel" containment="true" resolveProxies="false">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="namespace" value="##targetNamespace"/>

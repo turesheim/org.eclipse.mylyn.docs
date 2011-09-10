@@ -108,9 +108,9 @@ public class TOCGenerator extends DefaultHandler {
 			}
 			// Add to the parent header or to the root
 			if (level > 1) {
-				h.getNavPoint().add(np);
+				h.getNavPoints().add(np);
 			} else {
-				ncx.getNavMap().getNavPoint().add(np);
+				ncx.getNavMap().getNavPoints().add(np);
 			}
 			headers[level] = np;
 			buffer.setLength(0);

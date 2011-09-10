@@ -110,7 +110,7 @@ class EPUB2 extends EPUB {
 		Meta meta = NCXFactory.eINSTANCE.createMeta();
 		meta.setName("dtb:uid");
 		meta.setContent(getIdentifier().getMixed().getValue(0).toString());
-		head.getMeta().add(meta);
+		head.getMetas().add(meta);
 		DocTitle docTitle = NCXFactory.eINSTANCE.createDocTitle();
 		Text text = NCXFactory.eINSTANCE.createText();
 		FeatureMapUtil.addText(text.getMixed(), "Table of contents");

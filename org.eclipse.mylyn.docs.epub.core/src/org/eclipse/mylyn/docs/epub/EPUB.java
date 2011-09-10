@@ -362,6 +362,7 @@ public abstract class EPUB {
 	 * @param spine
 	 *            whether or not to add the item to the spine
 	 * @param linear
+	 *            whether or not the item is part of the reading order
 	 * @param noToc
 	 *            whether or not to include in TOC when automatically generated
 	 * @return the new item

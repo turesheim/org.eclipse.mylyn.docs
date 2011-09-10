@@ -47,10 +47,10 @@ public class TestTOCGenerator {
 		Ncx ncx = createNcx();
 		TOCGenerator.parse(new InputSource(new StringReader(html)), "test.html",
 				ncx,0);
-		EList<NavPoint> points = ncx.getNavMap().getNavPoint();
+		EList<NavPoint> points = ncx.getNavMap().getNavPoints();
 		Assert.assertEquals(2,points.size());
-		Assert.assertEquals(2,points.get(0).getNavPoint().size());
-		Assert.assertEquals(1,points.get(0).getNavPoint().get(1).getNavPoint().size());
+		Assert.assertEquals(2, points.get(0).getNavPoints().size());
+		Assert.assertEquals(1, points.get(0).getNavPoints().get(1).getNavPoints().size());
 	}
 	
 	@Test
@@ -63,9 +63,9 @@ public class TestTOCGenerator {
 		Ncx ncx = createNcx();
 		TOCGenerator.parse(new InputSource(new StringReader(html)), "test.html",
 				ncx,0);
-		EList<NavPoint> points = ncx.getNavMap().getNavPoint();
+		EList<NavPoint> points = ncx.getNavMap().getNavPoints();
 		Assert.assertEquals(2,points.size());
-		Assert.assertEquals(0,points.get(0).getNavPoint().size());
+		Assert.assertEquals(0, points.get(0).getNavPoints().size());
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public class TestTOCGenerator {
 		Ncx ncx = createNcx();
 		TOCGenerator.parse(new InputSource(new StringReader(html)), "test.html",
 				ncx,0);
-		EList<NavPoint> points = ncx.getNavMap().getNavPoint();
+		EList<NavPoint> points = ncx.getNavMap().getNavPoints();
 		for (NavPoint navPoint : points) {
 			System.out.println(navPoint);
 		}
@@ -103,9 +103,9 @@ public class TestTOCGenerator {
 		Ncx ncx = createNcx();
 		TOCGenerator.parse(new InputSource(new StringReader(html)), "test.html",
 				ncx,0);
-		EList<NavPoint> points = ncx.getNavMap().getNavPoint();
+		EList<NavPoint> points = ncx.getNavMap().getNavPoints();
 		Assert.assertEquals(2,points.size());
-		Assert.assertEquals(1,points.get(0).getNavPoint().size());
+		Assert.assertEquals(1, points.get(0).getNavPoints().size());
 	}
 	
 
