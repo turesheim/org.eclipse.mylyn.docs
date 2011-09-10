@@ -63,9 +63,11 @@ import org.xml.sax.SAXException;
  */
 class EPUB2 extends EPUB {
 
+	private static final String TOCFILE_NAME = "toc.ncx";
+
 	private static final String NCX_MIMETYPE = "application/x-dtbncx+xml";
 
-	private final Ncx ncxTOC;
+	private Ncx ncxTOC;
 
 	/**
 	 * Creates a new EPUB.
@@ -178,6 +180,11 @@ class EPUB2 extends EPUB {
 	 * able to create this factory without the Eclipse runtime.
 	 */
 	private void registerNCXResourceFactory() {
+		// Register package so that it is available even without the Eclipse
+		// runtime
+		@SuppressWarnings("unused")
+		NCXPackage packageInstance = NCXPackage.eINSTANCE;
+
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(NCX_FILE_SUFFIX,
 				new NCXResourceFactoryImpl() {
 					@Override
@@ -191,6 +198,17 @@ class EPUB2 extends EPUB {
 							}
 
 						};
+						Map<Object, Object> loadOptions = xmiResource.getDefaultLoadOptions();
+						Map<Object, Object> saveOptions = xmiResource.getDefaultSaveOptions();
+						// We use extended metadata
+						saveOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
+						loadOptions.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
+						// Required in order to correctly read in attributes
+						loadOptions.put(XMLResource.OPTION_LAX_FEATURE_PROCESSING, Boolean.TRUE);
+						// Treat "href" attributes as features
+						loadOptions.put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE, Boolean.TRUE);
+						// UTF-8 encoding is required per specification
+						saveOptions.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
 						return xmiResource;
 					}
 
@@ -223,7 +241,7 @@ class EPUB2 extends EPUB {
 	 */
 	@Override
 	protected void writeTableOfContents(File oepbsFolder) throws Exception {
-		File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator + "toc.ncx");
+		File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator + TOCFILE_NAME);
 		if (getItemById(opfPackage.getSpine().getToc()) == null) {
 			ResourceSet resourceSet = new ResourceSetImpl();
 			// Register the packages to make it available during loading.
@@ -247,6 +265,21 @@ class EPUB2 extends EPUB {
 		// the first element in the manifest.
 		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, NCX_MIMETYPE, false, false, false);
 		opfPackage.getManifest().getItems().move(0, item);
+	}
+
+	@Override
+	protected void readTableOfContents(File oepbsFolder) throws IOException {
+		ResourceSet resourceSet = new ResourceSetImpl();
+		File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator + TOCFILE_NAME);
+		URI fileURI = URI.createFileURI(ncxFile.getAbsolutePath());
+		Resource resource = resourceSet.createResource(fileURI);
+		resource.load(null);
+		ncxTOC = (Ncx) resource.getContents().get(0);
+	}
+
+	@Override
+	public Object getTableOfContents() {
+		return ncxTOC;
 	}
 
 }

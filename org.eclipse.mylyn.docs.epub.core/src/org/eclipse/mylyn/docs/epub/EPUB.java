@@ -779,6 +779,10 @@ public abstract class EPUB {
 		opfPackage = (Package) resource.getContents().get(0);
 	}
 
+	protected abstract void readTableOfContents(File oepbsFolder) throws IOException;
+
+	public abstract Object getTableOfContents();
+
 	/**
 	 * Registers a new resource factory for OPF data structures. This is
 	 * normally done through Eclipse extension points but we also need to be
@@ -907,9 +911,10 @@ public abstract class EPUB {
 	 */
 	public void unpack(File epubFile, File destination) throws Exception {
 		EPUBFileUtil.unzip(epubFile, destination);
-		File rootFolder = new File(destination.getAbsolutePath() + File.separator + "OEBPS");
-		File opfFile = new File(rootFolder.getAbsolutePath() + File.separator + "content.opf");
+		File oepbsFolder = new File(destination.getAbsolutePath() + File.separator + "OEBPS");
+		File opfFile = new File(oepbsFolder.getAbsolutePath() + File.separator + "content.opf");
 		readOPF(opfFile);
+		readTableOfContents(oepbsFolder);
 		if (verbose) {
 			System.out.println("Publication unpacked at " + destination.getAbsolutePath());
 		}
