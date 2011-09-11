@@ -46,6 +46,7 @@
 			helpPrefix="help">
 			<fileset dir="docs">
 				<include name="introduction.textile"/>
+				<include name="generate-epub.textile"/>
 				<include name="epub-ant-task.textile"/>
 				<include name="examples.textile"/>
 			</fileset>
@@ -56,10 +57,12 @@
 		<move todir="${basedir}/help">
 			<fileset dir="${basedir}/docs">
 				<include name="introduction.html" />
-				<include name="introduction-toc.xml" />
+				<include name="generate-epub.html" />
 				<include name="epub-ant-task.html" />
-				<include name="epub-ant-task-toc.xml" />
 				<include name="examples.html" />
+				<include name="introduction-toc.xml" />
+				<include name="generate-epub-toc.xml" />
+				<include name="epub-ant-task-toc.xml" />
 				<include name="examples-toc.xml" />
 			</fileset>
 		</move>

@@ -19,32 +19,35 @@ p {
   line-height: 1.5em;
 }
 
+/*
+ * PREFORMATTED TEXT
+ */
 code strong em, code em strong, pre strong em, pre em strong, tt strong em, tt em strong {
   font-weight: bold;
   font-style: italic;
   font-family: "DejaVu Sans Mono Bold Oblique", monospace;
   color: #3a587a;
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 code em, em code, pre em, em pre, tt em, em tt {
   font-style: italic;
   font-family: "DejaVu Sans Mono Oblique", monospace;
   color: #3a587a;
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 code strong, strong code, pre strong, strong pre, tt strong, strong tt {
   font-weight: bold;
   font-family: "DejaVu Sans Mono Bold", monospace;
   color: #3a587a;
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 code, pre, tt { 
   font-family: "DejaVu Sans Mono", monospace;
   color: #3a587a;
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 /*
@@ -94,7 +97,7 @@ td {
 }
 
 .author, .copyright {
-  font-size: 1em; color: #7c755b;
+  font-size: 1em; color: #000000;
   font-family: "Palatino", serif;
   font-weight: bold;
   text-align: center;
@@ -152,6 +155,12 @@ h6 {
   font-size: 1em;
   font-style: italic;
   font-family: "Palatino", serif;
+}
+
+hr {
+  width: 80%;
+  backgrund-color: #aaaaaa;
+  height: 1px;
 }
 
 /* 

@@ -69,6 +69,7 @@
 			<item file="${tempdir}/copyright.html" />
 			<item file="${tempdir}/introduction.html" />
 			<item file="${tempdir}/epub-format.html" />
+			<item file="${tempdir}/generate-epub.html" />
 			<item file="${tempdir}/epub-ant-task.html" />
 			<item file="${tempdir}/examples.html" />
 			<item file="${srcdir}/epub/style.css" type="text/css" spine="false" />

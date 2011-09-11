@@ -12,6 +12,7 @@
 <toc label="Mylyn Docs EPUB Documentation" link_to="../org.eclipse.mylyn.help.ui/primary-toc.xml#additions">
    <topic label="EPUB User Guide">
       <link toc="help/introduction-toc.xml"/>
+      <link toc="help/generate-epub-toc.xml"/>
       <link toc="help/epub-ant-task-toc.xml"/>
       <link toc="help/examples-toc.xml"/>
    </topic>
