@@ -12,8 +12,9 @@
 <project name="Build EPUB Model" default="build">
 
 	<target name="build">
+		<!--
 		<delete failonerror="false">
-			<fileset dir="${basedir}/src-gen/org/eclipse/mylyn/docs/epub/model">
+			<fileset dir="${basedir}/src-gen/org/eclipse/mylyn/docs/epub/">
 				<include name="*/**" />
 			</fileset>
 		</delete>
@@ -23,10 +24,11 @@
 		<emf.Ecore2Java copyright="Copyright © 2011 Torkild U. Resheim" 
 			reconcileGenModel="reload" 
 			generateJavaCode="true" 
-			model="${basedir}/model/epub2.ecore" 
-			genmodel="${basedir}/model/epub2.genmodel" 
+			model="${basedir}/model/dc.ecore" 
+			genmodel="${basedir}/model/dc.genmodel" 
 			modelproject="org.eclipse.mylyn.docs.epub.core" 
 			modelprojectfragmentpath="src-gen" />
+		-->
 	</target>
 
 </project>

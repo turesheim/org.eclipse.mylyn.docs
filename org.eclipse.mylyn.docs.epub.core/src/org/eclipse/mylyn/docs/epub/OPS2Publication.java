@@ -61,7 +61,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Torkild U. Resheim
  */
-class EPUB2 extends EPUB {
+class OPS2Publication extends OPSPublication {
 
 	private static final String TOCFILE_NAME = "toc.ncx";
 
@@ -72,7 +72,7 @@ class EPUB2 extends EPUB {
 	/**
 	 * Creates a new EPUB.
 	 */
-	public EPUB2() {
+	OPS2Publication() {
 		super();
 		opfPackage.setVersion("2.0");
 		ncxTOC = NCXFactory.eINSTANCE.createNcx();
@@ -90,6 +90,15 @@ class EPUB2 extends EPUB {
 
 		registerNCXResourceFactory();
 		opfPackage.setGenerateTableOfContents(true);
+	}
+
+	/**
+	 * Returns the first item in the spine that contains text.
+	 * 
+	 * @return the first text item
+	 */
+	public Item getFirstTextItem() {
+		return null;
 	}
 
 	/**
@@ -268,10 +277,9 @@ class EPUB2 extends EPUB {
 	}
 
 	@Override
-	protected void readTableOfContents(File oepbsFolder) throws IOException {
+	protected void readTableOfContents(File tocFile) throws IOException {
 		ResourceSet resourceSet = new ResourceSetImpl();
-		File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator + TOCFILE_NAME);
-		URI fileURI = URI.createFileURI(ncxFile.getAbsolutePath());
+		URI fileURI = URI.createFileURI(tocFile.getAbsolutePath());
 		Resource resource = resourceSet.createResource(fileURI);
 		resource.load(null);
 		ncxTOC = (Ncx) resource.getContents().get(0);

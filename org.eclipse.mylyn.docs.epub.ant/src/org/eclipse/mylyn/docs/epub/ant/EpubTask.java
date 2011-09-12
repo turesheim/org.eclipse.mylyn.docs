@@ -18,8 +18,8 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.mylyn.docs.epub.EPUB;
+import org.eclipse.mylyn.docs.epub.OPSPublication;
 import org.eclipse.mylyn.docs.epub.opf.Role;
-import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.eclipse.mylyn.docs.epub.opf.Type;
 
 /**
@@ -31,7 +31,7 @@ import org.eclipse.mylyn.docs.epub.opf.Type;
  */
 public class EpubTask extends Task {
 
-	private final EPUB epub = EPUB.getVersion2Instance();
+	private final OPSPublication ops = OPSPublication.getVersion2Instance();
 
 	private final ArrayList<FileSetType> filesets;
 
@@ -48,30 +48,30 @@ public class EpubTask extends Task {
 
 	public void addConfiguredContributor(ContributorType item) {
 		if (item.role == null) {
-			epub.addContributor(item.id, item.lang, item.name, null, item.fileAs);
+			ops.addContributor(item.id, item.lang, item.name, null, item.fileAs);
 		} else {
-			epub.addContributor(item.id, item.lang, item.name, Role.get(item.role), item.fileAs);
+			ops.addContributor(item.id, item.lang, item.name, Role.get(item.role), item.fileAs);
 		}
 	}
 
 	public void addConfiguredCover(CoverType item) {
-		epub.setCover(new File(item.image), item.value);
+		ops.setCover(new File(item.image), item.value);
 	}
 
 	public void addConfiguredCoverage(CoverageType coverage) {
-		epub.addCoverage(coverage.id, coverage.lang, coverage.text);
+		ops.addCoverage(coverage.id, coverage.lang, coverage.text);
 	}
 
 	public void addConfiguredCreator(CreatorType item) {
 		if (item.role == null) {
-			epub.addCreator(item.id, item.lang, item.name, null, item.fileAs);
+			ops.addCreator(item.id, item.lang, item.name, null, item.fileAs);
 		} else {
-			epub.addCreator(item.id, item.lang, item.name, Role.get(item.role), item.fileAs);
+			ops.addCreator(item.id, item.lang, item.name, Role.get(item.role), item.fileAs);
 		}
 	}
 
 	public void addConfiguredDate(DateType item) {
-		epub.addDate(item.id, item.date, item.event);
+		ops.addDate(item.id, item.date, item.event);
 	}
 
 	/**
@@ -86,36 +86,36 @@ public class EpubTask extends Task {
 	}
 
 	public void addConfiguredFormat(FormatType format) {
-		epub.addFormat(format.id, format.text);
+		ops.addFormat(format.id, format.text);
 	}
 
 	/**
 	 * @ant.required
 	 */
 	public void addConfiguredIdentifier(IdentifierType identifier) {
-		epub.addIdentifier(identifier.id, Scheme.getByName(identifier.scheme), identifier.value);
+		ops.addIdentifier(identifier.id, identifier.scheme, identifier.value);
 	}
 
 	/**
 	 * @ant.required
 	 */
 	public void addConfiguredItem(ItemType item) {
-		epub.addItem(item.id, item.lang, item.file, item.dest, item.type, item.spine, item.linear, item.noToc);
+		ops.addItem(item.id, item.lang, item.file, item.dest, item.type, item.spine, item.linear, item.noToc);
 	}
 
 	/**
 	 * @ant.required
 	 */
 	public void addConfiguredLanguage(LanguageType language) {
-		epub.addLanguage(language.id, language.code);
+		ops.addLanguage(language.id, language.code);
 	}
 
 	public void addConfiguredMeta(MetaType item) {
-		epub.addMeta(item.name, item.content);
+		ops.addMeta(item.name, item.content);
 	}
 
 	public void addConfiguredPublisher(PublisherType publisher) {
-		epub.addPublisher(publisher.id, publisher.lang, publisher.text);
+		ops.addPublisher(publisher.id, publisher.lang, publisher.text);
 	}
 
 	public void addConfiguredReference(ReferenceType reference) {
@@ -123,30 +123,30 @@ public class EpubTask extends Task {
 		if (type == null) {
 			throw new BuildException("Unknown reference type " + reference.type);
 		}
-		epub.addReference(reference.href, reference.title, type);
+		ops.addReference(reference.href, reference.title, type);
 	}
 
 	public void addConfiguredRelation(RelationType relation) {
-		epub.addRelation(relation.id, relation.lang, relation.text);
+		ops.addRelation(relation.id, relation.lang, relation.text);
 	}
 
 	public void addConfiguredRights(RightsType rights) {
-		epub.addRights(rights.id, rights.lang, rights.text);
+		ops.addRights(rights.id, rights.lang, rights.text);
 	}
 
 	public void addConfiguredSource(SourceType source) {
-		epub.addSource(source.id, source.lang, source.text);
+		ops.addSource(source.id, source.lang, source.text);
 	}
 
 	public void addConfiguredSubject(SubjectType subject) {
-		epub.addSubject(subject.id, subject.lang, subject.text);
+		ops.addSubject(subject.id, subject.lang, subject.text);
 	}
 
 	/**
 	 * @ant.required
 	 */
 	public void addConfiguredTitle(TitleType title) {
-		epub.addTitle(title.id, title.lang, title.text);
+		ops.addTitle(title.id, title.lang, title.text);
 	}
 
 	public void addConfiguredToc(TocType toc) {
@@ -157,7 +157,7 @@ public class EpubTask extends Task {
 	}
 
 	public void addConfiguredType(org.eclipse.mylyn.docs.epub.ant.TypeType type) {
-		epub.addType(type.id, type.text);
+		ops.addType(type.id, type.text);
 	}
 
 	private void addFilesets() {
@@ -180,7 +180,7 @@ public class EpubTask extends Task {
 				filename = filename.substring(filename.lastIndexOf("/") + 1);
 				File base = ds.getBasedir();
 				File found = new File(base, includedFiles[i]);
-				epub.addItem(null, fs.lang, found, fs.dest, null, false, true, false);
+				ops.addItem(null, fs.lang, found, fs.dest, null, false, true, false);
 			}
 
 		}
@@ -193,12 +193,14 @@ public class EpubTask extends Task {
 		addFilesets();
 		if (toc != null) {
 			if (toc.generate) {
-				epub.setGenerateToc(true);
+				ops.setGenerateToc(true);
 			} else if (toc.file != null) {
-				epub.setTableOfContents(toc.file);
+				ops.setTableOfContents(toc.file);
 			}
 		}
 		try {
+			EPUB epub = new EPUB();
+			epub.add(ops);
 			if (workingFolder == null) {
 				epub.pack(epubFile);
 			} else {
@@ -214,7 +216,7 @@ public class EpubTask extends Task {
 	 * @ant.not-required Automatically add referenced resources.
 	 */
 	public void setAutomaticAdd(boolean automatic) {
-		epub.setIncludeReferencedResources(automatic);
+		ops.setIncludeReferencedResources(automatic);
 	}
 
 	/**
@@ -228,7 +230,7 @@ public class EpubTask extends Task {
 	}
 
 	public void setIdentifierId(String identifierId) {
-		epub.setIdentifierId(identifierId);
+		ops.setIdentifierId(identifierId);
 	}
 
 	public void setWorkingFolder(File workingFolder) {

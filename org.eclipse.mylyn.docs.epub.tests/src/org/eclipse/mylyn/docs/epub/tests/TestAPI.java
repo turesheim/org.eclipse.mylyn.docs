@@ -28,6 +28,7 @@ import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.mylyn.docs.epub.EPUB;
+import org.eclipse.mylyn.docs.epub.OPSPublication;
 import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Type;
 import org.junit.After;
@@ -146,29 +147,33 @@ public class TestAPI {
 	 * @throws URISyntaxException
 	 * @throws Exception
 	 */
-	private EPUB createSimpleEPUB(File epubfile) throws URISyntaxException, Exception {
-		EPUB epub = EPUB.getVersion2Instance();
-		epub.setIdentifierId("uuid");
-		epub.addLanguage(null, "en");
-		epub.addTitle(null, null, "Mylyn Docs Test EPUB");
-		epub.addSubject(null, null, "Testing");
-		epub.addSource(null, null, "Eclipse");
-		epub.addPublisher(null, null, "Eclipse.org");
-		epub.addCreator(null, null, "Torkild U. Resheim", Role.AUTHOR, "Resheim, Torkild U.");
-		epub.addItem(getFile("testdata/plain-page.xhtml"));
-		epub.setGenerateToc(true);
+	private OPSPublication createSimpleEPUB(File epubfile) throws URISyntaxException, Exception {
+		OPSPublication ops = OPSPublication.getVersion2Instance();
+		ops.setIdentifierId("uuid");
+		ops.addLanguage(null, "en");
+		ops.addTitle(null, null, "Mylyn Docs Test EPUB");
+		ops.addSubject(null, null, "Testing");
+		ops.addSource(null, null, "Eclipse");
+		ops.addPublisher(null, null, "Eclipse.org");
+		ops.addCreator(null, null, "Torkild U. Resheim", Role.AUTHOR, "Resheim, Torkild U.");
+		ops.addItem(getFile("testdata/plain-page.xhtml"));
+		ops.setGenerateToc(true);
+		EPUB epub = new EPUB();
+		epub.add(ops);
 		epub.pack(epubfile, packingFolder);
-		return epub;
+		return ops;
 	}
 
 	@Test
 	public void testUnpackSimpleEPUB() throws Exception {
 		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
-		EPUB epub1 = createSimpleEPUB(epubfile);
-		EPUB epub2 = EPUB.getVersion2Instance();
-		epub2.unpack(epubfile, unPackingFolder);
-		System.out.println(epub1.getOpfPackage().getManifest().getItems().get(0).getHref());
-		MatchModel match = MatchService.doMatch(epub1.getOpfPackage(), epub2.getOpfPackage(),
+		OPSPublication ops1 = createSimpleEPUB(epubfile);
+		EPUB epub = new EPUB();
+		OPSPublication epub2 = OPSPublication.getVersion2Instance();
+		epub.add(epub2);
+		epub.unpack(epubfile, unPackingFolder);
+		System.out.println(ops1.getOpfPackage().getManifest().getItems().get(0).getHref());
+		MatchModel match = MatchService.doMatch(ops1.getOpfPackage(), epub2.getOpfPackage(),
 				Collections.<String, Object> emptyMap());
 		// Something fishy going on here.
 		DiffModel diff = DiffService.doDiff(match, false);
@@ -186,13 +191,15 @@ public class TestAPI {
 	 */
 	@Test
 	public void testSerializationContributors() throws Exception {
-		EPUB epub = EPUB.getVersion2Instance();
+		OPSPublication ops = OPSPublication.getVersion2Instance();
 		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
 		Role[] roles = Role.values();
 		for (Role role : roles) {
-			epub.addContributor(role.getLiteral(), Locale.ENGLISH,
+			ops.addContributor(role.getLiteral(), Locale.ENGLISH,
 					"Nomen Nescio", role, "Nescio, Nomen");
 		}
+		EPUB epub = new EPUB();
+		epub.add(ops);
 		epub.pack(epubfile, packingFolder);
 		Element doc = readOPF();
 		Node guide = doc.getElementsByTagName("opf:metadata").item(0);
@@ -237,13 +244,15 @@ public class TestAPI {
 	 */
 	@Test
 	public void testSerializationCreators() throws Exception {
-		EPUB epub = EPUB.getVersion2Instance();
+		OPSPublication ops = OPSPublication.getVersion2Instance();
 		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
 		Role[] roles = Role.values();
 		for (Role role : roles) {
-			epub.addCreator(role.getLiteral(), Locale.ENGLISH,
+			ops.addCreator(role.getLiteral(), Locale.ENGLISH,
 					"Nomen Nescio", role, "Nescio, Nomen");
 		}
+		EPUB epub = new EPUB();
+		epub.add(ops);
 		epub.pack(epubfile, packingFolder);
 		Element doc = readOPF();
 		Node guide = doc.getElementsByTagName("opf:metadata").item(0);
@@ -275,8 +284,10 @@ public class TestAPI {
 	 */
 	@Test
 	public void testSerializationEmpty() throws Exception {
-		EPUB epub = EPUB.getVersion2Instance();
+		OPSPublication ops = OPSPublication.getVersion2Instance();
 		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
+		EPUB epub = new EPUB();
+		epub.add(ops);
 		epub.pack(epubfile, packingFolder);
 		Element doc = readOPF();
 		Assert.assertEquals("opf:package", doc.getNodeName());
@@ -315,13 +326,15 @@ public class TestAPI {
 	 */
 	@Test
 	public void testSerializationReferences() throws Exception {
-		EPUB epub = EPUB.getVersion2Instance();
+		OPSPublication ops = OPSPublication.getVersion2Instance();
 		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
 		Type[] types = Type.values();
 		for (Type type : types) {
-			epub.addReference(type.getLiteral() + ".xhtml", type.getName(),
+			ops.addReference(type.getLiteral() + ".xhtml", type.getName(),
 					type);
 		}
+		EPUB epub = new EPUB();
+		epub.add(ops);
 		epub.pack(epubfile, packingFolder);
 		Element doc = readOPF();
 		Node guide = doc.getElementsByTagName("opf:guide").item(0);

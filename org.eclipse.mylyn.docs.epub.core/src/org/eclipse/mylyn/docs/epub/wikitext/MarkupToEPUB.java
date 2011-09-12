@@ -19,6 +19,7 @@ import java.io.Writer;
 import java.util.List;
 
 import org.eclipse.mylyn.docs.epub.EPUB;
+import org.eclipse.mylyn.docs.epub.OPSPublication;
 import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
@@ -57,14 +58,14 @@ public class MarkupToEPUB {
 	 * @return the EPUB instance
 	 * @throws Exception
 	 */
-	public EPUB parse(File markup) throws Exception {
-		EPUB epub = EPUB.getVersion2Instance();
+	public OPSPublication parse(File markup) throws Exception {
+		OPSPublication epub = OPSPublication.getVersion2Instance();
 		parse(epub, markup);
 		return epub;
 
 	}
 
-	public void parse(EPUB epub, File markupFile) throws IOException, FileNotFoundException {
+	public void parse(OPSPublication epub, File markupFile) throws IOException, FileNotFoundException {
 		if (markupLanguage == null) {
 			throw new IllegalStateException("must set markupLanguage"); //$NON-NLS-1$
 		}
@@ -80,7 +81,7 @@ public class MarkupToEPUB {
 				}
 			};
 
-			List<Item> stylesheets = epub.getItemsByMIMEType(EPUB.MIMETYPE_CSS);
+			List<Item> stylesheets = epub.getItemsByMIMEType(OPSPublication.MIMETYPE_CSS);
 			for (Item item : stylesheets) {
 				File file = new File(item.getFile());
 				Stylesheet css = new Stylesheet(file);
@@ -105,7 +106,9 @@ public class MarkupToEPUB {
 	}
 
 	public void assemble(File markupFile, File epubFile) throws Exception {
-		EPUB epub = parse(markupFile);
+		OPSPublication ops = parse(markupFile);
+		EPUB epub = new EPUB();
+		epub.add(ops);
 		epub.pack(epubFile);
 	}
 

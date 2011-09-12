@@ -163,6 +163,7 @@
         eType="#//Meta" containment="true">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="name" value="meta"/>
+        <details key="namespace" value="http://www.idpf.org/2007/opf"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -469,16 +470,6 @@
     <eLiterals name="Woodcutter" literal="wdc"/>
     <eLiterals name="Wood_engraver" literal="wde"/>
     <eLiterals name="Witness" literal="wit"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="Scheme">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="namespace" value="##targetNamespace"/>
-    </eAnnotations>
-    <eLiterals name="ISBN" value="1" literal="ISBN"/>
-    <eLiterals name="URI" value="2" literal="URI"/>
-    <eLiterals name="URL" value="3" literal="URL"/>
-    <eLiterals name="UUID" value="4" literal="UUID"/>
-    <eLiterals name="URN" value="5" literal="URN"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Type">
     <eLiterals name="Cover" value="1" literal="cover"/>
