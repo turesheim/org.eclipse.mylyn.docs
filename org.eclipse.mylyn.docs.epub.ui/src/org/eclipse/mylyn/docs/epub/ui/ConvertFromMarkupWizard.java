@@ -26,6 +26,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.mylyn.docs.epub.EPUB;
+import org.eclipse.mylyn.docs.epub.OPSPublication;
 import org.eclipse.mylyn.docs.epub.wikitext.MarkupToEPUB;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.ui.PlatformUI;
@@ -37,7 +38,7 @@ public class ConvertFromMarkupWizard extends Wizard {
 
 	private EPUB2Bean bean;
 
-	EPUB epub;
+	OPSPublication epub;
 
 	private IFile epubFile;
 
@@ -55,15 +56,16 @@ public class ConvertFromMarkupWizard extends Wizard {
 
 	@Override
 	public void addPages() {
-		epub = EPUB.getVersion2Instance();
+		epub = OPSPublication.getVersion2Instance();
+		// XXX: Read back epub
 		File workingFolder = null;
-		if (epubFile.exists()) {
-			try {
-				workingFolder = epub.unpack(epubFile.getLocation().toFile());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		// if (epubFile.exists()) {
+		// try {
+		// workingFolder = epub.unpack(epubFile.getLocation().toFile());
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+		// }
 		bean = new EPUB2Bean(epub, markupFile.getLocation().toFile(), epubFile.getLocation().toFile(), workingFolder);
 		page = new MainPage(bean);
 		addPage(page);
@@ -93,7 +95,7 @@ public class ConvertFromMarkupWizard extends Wizard {
 						// Parse the wiki markup and populate the EPUB
 						markupToEPUB.parse(epub, markupFile.getLocation().toFile());
 						monitor.worked(1);
-						List<Diagnostic> problems = epub.validate();
+						List<Diagnostic> problems = epub.validateMetadata();
 						
 						if (problems.size()>0){
 							for (Diagnostic diagnostic : problems) {
@@ -105,7 +107,9 @@ public class ConvertFromMarkupWizard extends Wizard {
 							StatusManager.getManager().handle(ms, StatusManager.BLOCK);
 							return;
 						}
-						epub.pack(epubFile.getLocation().toFile());
+						EPUB publication = new EPUB();
+						publication.add(epub);
+						publication.pack(epubFile.getLocation().toFile());
 						monitor.worked(1);
 						epubFile.refreshLocal(IResource.DEPTH_ONE, monitor);
 						monitor.worked(1);

@@ -17,7 +17,6 @@ import org.eclipse.core.databinding.beans.PojoObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.mylyn.docs.epub.opf.Scheme;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -127,10 +126,7 @@ public class MainPage extends WizardPage {
 
 		schemeText = new Combo(grpRequiredDetails, SWT.BORDER);
 		schemeText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		Scheme[] schemes = Scheme.values();
-		for (Scheme scheme : schemes) {
-			schemeText.add(scheme.getName());
-		}
+		schemeText.add("UUID");
 
 		Label lblCopyright = new Label(grpRequiredDetails, SWT.NONE);
 		lblCopyright.setText("Copyright:");

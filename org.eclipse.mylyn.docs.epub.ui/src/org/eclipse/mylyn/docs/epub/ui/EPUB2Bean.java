@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMapUtil.FeatureEList;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
-import org.eclipse.mylyn.docs.epub.EPUB;
+import org.eclipse.mylyn.docs.epub.OPSPublication;
 import org.eclipse.mylyn.docs.epub.dc.Creator;
 import org.eclipse.mylyn.docs.epub.dc.Date;
 import org.eclipse.mylyn.docs.epub.dc.Identifier;
@@ -32,7 +32,6 @@ import org.eclipse.mylyn.docs.epub.dc.Rights;
 import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
 import org.eclipse.mylyn.docs.epub.opf.Item;
-import org.eclipse.mylyn.docs.epub.opf.Scheme;
 
 /**
  * Simplified representation of an EPUB revision 2.0 instance.
@@ -48,7 +47,7 @@ class EPUB2Bean {
 
 	private static final EStructuralFeature TEXT = XMLTypePackage.eINSTANCE.getXMLTypeDocumentRoot_Text();
 
-	private final EPUB epub;
+	private final OPSPublication epub;
 
 	private final File markupFile;
 
@@ -57,7 +56,7 @@ class EPUB2Bean {
 	}
 
 	public EPUB2Bean() {
-		epub = EPUB.getVersion2Instance();
+		epub = OPSPublication.getVersion2Instance();
 		markupFile = null;
 	}
 
@@ -79,29 +78,31 @@ class EPUB2Bean {
 
 	TreeMap<String, String> sorted_locales;
 
-	public EPUB2Bean(EPUB epub, File markupFile, File epubFile, File workingFolder) {
+	public EPUB2Bean(OPSPublication epub, File markupFile, File epubFile, File workingFolder) {
 		this.epub = epub;
 		this.markupFile = markupFile;
 		id = epub.getOpfPackage().getUniqueIdentifier();
 		if (id == null || id.trim().length() == 0) {
 			id = "id";
 			epub.getOpfPackage().setUniqueIdentifier(id);
-			epub.addIdentifier(id, Scheme.UUID, UUID.randomUUID().toString());
+			epub.addIdentifier(id, "UUID", UUID.randomUUID().toString());
 		}
 		// Keep the cover image reference
-		Item item = epub.getItemById(EPUB.COVER_IMAGE_ID);
+		Item item = epub.getItemById(OPSPublication.COVER_IMAGE_ID);
 		// Clear everything except the metadata
 		epub.getOpfPackage().getManifest().getItems().clear();
 		epub.getOpfPackage().getGuide().getGuideItems().clear();
 		epub.getOpfPackage().getSpine().getSpineItems().clear();
 
-		if (epubFile.exists()) {
-			// Try to restore some information
-			File rootFolder = new File(workingFolder.getAbsolutePath() + File.separator + epub.getRootFolder()[0]);
-			if (item != null) {
-				epub.setCover(new File(rootFolder.getAbsolutePath() + File.separator + item.getHref()), item.getTitle());
-			}
-		}
+		// if (epubFile.exists()) {
+		// // Try to restore some information
+		// File rootFolder = new File(workingFolder.getAbsolutePath() +
+		// File.separator + epub.getRootFolder()[0]);
+		// if (item != null) {
+		// epub.setCover(new File(rootFolder.getAbsolutePath() + File.separator
+		// + item.getHref()), item.getTitle());
+		// }
+		// }
 
 		sorted_locales = new TreeMap<String, String>();
 		String[] iso639s = Locale.getISOLanguages();
@@ -112,7 +113,7 @@ class EPUB2Bean {
 	}
 
 	public String getCover() {
-		Item item = epub.getItemById(EPUB.COVER_IMAGE_ID);
+		Item item = epub.getItemById(OPSPublication.COVER_IMAGE_ID);
 		if (item == null) {
 			return EMPTY_STRING;
 		} else {
@@ -135,7 +136,7 @@ class EPUB2Bean {
 		return EMPTY_STRING;
 	}
 
-	public EPUB getEPUB() {
+	public OPSPublication getEPUB() {
 		return epub;
 	}
 
@@ -192,7 +193,7 @@ class EPUB2Bean {
 	}
 
 	public String getStyleSheet() {
-		List<Item> stylesheets = epub.getItemsByMIMEType(EPUB.MIMETYPE_CSS);
+		List<Item> stylesheets = epub.getItemsByMIMEType(OPSPublication.MIMETYPE_CSS);
 		if (stylesheets.isEmpty()) {
 			return EMPTY_STRING;
 		} else {
@@ -242,21 +243,19 @@ class EPUB2Bean {
 	private String id = "id";
 
 	public void setIdentifier(String identifier) {
-		String scheme = getIdScheme();
 		epub.getOpfPackage().getMetadata().getIdentifiers().clear();
-		epub.addIdentifier(id, Scheme.getByName(scheme), identifier);
+		epub.addIdentifier(id, getIdScheme(), identifier);
 	}
 
 	public void setIdScheme(String schemeName) {
 		String identifier = getIdentifier();
 		epub.getOpfPackage().getMetadata().getIdentifiers().clear();
-		epub.addIdentifier(id, Scheme.getByName(schemeName), identifier);
+		epub.addIdentifier(id, schemeName, identifier);
 	}
 
 	public String getIdScheme() {
 		Identifier ident = epub.getOpfPackage().getMetadata().getIdentifiers().get(0);
-		Scheme scheme = ident.getScheme();
-		return scheme.getName();
+		return ident.getScheme();
 	}
 
 	public void setRights(String rights) {
@@ -265,7 +264,7 @@ class EPUB2Bean {
 	}
 
 	public void setStyleSheet(String css) {
-		epub.getOpfPackage().getManifest().getItems().remove(epub.getItemsByMIMEType(EPUB.MIMETYPE_CSS));
+		epub.getOpfPackage().getManifest().getItems().remove(epub.getItemsByMIMEType(OPSPublication.MIMETYPE_CSS));
 		epub.addItem(STYLING_ID, null, new File(css), null, null, false, false, true);
 	}
 

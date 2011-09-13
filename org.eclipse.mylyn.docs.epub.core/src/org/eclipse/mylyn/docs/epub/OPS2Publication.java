@@ -55,17 +55,19 @@ import org.xml.sax.SAXException;
  * maintains a data structure representing the entire publication and API for
  * building it.
  * <p>
- * Please note that this API is provisional and should not yet be used to build
- * applications.
+ * <b>Please note that this API is provisional and should not yet be used to
+ * build applications.</b>
  * </p>
  * 
  * @author Torkild U. Resheim
  */
 class OPS2Publication extends OPSPublication {
 
+	/** Default name for the table of contents */
 	private static final String TOCFILE_NAME = "toc.ncx";
 
-	private static final String NCX_MIMETYPE = "application/x-dtbncx+xml";
+	/** MIME type for NCX documents */
+	private static final String MIMETYPE_NCX = "application/x-dtbncx+xml";
 
 	private Ncx ncxTOC;
 
@@ -90,15 +92,6 @@ class OPS2Publication extends OPSPublication {
 
 		registerNCXResourceFactory();
 		opfPackage.setGenerateTableOfContents(true);
-	}
-
-	/**
-	 * Returns the first item in the spine that contains text.
-	 * 
-	 * @return the first text item
-	 */
-	public Item getFirstTextItem() {
-		return null;
 	}
 
 	/**
@@ -143,9 +136,6 @@ class OPS2Publication extends OPSPublication {
 			}
 			if (referencedItem != null && !referencedItem.isNoToc()) {
 				File file = new File(referencedItem.getFile());
-				if (verbose) {
-					System.out.println("Populating table of contents from \"" + file.getName() + "\".");
-				}
 				FileReader fr = new FileReader(file);
 				playOrder = TOCGenerator.parse(new InputSource(fr), referencedItem.getHref(), ncxTOC, playOrder);
 			}
@@ -168,9 +158,6 @@ class OPS2Publication extends OPSPublication {
 			}
 			if (referencedItem != null && !referencedItem.isNoToc()) {
 				File file = new File(referencedItem.getFile());
-				if (verbose) {
-					System.out.println("Validating contents in \"" + file.getName() + "\".");
-				}
 				FileReader fr = new FileReader(file);
 				OPS2Validator.parse(new InputSource(fr), referencedItem.getHref(), Mode.WARN);
 			}
@@ -228,7 +215,7 @@ class OPS2Publication extends OPSPublication {
 	public void setTableOfContents(File ncxFile) {
 		// Add the file to the publication and make sure we use the table of
 		// contents identifier.
-		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, NCX_MIMETYPE, false, false, false);
+		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, MIMETYPE_NCX, false, false, false);
 		// The table of contents file must be first.
 		opfPackage.getManifest().getItems().move(0, item);
 
@@ -272,7 +259,7 @@ class OPS2Publication extends OPSPublication {
 		// As we now have written the table of contents we must make sure it is
 		// in the manifest and referenced in the spine. We also want it to be
 		// the first element in the manifest.
-		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, NCX_MIMETYPE, false, false, false);
+		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, MIMETYPE_NCX, false, false, false);
 		opfPackage.getManifest().getItems().move(0, item);
 	}
 

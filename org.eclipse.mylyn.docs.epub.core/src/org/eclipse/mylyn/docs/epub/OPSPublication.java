@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -75,7 +73,8 @@ import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceImpl;
 import org.xml.sax.SAXException;
 
 /**
- * This type represents one EPUB formatted publication. It maintains a data
+ * This type represents one <i>OPS publication</i>. This includes the <i>OPF
+ * package document</i> and <i>OPS content documents</i>. It maintains a data
  * structure representing the entire publication and API for building it.
  * <p>
  * Please note that this API is provisional and should not yet be used to build
@@ -87,8 +86,9 @@ import org.xml.sax.SAXException;
 public abstract class OPSPublication {
 	// Rules of engagement:
 	// * Keep all data in the model, use "transient" for temporary variables
-	// * Do not create files before the final assemble
+	// * Do not create anything before the final assemble
 
+	/** Default identifier for the cover page */
 	private static final String COVER_ID = "cover";
 
 	/** Publication identifier for the cover image item */
@@ -121,7 +121,8 @@ public abstract class OPSPublication {
 	/** The root model element */
 	protected Package opfPackage;
 
-	protected final boolean verbose = true;
+	/** The root folder */
+	private File rootFolder;
 
 	protected OPSPublication() {
 		opfPackage = OPFFactory.eINSTANCE.createPackage();
@@ -241,9 +242,26 @@ public abstract class OPSPublication {
 		return dc;
 	}
 
+	/**
+	 * Adds a new date to the publication. The given instance will be
+	 * represented in a format defined by "Date and Time Formats" at
+	 * http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
+	 * 
+	 * @param id
+	 *            optional identifier
+	 * @param date
+	 *            the date
+	 * @param event
+	 *            the event
+	 * @return the new date
+	 * @see #addDate(String, String, String)
+	 */
 	public Date addDate(String id, java.util.Date date, String event) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		TimeZone tz = TimeZone.getTimeZone("UTC");
+		df.setTimeZone(tz);
 		Date dc = DCFactory.eINSTANCE.createDate();
-		setDcCommon(dc, id, toString(date));
+		setDcCommon(dc, id, df.format(date));
 		if (event != null) {
 			dc.setEvent(event);
 		}
@@ -253,18 +271,16 @@ public abstract class OPSPublication {
 
 	/**
 	 * Date of publication, in the format defined by "Date and Time Formats" at
-	 * http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
-	 * In particular, dates without times are represented in the form
-	 * YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month, and
-	 * if the month is given, an optional 2-digit day of month. The date element
-	 * has one optional OPF event attribute. The set of values for event are not
-	 * defined by this specification; possible values may include: creation,
-	 * publication, and modification.
+	 * http://www.w3.org/TR/NOTE-datetime and by ISO 8601. In particular, dates
+	 * without times must be represented in the form YYYY[-MM[-DD]]: a required
+	 * 4-digit year, an optional 2-digit month, and if the month is given, an
+	 * optional 2-digit day of month. The event attribute is optional, possible
+	 * values may include: "creation", "publication", and "modification".
 	 * 
 	 * @param date
 	 *            the date string
 	 * @param event
-	 *            an option event description
+	 *            an optional event description
 	 * @return the new date
 	 */
 	public Date addDate(String id, String date, String event) {
@@ -294,7 +310,7 @@ public abstract class OPSPublication {
 	}
 
 	/**
-	 * Adds a publication format. (This property is optional.)
+	 * Adds an optional publication format.
 	 * 
 	 * @param value
 	 *            the format to add
@@ -306,6 +322,7 @@ public abstract class OPSPublication {
 		opfPackage.getMetadata().getFormats().add(dc);
 		return dc;
 	}
+
 
 	/**
 	 * Adds a new identifier to the publication.
@@ -327,24 +344,13 @@ public abstract class OPSPublication {
 		return dc;
 	}
 
-	public String getContents(Item item) throws IOException {
-		File f = new File(rootFolder.getAbsolutePath() + File.separator + item.getHref());
-		BufferedReader br = new BufferedReader(new FileReader(f));
-		StringBuilder sb = new StringBuilder();
-		String in = null;
-		while ((in = br.readLine()) != null) {
-			sb.append(in);
-		}
-		return sb.toString();
-	}
-
 	/**
 	 * Adds a new item to the manifest using default values for properties not
 	 * specified. Same as
 	 * <code>addItem(null, null, file, null, null, true, false);</code>.
 	 * 
 	 * @param file
-	 * @return
+	 * @return the new item
 	 */
 	public Item addItem(File file) {
 		return addItem(null, null, file, null, null, true, true, false);
@@ -414,9 +420,6 @@ public abstract class OPSPublication {
 		item.setNoToc(noToc);
 		item.setMedia_type(type);
 		item.setFile(file.getAbsolutePath());
-		if (verbose) {
-			System.out.println("Adding " + file.getName() + " (" + item.getMedia_type() + ") to publication");
-		}
 		opfPackage.getManifest().getItems().add(item);
 		if (spine) {
 			Itemref ref = OPFFactory.eINSTANCE.createItemref();
@@ -430,7 +433,7 @@ public abstract class OPSPublication {
 	}
 
 	/**
-	 * Adds a new language specification to the publication
+	 * Adds a new language specification to the publication.
 	 * 
 	 * @param lang
 	 *            the RFC-3066 format of the language code
@@ -443,6 +446,15 @@ public abstract class OPSPublication {
 		return dc;
 	}
 
+	/**
+	 * Adds a new meta item to the publication.
+	 * 
+	 * @param name
+	 *            name of the item
+	 * @param content
+	 *            content of the item
+	 * @return the new meta
+	 */
 	public org.eclipse.mylyn.docs.epub.opf.Meta addMeta(String name, String content) {
 		org.eclipse.mylyn.docs.epub.opf.Meta opf = OPFFactory.eINSTANCE.createMeta();
 		opf.setName(name);
@@ -491,6 +503,17 @@ public abstract class OPSPublication {
 		return reference;
 	}
 
+	/**
+	 * Adds a optional <i>relation</i> specification to the publication.
+	 * 
+	 * @param id
+	 *            an optional identifier
+	 * @param lang
+	 *            an optional language
+	 * @param value
+	 *            the value of the relation
+	 * @return the new relation
+	 */
 	public Relation addRelation(String id, Locale lang, String value) {
 		Relation dc = DCFactory.eINSTANCE.createRelation();
 		setDcLocalized(dc, id, lang, value);
@@ -499,10 +522,7 @@ public abstract class OPSPublication {
 	}
 
 	/**
-	 * Sets the &quot;Dublin Core Rights&quot; of the publication.
-	 * <p>
-	 * This property is optional.
-	 * </p>
+	 * Adds a optional <i>rights</i> specification to the publication.
 	 * 
 	 * @param text
 	 *            the rights text
@@ -516,10 +536,7 @@ public abstract class OPSPublication {
 	}
 
 	/**
-	 * Sets the &quot;Dublin Core Source&quot; of the publication.
-	 * <p>
-	 * This property is optional.
-	 * </p>
+	 * Adds a optional <i>source</i> specification to the publication.
 	 * 
 	 * @param text
 	 *            the source text
@@ -533,7 +550,7 @@ public abstract class OPSPublication {
 	}
 
 	/**
-	 * Adds a new subject to the publication.
+	 * Adds a required <i>subject</i> specification to the publication.
 	 * 
 	 * @param subject
 	 *            the subject
@@ -548,7 +565,7 @@ public abstract class OPSPublication {
 	}
 
 	/**
-	 * Specifies a new title for the publication. There must be at least one.
+	 * Adds a required <i>title</i> specification to the publication.
 	 * 
 	 * @param title
 	 *            the new title
@@ -564,10 +581,7 @@ public abstract class OPSPublication {
 	}
 
 	/**
-	 * Adds a new &quot;Dublin Core Type&quot; to the publication.
-	 * <p>
-	 * This property is optional.
-	 * </p>
+	 * Adds a optional <i>type</i> specification to the publication.
 	 * 
 	 * @param type
 	 *            the type to add
@@ -606,8 +620,6 @@ public abstract class OPSPublication {
 	 * @throws Exception
 	 */
 	protected abstract void generateTableOfContents() throws Exception;
-
-	protected abstract void validateContents() throws Exception;
 
 	/**
 	 * Returns the main identifier of the publication or <code>null</code> if it
@@ -666,6 +678,18 @@ public abstract class OPSPublication {
 	}
 
 	/**
+	 * Returns the root folder of the publication. This is the folder where the
+	 * OPF file resides. Note that this property will only have a value if this
+	 * instance has been populated using an existing publication, such as when
+	 * unpacking an EPUB file.
+	 * 
+	 * @return the root folder or <code>null</code>
+	 */
+	public File getRootFolder() {
+		return rootFolder;
+	}
+
+	/**
 	 * Returns the publication spine.
 	 * 
 	 * @return the spine
@@ -673,6 +697,14 @@ public abstract class OPSPublication {
 	protected Spine getSpine() {
 		return opfPackage.getSpine();
 	}
+
+	/**
+	 * Returns the table of contents for the publication. As the actual
+	 * implementation may vary depending on
+	 * 
+	 * @return
+	 */
+	public abstract Object getTableOfContents();
 
 	/**
 	 * Iterates over all files in the manifest attempting to determine
@@ -709,12 +741,17 @@ public abstract class OPSPublication {
 	}
 
 	/**
-	 * Assembles the EPUB file.
+	 * Assembles the OPS publication in a location relative to the root file.
 	 * 
-	 * @param workingFolder
+	 * @param rootFile
+	 *            the root file
 	 * @throws Exception
 	 */
-	void pack(File rootFolder) throws Exception {
+	void pack(File rootFile) throws Exception {
+		// Note that order is important here. Some of the steps for assembling
+		// the EPUB may insert data into the EPUB structure. Hence the OPF must
+		// be written last.
+		rootFolder = rootFile.getAbsoluteFile().getParentFile();
 		addCompulsoryData();
 		if (rootFolder.mkdir()) {
 			if (opfPackage.isGenerateCoverHTML()) {
@@ -726,31 +763,37 @@ public abstract class OPSPublication {
 			copyContent(rootFolder);
 			validateContents();
 			writeTableOfContents(rootFolder);
-			writeOPF(rootFolder);
+			writeOPF(rootFile);
 		} else {
 			throw new IOException("Could not create OEBPS folder in " + rootFolder.getAbsolutePath());
 		}
-		validate();
+		validateMetadata();
 	}
 
 	/**
-	 * Reads the <b>content.opf</b> file.
+	 * Reads the root file.
 	 * 
-	 * @param opfFile
-	 *            the file to read.
+	 * @param rootFile
+	 *            the file to read
 	 * @throws IOException
 	 */
-	private void readOPF(File opfFile) throws IOException {
+	private void readOPF(File rootFile) throws IOException {
 		ResourceSet resourceSet = new ResourceSetImpl();
-		URI fileURI = URI.createFileURI(opfFile.getAbsolutePath());
+		URI fileURI = URI.createFileURI(rootFile.getAbsolutePath());
 		Resource resource = resourceSet.createResource(fileURI);
 		resource.load(null);
 		opfPackage = (Package) resource.getContents().get(0);
 	}
 
+	/**
+	 * Implement to read the table of contents for the particular OEPBS
+	 * implementation.
+	 * 
+	 * @param tocFile
+	 *            the table of contents file
+	 * @throws IOException
+	 */
 	protected abstract void readTableOfContents(File tocFile) throws IOException;
-
-	public abstract Object getTableOfContents();
 
 	/**
 	 * Registers a new resource factory for OPF data structures. This is
@@ -815,6 +858,16 @@ public abstract class OPSPublication {
 
 	}
 
+	/**
+	 * Sets common properties for <i>Dublin Core</i> elements.
+	 * 
+	 * @param dc
+	 *            the Dublin Core element
+	 * @param id
+	 *            optional identifier
+	 * @param value
+	 *            value of the element
+	 */
 	private void setDcCommon(DCType dc, String id, String value) {
 		FeatureMapUtil.addText(dc.getMixed(), value);
 		if (id != null) {
@@ -822,6 +875,18 @@ public abstract class OPSPublication {
 		}
 	}
 
+	/**
+	 * Sets common properties for localized <i>Dublin Core</i> elements.
+	 * 
+	 * @param dc
+	 *            the Dublin Core element
+	 * @param id
+	 *            optional identifier
+	 * @param lang
+	 *            language code
+	 * @param value
+	 *            value of the element
+	 */
 	private void setDcLocalized(LocalizedDCType dc, String id, Locale lang, String value) {
 		setDcCommon(dc, id, value);
 		if (lang != null) {
@@ -829,39 +894,50 @@ public abstract class OPSPublication {
 		}
 	}
 
+	/**
+	 * Specifies whether or not to automatically generate table of contents from
+	 * the publication contents. The default is <code>false</code>
+	 * 
+	 * @param generateToc
+	 *            whether or not to generate a table of contents
+	 */
 	public void setGenerateToc(boolean generateToc) {
 		opfPackage.setGenerateTableOfContents(generateToc);
 	}
 
+	/**
+	 * Specifies the id of the identifier used for the publication.
+	 * 
+	 * @param identifier_id
+	 *            the identifier id
+	 * @see #addIdentifier(String, String, String)
+	 */
 	public void setIdentifierId(String identifier_id) {
 		opfPackage.setUniqueIdentifier(identifier_id);
 	}
 
-	public void setIncludeReferencedResources(boolean op) {
-		opfPackage.setIncludeReferencedResources(op);
+	/**
+	 * Specifies whether or not to automatically include resources (files) that
+	 * are referenced in the contents.
+	 * 
+	 * @param include
+	 *            whether or not automatically include resources
+	 */
+	public void setIncludeReferencedResources(boolean include) {
+		opfPackage.setIncludeReferencedResources(include);
 	}
 
+	/**
+	 * Specifies a target of contents file for the publication. This is an
+	 * alternative to {@link #setGenerateToc(boolean)}.
+	 * 
+	 * @param tocFile
+	 *            the table of contents file
+	 */
 	public abstract void setTableOfContents(File tocFile);
 
 	/**
-	 * Represents a {@link java.util.Date} instance in a format defined by
-	 * "Date and Time Formats" at http://www.w3.org/TR/NOTE-datetime and by ISO
-	 * 8601 on which it is based.
-	 * 
-	 * @param date
-	 *            the date to represent
-	 * @return the formatted string
-	 */
-	public String toString(java.util.Date date) {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		TimeZone tz = TimeZone.getTimeZone("UTC");
-		df.setTimeZone(tz);
-		return df.format(date);
-	}
-
-	/**
-	 * Unpacks the given EPUB file into the specified destination and populates
-	 * the data model with the content.
+	 * Populates the data model with the content from an unpacked EPUB.
 	 * 
 	 * @param epubFile
 	 *            the EPUB file to unpack
@@ -878,27 +954,12 @@ public abstract class OPSPublication {
 		readTableOfContents(tocFile);
 	}
 
-	private File rootFolder;
-
 	/**
-	 * Returns the root folder of the publication. This is the folder where the
-	 * OPF file resides. Note that this property will only have a value if this
-	 * instance has been populated using an existing publication, such as when
-	 * unpacking an EPUB file.
+	 * Validates the data model contents.
 	 * 
-	 * @return the root folder or <code>null</code>
+	 * @return a list of EMF diagnostics
 	 */
-	public File getRootFolder() {
-		return rootFolder;
-	}
-
-	/**
-	 * Validates the OPF structure.
-	 * 
-	 * @return <code>true</code> if the model is valid, <code>false</code>
-	 *         otherwise.
-	 */
-	public List<Diagnostic> validate() {
+	public List<Diagnostic> validateMetadata() {
 		EValidator.Registry.INSTANCE.put(OPFPackage.eINSTANCE, new EcoreValidator());
 		BasicDiagnostic diagnostics = new BasicDiagnostic();
 		for (EObject eo : opfPackage.eContents()) {
@@ -907,6 +968,13 @@ public abstract class OPSPublication {
 		}
 		return diagnostics.getChildren();
 	}
+
+	/**
+	 * Implement to validate contents.
+	 * 
+	 * @throws Exception
+	 */
+	protected abstract void validateContents() throws Exception;
 
 
 	/**
@@ -983,8 +1051,7 @@ public abstract class OPSPublication {
 	 *            the folder where to write the file.
 	 * @throws IOException
 	 */
-	private void writeOPF(File rootFolder) throws IOException {
-		File opfFile = new File(rootFolder.getAbsolutePath() + File.separator + "content.opf");
+	private void writeOPF(File opfFile) throws IOException {
 		ResourceSet resourceSet = new ResourceSetImpl();
 		// Register the packages to make it available during loading.
 		URI fileURI = URI.createFileURI(opfFile.getAbsolutePath());
