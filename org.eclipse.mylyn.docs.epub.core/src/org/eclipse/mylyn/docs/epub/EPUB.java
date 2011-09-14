@@ -63,6 +63,7 @@ public class EPUB {
 		ocfContainer = OCFFactory.eINSTANCE.createContainer();
 		RootFiles rootFiles = OCFFactory.eINSTANCE.createRootFiles();
 		ocfContainer.setRootfiles(rootFiles);
+		ocfContainer.setVersion("2.0");
 		registerOCFResourceFactory();
 	}
 
