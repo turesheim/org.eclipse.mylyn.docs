@@ -126,15 +126,15 @@ public class EPUB {
 	 * @throws Exception
 	 */
 	public void pack(File epubFile, File workingFolder) throws Exception {
+		workingFolder.mkdirs();
 		if (workingFolder.isDirectory() || workingFolder.mkdirs()) {
 			writeOCF(workingFolder);
 			EList<RootFile> publications = ocfContainer.getRootfiles().getRootfiles();
 			for (RootFile rootFile : publications) {
 				Object publication = rootFile.getPublication();
 				if (publication instanceof OPSPublication) {
-					String folder = new File(rootFile.getFullPath()).getParent();
-					File rootFolder = new File(workingFolder.getAbsolutePath() + File.separator + folder);
-					((OPSPublication) publication).pack(rootFolder);
+					File root = new File(workingFolder.getAbsolutePath() + File.separator + rootFile.getFullPath());
+					((OPSPublication) publication).pack(root);
 				}
 			}
 			EPUBFileUtil.zip(epubFile, workingFolder);

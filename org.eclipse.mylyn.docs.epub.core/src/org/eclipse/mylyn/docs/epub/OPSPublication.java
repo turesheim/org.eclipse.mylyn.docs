@@ -751,9 +751,9 @@ public abstract class OPSPublication {
 		// Note that order is important here. Some of the steps for assembling
 		// the EPUB may insert data into the EPUB structure. Hence the OPF must
 		// be written last.
-		rootFolder = rootFile.getAbsoluteFile().getParentFile();
+		this.rootFolder = rootFile.getAbsoluteFile().getParentFile();
 		addCompulsoryData();
-		if (rootFolder.mkdir()) {
+		if (rootFolder.isDirectory() || rootFolder.mkdirs()) {
 			if (opfPackage.isGenerateCoverHTML()) {
 				writeCoverHTML(rootFolder);
 			}
