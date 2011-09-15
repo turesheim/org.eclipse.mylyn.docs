@@ -26,6 +26,8 @@ import org.xml.sax.SAXException;
  * EPUB metadata. This can be the publication title, copyright and author. Some
  * of this information can be found inside Dublin Core elements.
  * 
+ * XXX: Not in use yet
+ * 
  * @author Torkild U. Resheim
  * @see http://dublincore.org/documents/dc-html/
  * @see http://dublincore.org/documents/dcq-html/ (obsolete)
