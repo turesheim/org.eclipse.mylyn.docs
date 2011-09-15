@@ -132,6 +132,12 @@ public class TestAPI {
 		}
 	}
 
+	/**
+	 * Creates a new simple EPUB and tests whether it can be validated using
+	 * "epubcheck".
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testPackSimpleEPUB() throws Exception {
 		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
@@ -141,7 +147,8 @@ public class TestAPI {
 	}
 
 	/**
-	 * Creates a very simple EPUB file with some metadata and one single page.
+	 * Creates a very simple EPUB file with only required metadata added and one
+	 * single page.
 	 * 
 	 * @return the new EPUB file
 	 * @throws URISyntaxException
@@ -149,13 +156,8 @@ public class TestAPI {
 	 */
 	private OPSPublication createSimpleEPUB(File epubfile) throws URISyntaxException, Exception {
 		OPSPublication ops = OPSPublication.getVersion2Instance();
-		ops.setIdentifierId("uuid");
-		ops.addLanguage(null, "en");
 		ops.addTitle(null, null, "Mylyn Docs Test EPUB");
 		ops.addSubject(null, null, "Testing");
-		ops.addSource(null, null, "Eclipse");
-		ops.addPublisher(null, null, "Eclipse.org");
-		ops.addCreator(null, null, "Torkild U. Resheim", Role.AUTHOR, "Resheim, Torkild U.");
 		ops.addItem(getFile("testdata/plain-page.xhtml"));
 		ops.setGenerateToc(true);
 		EPUB epub = new EPUB();
@@ -172,7 +174,6 @@ public class TestAPI {
 		OPSPublication epub2 = OPSPublication.getVersion2Instance();
 		epub.add(epub2);
 		epub.unpack(epubfile, unPackingFolder);
-		System.out.println(ops1.getOpfPackage().getManifest().getItems().get(0).getHref());
 		MatchModel match = MatchService.doMatch(ops1.getOpfPackage(), epub2.getOpfPackage(),
 				Collections.<String, Object> emptyMap());
 		// Something fishy going on here.
@@ -232,45 +233,6 @@ public class TestAPI {
 		}
 	}
 
-	/**
-	 * See if all creators are serialised properly.
-	 * <ul>
-	 * <li>Wrong number of attributes due to EMF default value handling.</li>
-	 * <li>Unexpected attribute names and or values.</li>
-	 * <li>Wrong element value.</li>
-	 * </ul>
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testSerializationCreators() throws Exception {
-		OPSPublication ops = OPSPublication.getVersion2Instance();
-		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
-		Role[] roles = Role.values();
-		for (Role role : roles) {
-			ops.addCreator(role.getLiteral(), Locale.ENGLISH,
-					"Nomen Nescio", role, "Nescio, Nomen");
-		}
-		EPUB epub = new EPUB();
-		epub.add(ops);
-		epub.pack(epubfile, packingFolder);
-		Element doc = readOPF();
-		Node guide = doc.getElementsByTagName("opf:metadata").item(0);
-		Node node = guide.getFirstChild(); // Discard first TEXT node
-		String[] ids = new String[] { "id", "xml:lang", "opf:role",
-				"opf:file-as" };
-		for (Role role : roles) {
-			node = node.getNextSibling();
-			String[] values = new String[] { role.getLiteral(),
-					Locale.ENGLISH.getLanguage(), role.getLiteral(),
-					"Nescio, Nomen" };
-			Assert.assertEquals("dc:creator", node.getNodeName());
-			Assert.assertEquals("Nomen Nescio", node.getFirstChild()
-					.getNodeValue());
-			testAttributes(node, ids, values);
-			node = node.getNextSibling(); // Discard next TEXT node
-		}
-	}
 
 	/**
 	 * Checks the contents of the OPF when nothing has been added to the
