@@ -8,7 +8,7 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub;
+package org.eclipse.mylyn.docs.epub.core.internal;
 
 import java.io.File;
 import java.io.FileReader;
@@ -26,10 +26,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.mylyn.docs.epub.internal.EPUBXMLHelperImp;
-import org.eclipse.mylyn.docs.epub.internal.OPS2Validator;
-import org.eclipse.mylyn.docs.epub.internal.OPS2Validator.Mode;
-import org.eclipse.mylyn.docs.epub.internal.TOCGenerator;
+import org.eclipse.mylyn.docs.epub.core.OPSPublication;
+import org.eclipse.mylyn.docs.epub.core.internal.OPS2Validator.Mode;
 import org.eclipse.mylyn.docs.epub.ncx.DocTitle;
 import org.eclipse.mylyn.docs.epub.ncx.Head;
 import org.eclipse.mylyn.docs.epub.ncx.Meta;
@@ -61,7 +59,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Torkild U. Resheim
  */
-class OPS2Publication extends OPSPublication {
+public class OPS2Publication extends OPSPublication {
 
 	/** Default name for the table of contents */
 	private static final String TOCFILE_NAME = "toc.ncx";
@@ -74,7 +72,7 @@ class OPS2Publication extends OPSPublication {
 	/**
 	 * Creates a new EPUB.
 	 */
-	OPS2Publication() {
+	public OPS2Publication() {
 		super();
 		opfPackage.setVersion("2.0");
 		ncxTOC = NCXFactory.eINSTANCE.createNcx();

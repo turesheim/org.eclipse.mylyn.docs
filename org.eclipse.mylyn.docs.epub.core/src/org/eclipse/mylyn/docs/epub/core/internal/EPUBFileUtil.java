@@ -8,7 +8,7 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub.internal;
+package org.eclipse.mylyn.docs.epub.core.internal;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -25,7 +25,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import org.eclipse.mylyn.docs.epub.OPSPublication;
+import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 
 /**
  * Various EPUB file related utilities.
@@ -208,7 +208,6 @@ public class EPUBFileUtil {
 			}
 		}
 	}
-
 
 	/**
 	 * A correctly formatted EPUB file must contain an uncompressed entry named

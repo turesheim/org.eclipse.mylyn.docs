@@ -8,7 +8,7 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub;
+package org.eclipse.mylyn.docs.epub.core;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
-import org.eclipse.mylyn.docs.epub.internal.EPUBFileUtil;
+import org.eclipse.mylyn.docs.epub.core.internal.EPUBFileUtil;
 import org.eclipse.mylyn.docs.epub.ocf.Container;
 import org.eclipse.mylyn.docs.epub.ocf.OCFFactory;
 import org.eclipse.mylyn.docs.epub.ocf.OCFPackage;
@@ -102,7 +102,8 @@ public class EPUB {
 	}
 
 	/**
-	 * Assembles the EPUB file using a temporary working folder.
+	 * f Assembles the EPUB file using a temporary working folder. The folder
+	 * will be deleted as soon as the assembly has completed.
 	 * 
 	 * @param epubFile
 	 *            the target EPUB file
@@ -114,7 +115,7 @@ public class EPUB {
 		if (workingFolder.delete() && workingFolder.mkdirs()) {
 			pack(epubFile, workingFolder);
 		}
-		workingFolder.delete();
+		deleteFolder(workingFolder);
 	}
 
 	/**
@@ -262,5 +263,25 @@ public class EPUB {
 			resource.getContents().add(ocfContainer);
 			resource.save(null);
 		}
+	}
+
+	/**
+	 * Delete the folder recursively.
+	 * 
+	 * @param folder
+	 *            the folder to delete
+	 * @return
+	 */
+	private boolean deleteFolder(File folder) {
+		if (folder.isDirectory()) {
+			String[] children = folder.list();
+			for (int i = 0; i < children.length; i++) {
+				boolean ok = deleteFolder(new File(folder, children[i]));
+				if (!ok) {
+					return false;
+				}
+			}
+		}
+		return folder.delete();
 	}
 }

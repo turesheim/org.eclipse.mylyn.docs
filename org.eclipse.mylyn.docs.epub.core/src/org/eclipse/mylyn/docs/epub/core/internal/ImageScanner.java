@@ -8,7 +8,7 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub.internal;
+package org.eclipse.mylyn.docs.epub.core.internal;
 
 import java.io.File;
 import java.io.FileReader;
@@ -61,7 +61,6 @@ public class ImageScanner extends XHTMLScanner {
 		files = new ArrayList<File>();
 		currentItem = item;
 	}
-
 
 	/**
 	 * Case-insensitive method for obtaining an attribute.

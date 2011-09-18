@@ -9,7 +9,7 @@
  * Contributors: 
  * Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub;
+package org.eclipse.mylyn.docs.epub.core;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -40,6 +40,10 @@ import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
+import org.eclipse.mylyn.docs.epub.core.internal.EPUBFileUtil;
+import org.eclipse.mylyn.docs.epub.core.internal.EPUBXMLHelperImp;
+import org.eclipse.mylyn.docs.epub.core.internal.ImageScanner;
+import org.eclipse.mylyn.docs.epub.core.internal.OPS2Publication;
 import org.eclipse.mylyn.docs.epub.dc.Contributor;
 import org.eclipse.mylyn.docs.epub.dc.Coverage;
 import org.eclipse.mylyn.docs.epub.dc.Creator;
@@ -57,9 +61,6 @@ import org.eclipse.mylyn.docs.epub.dc.Rights;
 import org.eclipse.mylyn.docs.epub.dc.Source;
 import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
-import org.eclipse.mylyn.docs.epub.internal.EPUBFileUtil;
-import org.eclipse.mylyn.docs.epub.internal.EPUBXMLHelperImp;
-import org.eclipse.mylyn.docs.epub.internal.ImageScanner;
 import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.eclipse.mylyn.docs.epub.opf.Itemref;
 import org.eclipse.mylyn.docs.epub.opf.OPFFactory;
@@ -322,7 +323,6 @@ public abstract class OPSPublication {
 		opfPackage.getMetadata().getFormats().add(dc);
 		return dc;
 	}
-
 
 	/**
 	 * Adds a new identifier to the publication.
@@ -975,7 +975,6 @@ public abstract class OPSPublication {
 	 * @throws Exception
 	 */
 	protected abstract void validateContents() throws Exception;
-
 
 	/**
 	 * Writes a XHTML-file for the cover image. This is added to the publication

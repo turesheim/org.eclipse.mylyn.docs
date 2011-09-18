@@ -8,7 +8,7 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub.wikitext;
+package org.eclipse.mylyn.docs.epub.core.wikitext;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-import org.eclipse.mylyn.docs.epub.EPUB;
-import org.eclipse.mylyn.docs.epub.OPSPublication;
+import org.eclipse.mylyn.docs.epub.core.EPUB;
+import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder;
@@ -35,36 +35,73 @@ import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
  */
 public class MarkupToEPUB {
 
-	private String bookTitle;
-
 	private MarkupLanguage markupLanguage;
 
-	public MarkupLanguage getMarkupLanguage() {
-		return markupLanguage;
+	/**
+	 * Delete the folder recursively.
+	 * 
+	 * @param folder
+	 *            the folder to delete
+	 * @return <code>true</code> if the folder was deleted
+	 */
+	private boolean deleteFolder(File folder) {
+		if (folder.isDirectory()) {
+			String[] children = folder.list();
+			for (int i = 0; i < children.length; i++) {
+				boolean ok = deleteFolder(new File(folder, children[i]));
+				if (!ok) {
+					return false;
+				}
+			}
+		}
+		return folder.delete();
 	}
-
-	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
-		this.markupLanguage = markupLanguage;
-	}
-
 
 	/**
-	 * Parses the markup file and populates the EPUB data model â€” but does not
-	 * assemble the resulting EPUB file. This is left to the consumer which may
-	 * also do further manipulation of the data model.
+	 * Parses the markup file and populates the OPS dataâ but does not assemble
+	 * the resulting EPUB file. This is left to the consumer which may also do
+	 * further manipulation of the data.
 	 * 
 	 * @param markup
 	 *            the WikiText markup file
+	 * 
 	 * @return the EPUB instance
 	 * @throws Exception
 	 */
-	public OPSPublication parse(File markup) throws Exception {
+	public OPSPublication generate(File markup) throws Exception {
 		OPSPublication epub = OPSPublication.getVersion2Instance();
 		parse(epub, markup);
 		return epub;
 
 	}
 
+	/**
+	 * Converts the markup code to HTML then places it with the EPUB and
+	 * assembles the publication.
+	 * 
+	 * @param markupFile
+	 *            the markup file
+	 * @param epubFile
+	 *            the new EPUB file
+	 * @return the EPUB file
+	 * @throws Exception
+	 */
+	public EPUB generate(File markupFile, File epubFile) throws Exception {
+		OPSPublication ops = generate(markupFile);
+		EPUB epub = new EPUB();
+		epub.add(ops);
+		epub.pack(epubFile);
+		return epub;
+	}
+
+	/**
+	 * Parses the markup file and populates the OPS data.
+	 * 
+	 * @param epub
+	 *            the new EPUB file
+	 * @param the
+	 *            WikiText markup file
+	 */
 	public void parse(OPSPublication epub, File markupFile) throws IOException, FileNotFoundException {
 		if (markupLanguage == null) {
 			throw new IllegalStateException("must set markupLanguage"); //$NON-NLS-1$
@@ -86,7 +123,6 @@ public class MarkupToEPUB {
 				File file = new File(item.getFile());
 				Stylesheet css = new Stylesheet(file);
 				builder.addCssStylesheet(css);
-				System.out.println(item.getFile());
 			}
 
 			builder.setXhtmlStrict(true);
@@ -102,22 +138,17 @@ public class MarkupToEPUB {
 			Item item = epub.addItem(htmlFile);
 			item.setSourcePath(markupFile.getAbsolutePath());
 		}
-		workingFolder.deleteOnExit();
+		deleteFolder(workingFolder);
 	}
 
-	public void assemble(File markupFile, File epubFile) throws Exception {
-		OPSPublication ops = parse(markupFile);
-		EPUB epub = new EPUB();
-		epub.add(ops);
-		epub.pack(epubFile);
-	}
-
-	public String getBookTitle() {
-		return bookTitle;
-	}
-
-	public void setBookTitle(String bookTitle) {
-		this.bookTitle = bookTitle;
+	/**
+	 * Sets the markup language to use when generating HTML from markup.
+	 * 
+	 * @param markupLanguage
+	 *            the markup language
+	 */
+	public void setMarkupLanguage(MarkupLanguage markupLanguage) {
+		this.markupLanguage = markupLanguage;
 	}
 
 }
