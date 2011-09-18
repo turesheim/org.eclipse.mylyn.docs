@@ -4,7 +4,7 @@
       label="%featureName"
       version="0.8.0.qualifier"
       provider-name="%providerName"
-      plugin="%featureName"
+      plugin="org.eclipse.mylyn"
       license-feature="org.eclipse.mylyn_feature"
       license-feature-version="3.6.0.v20110608-1400">
 
@@ -21,7 +21,7 @@
    </license>
 
    <plugin
-         id="org.eclipse.mylyn.docs.epub.ant"
+         id="org.eclipse.mylyn.docs.epub.ant.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
