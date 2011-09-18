@@ -17,8 +17,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.Assert;
 
-import org.eclipse.mylyn.docs.epub.internal.OPS2Validator;
-import org.eclipse.mylyn.docs.epub.internal.OPS2Validator.Mode;
+import org.eclipse.mylyn.docs.epub.core.internal.OPS2Validator;
+import org.eclipse.mylyn.docs.epub.core.internal.OPS2Validator.Mode;
 import org.junit.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

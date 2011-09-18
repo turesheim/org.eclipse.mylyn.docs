@@ -18,7 +18,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import junit.framework.Assert;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.mylyn.docs.epub.internal.TOCGenerator;
+import org.eclipse.mylyn.docs.epub.core.internal.TOCGenerator;
 import org.eclipse.mylyn.docs.epub.ncx.NCXFactory;
 import org.eclipse.mylyn.docs.epub.ncx.NavMap;
 import org.eclipse.mylyn.docs.epub.ncx.NavPoint;
