@@ -9,7 +9,7 @@
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.docs.epub.ui.commands;
+package org.eclipse.mylyn.internal.docs.epub.ui.commands;
 
 import org.eclipse.osgi.util.NLS;
 

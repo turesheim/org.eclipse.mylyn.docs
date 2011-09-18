@@ -8,7 +8,7 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub.ui;
+package org.eclipse.mylyn.internal.docs.epub.ui;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -25,9 +25,9 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.mylyn.docs.epub.EPUB;
-import org.eclipse.mylyn.docs.epub.OPSPublication;
-import org.eclipse.mylyn.docs.epub.wikitext.MarkupToEPUB;
+import org.eclipse.mylyn.docs.epub.core.EPUB;
+import org.eclipse.mylyn.docs.epub.core.OPSPublication;
+import org.eclipse.mylyn.docs.epub.core.wikitext.MarkupToEPUB;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.statushandlers.StatusManager;

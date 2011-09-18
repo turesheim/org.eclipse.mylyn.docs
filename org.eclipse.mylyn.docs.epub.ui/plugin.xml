@@ -4,9 +4,9 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="org.eclipse.mylyn.docs.epub.ui.commands.ConvertMarkupToEPUB"
+            defaultHandler="org.eclipse.mylyn.internal.docs.epub.ui.commands.ConvertMarkupToEPUB"
             id="org.eclipse.mylyn.docs.epub.ui.convertToEPUBCommand"
-            name="Generate EPUB">
+            name="%command.name">
       </command>
    </extension>
    <extension
@@ -16,7 +16,7 @@
             locationURI="popup:org.eclipse.mylyn.wikitext.ui.contextmenu?after=additions">
          <command
                commandId="org.eclipse.mylyn.docs.epub.ui.convertToEPUBCommand"
-               label="Generate EPUB"
+               label="%command.label"
                style="push">
          </command>
       </menuContribution>

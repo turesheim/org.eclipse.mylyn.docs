@@ -8,14 +8,14 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub.ui.commands;
+package org.eclipse.mylyn.internal.docs.epub.ui.commands;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.mylyn.docs.epub.ui.ConvertFromMarkupWizard;
+import org.eclipse.mylyn.internal.docs.epub.ui.ConvertFromMarkupWizard;
 import org.eclipse.mylyn.wikitext.ui.commands.AbstractMarkupResourceHandler;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;

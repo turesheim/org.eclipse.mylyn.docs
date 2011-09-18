@@ -8,7 +8,7 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub.ui;
+package org.eclipse.mylyn.internal.docs.epub.ui;
 
 import java.util.Set;
 
@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.ResourceManager;
 
 public class MainPage extends WizardPage {
 
@@ -71,7 +70,7 @@ public class MainPage extends WizardPage {
 	public MainPage() {
 		super("wizardPage");
 		setMessage("Define properties for the resulting EPUB file.");
-		setImageDescriptor(ResourceManager.getPluginImageDescriptor("org.eclipse.mylyn.docs.epub.ui",
+		setImageDescriptor(EPUBUIPlugin.imageDescriptorFromPlugin("org.eclipse.mylyn.docs.epub.ui",
 				"icons/wizard-banner.png"));
 		setTitle("EPUB Properties");
 	}
