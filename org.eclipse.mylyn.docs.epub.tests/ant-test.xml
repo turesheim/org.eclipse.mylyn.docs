@@ -9,7 +9,7 @@
 
 	<path id="epub-classpath">
 		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub.core/bin/" />
-		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub.ant/bin/" />
+		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub.ant.core/bin/" />
 	</path>
 
 	<taskdef classpathref="epub-classpath" resource="org/eclipse/mylyn/docs/epub/ant/tasks.properties" />
