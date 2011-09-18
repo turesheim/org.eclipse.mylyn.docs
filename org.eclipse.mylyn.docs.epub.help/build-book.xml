@@ -19,7 +19,7 @@
 
 	<path id="epub.classpath">
 		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub.core/bin/" />
-		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub.ant/bin/" />
+		<pathelement location="${basedir}/../org.eclipse.mylyn.docs.epub.ant.core/bin/" />
 		<fileset dir="${wikitext.standalone}">
 			<include name="*.jar" />
 		</fileset>
