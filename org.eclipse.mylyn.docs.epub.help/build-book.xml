@@ -35,7 +35,7 @@
 			<fileset dir="${tempdir}" />
 		</delete>
 		<delete file="${epubfile}" failonerror="false" />
-		<wikitext-to-html markupLanguage="Textile" xhtmlstrict="true" >
+		<wikitext-to-html markupLanguage="Textile" emitdoctype="true" overwrite="true" xhtmlstrict="true" htmlDoctype="&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.1//EN&quot; &quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;&gt;">
 			<fileset dir="${srcdir}">
 				<include name="*.textile" />
 			</fileset>
@@ -44,14 +44,14 @@
 		<move todir="${tempdir}">
 			<fileset dir="${srcdir}">
 				<include name="*.html" />
-				<exclude name="title-page.html"/>
+				<exclude name="title-page.html" />
 			</fileset>
 		</move>
 	</target>
 
 	<!-- contributor, date -->
 	<target name="plugin-book" depends="init">
-		<epub identifierId="uuid" file="${epubfile}" workingFolder="${workdir}" >
+		<epub identifierId="uuid" file="${epubfile}" workingFolder="${workdir}">
 			<language code="en" />
 			<identifier id="uuid" scheme="UUID">70ce7c20-8f9e-11e0-91e4-0800200c9a66</identifier>
 			<title>Building EPUBs</title>
@@ -65,7 +65,7 @@
 			<!-- The DejaVu Fonts - http://dejavu-fonts.org/wiki/License -->
 			<contributor name="Bitstream" fileAs="Bitstream" role="art" />
 			<cover image="${srcdir}/epub/cover.jpg">Cover page</cover>
-			<item file="${srcdir}/title-page.html"/>
+			<item file="${srcdir}/title-page.html" />
 			<item file="${tempdir}/copyright.html" />
 			<item file="${tempdir}/introduction.html" />
 			<item file="${tempdir}/epub-format.html" />
