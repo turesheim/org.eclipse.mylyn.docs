@@ -172,7 +172,7 @@ public class EPUB {
 					if (rootFile.getPublication() instanceof File) {
 						EPUBFileUtil.copy((File) rootFile.getPublication(), root);
 					} else {
-						throw new IllegalAccessError("Unknown publication type");
+						throw new IllegalArgumentException("Unknown publication type");
 					}
 				}
 			}
