@@ -248,7 +248,7 @@ public class EPUBFileUtil {
 	 */
 	public static void zip(File destination, File folder) throws ZipException, IOException {
 		if (destination.exists()) {
-			throw new IOException("The destination zip-file already exists.");
+			throw new IOException("A file already exists at " + destination.getAbsolutePath());
 		}
 		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(destination));
 		writeEPUBHeader(out);
