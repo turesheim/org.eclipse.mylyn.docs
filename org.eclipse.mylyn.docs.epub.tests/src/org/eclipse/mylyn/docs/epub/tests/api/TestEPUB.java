@@ -11,8 +11,8 @@ import junit.framework.Assert;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
+import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
-import org.eclipse.mylyn.docs.epub.core.internal.OPS2Publication;
 import org.eclipse.mylyn.docs.epub.ocf.Container;
 import org.eclipse.mylyn.docs.epub.ocf.RootFile;
 import org.eclipse.mylyn.docs.epub.ocf.RootFiles;

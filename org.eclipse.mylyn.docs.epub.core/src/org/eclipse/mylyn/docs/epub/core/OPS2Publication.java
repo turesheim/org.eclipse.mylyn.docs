@@ -8,7 +8,7 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub.core.internal;
+package org.eclipse.mylyn.docs.epub.core;
 
 import java.io.File;
 import java.io.FileReader;
@@ -26,7 +26,9 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.eclipse.mylyn.docs.epub.core.OPSPublication;
+import org.eclipse.mylyn.docs.epub.core.internal.EPUBXMLHelperImp;
+import org.eclipse.mylyn.docs.epub.core.internal.OPS2Validator;
+import org.eclipse.mylyn.docs.epub.core.internal.TOCGenerator;
 import org.eclipse.mylyn.docs.epub.core.internal.OPS2Validator.Mode;
 import org.eclipse.mylyn.docs.epub.ncx.DocTitle;
 import org.eclipse.mylyn.docs.epub.ncx.Head;
