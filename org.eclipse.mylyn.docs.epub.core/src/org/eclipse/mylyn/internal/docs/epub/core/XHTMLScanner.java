@@ -8,7 +8,7 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub.core.internal;
+package org.eclipse.mylyn.internal.docs.epub.core;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

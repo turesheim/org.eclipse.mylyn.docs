@@ -8,7 +8,7 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub.core.internal;
+package org.eclipse.mylyn.internal.docs.epub.core;
 
 import java.io.File;
 import java.io.FileReader;

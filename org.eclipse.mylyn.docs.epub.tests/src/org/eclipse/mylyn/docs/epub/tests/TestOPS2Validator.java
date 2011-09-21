@@ -17,8 +17,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.Assert;
 
-import org.eclipse.mylyn.docs.epub.core.internal.OPS2Validator;
-import org.eclipse.mylyn.docs.epub.core.internal.OPS2Validator.Mode;
+import org.eclipse.mylyn.internal.docs.epub.core.OPS2Validator;
+import org.eclipse.mylyn.internal.docs.epub.core.OPS2Validator.Mode;
 import org.junit.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -29,6 +29,7 @@ import org.xml.sax.SAXException;
  * @author Torkild U. Resheim
  * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm
  */
+@SuppressWarnings("restriction")
 public class TestOPS2Validator {
 
 	private final String[] illegalAttributes = new String[] { "anything", "goes", "in", "here" };

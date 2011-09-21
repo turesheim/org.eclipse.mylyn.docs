@@ -23,13 +23,13 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
-import org.eclipse.mylyn.docs.epub.core.internal.EPUBFileUtil;
 import org.eclipse.mylyn.docs.epub.ocf.Container;
 import org.eclipse.mylyn.docs.epub.ocf.OCFFactory;
 import org.eclipse.mylyn.docs.epub.ocf.OCFPackage;
 import org.eclipse.mylyn.docs.epub.ocf.RootFile;
 import org.eclipse.mylyn.docs.epub.ocf.RootFiles;
 import org.eclipse.mylyn.docs.epub.ocf.util.OCFResourceImpl;
+import org.eclipse.mylyn.internal.docs.epub.core.EPUBFileUtil;
 
 /**
  * Represents one EPUB file. One or more publications can be added and will be a

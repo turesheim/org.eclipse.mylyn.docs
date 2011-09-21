@@ -18,11 +18,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import junit.framework.Assert;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.mylyn.docs.epub.core.internal.TOCGenerator;
 import org.eclipse.mylyn.docs.epub.ncx.NCXFactory;
 import org.eclipse.mylyn.docs.epub.ncx.NavMap;
 import org.eclipse.mylyn.docs.epub.ncx.NavPoint;
 import org.eclipse.mylyn.docs.epub.ncx.Ncx;
+import org.eclipse.mylyn.internal.docs.epub.core.TOCGenerator;
 import org.junit.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -32,6 +32,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Torkild U. Resheim
  */
+@SuppressWarnings("restriction")
 public class TestTOCGenerator {
 
 	@Test

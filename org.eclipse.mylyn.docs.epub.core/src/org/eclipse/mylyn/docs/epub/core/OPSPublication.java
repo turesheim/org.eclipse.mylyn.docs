@@ -40,9 +40,6 @@ import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl;
-import org.eclipse.mylyn.docs.epub.core.internal.EPUBFileUtil;
-import org.eclipse.mylyn.docs.epub.core.internal.EPUBXMLHelperImp;
-import org.eclipse.mylyn.docs.epub.core.internal.ImageScanner;
 import org.eclipse.mylyn.docs.epub.dc.Contributor;
 import org.eclipse.mylyn.docs.epub.dc.Coverage;
 import org.eclipse.mylyn.docs.epub.dc.Creator;
@@ -70,6 +67,9 @@ import org.eclipse.mylyn.docs.epub.opf.Role;
 import org.eclipse.mylyn.docs.epub.opf.Spine;
 import org.eclipse.mylyn.docs.epub.opf.Type;
 import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceImpl;
+import org.eclipse.mylyn.internal.docs.epub.core.EPUBFileUtil;
+import org.eclipse.mylyn.internal.docs.epub.core.EPUBXMLHelperImp;
+import org.eclipse.mylyn.internal.docs.epub.core.ImageScanner;
 import org.xml.sax.SAXException;
 
 /**

@@ -1,4 +1,4 @@
-package org.eclipse.mylyn.docs.epub.core.internal;
+package org.eclipse.mylyn.internal.docs.epub.core;
 
 import java.io.IOException;
 
