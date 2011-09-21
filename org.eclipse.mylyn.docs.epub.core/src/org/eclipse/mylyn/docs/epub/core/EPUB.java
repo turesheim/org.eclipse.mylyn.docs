@@ -43,8 +43,8 @@ import org.eclipse.mylyn.docs.epub.ocf.util.OCFResourceImpl;
  */
 public class EPUB {
 
-	/** OEPBS (OPS+OPF) mimetype */
-	public static final String MIMETYPE_OEBPS = "application/oebps-package+xml";
+	/** OEBPS (OPS+OPF) mimetype */
+	private static final String MIMETYPE_OEBPS = "application/oebps-package+xml";
 
 	/** Suffix for OCF files */
 	private static final String OCF_FILE_SUFFIX = "xml";
@@ -68,6 +68,15 @@ public class EPUB {
 	}
 
 	/**
+	 * Returns the container instance of the EPUB.
+	 * 
+	 * @return the container instance
+	 */
+	public Container getContainer() {
+		return ocfContainer;
+	}
+
+	/**
 	 * Adds a new OPS publication to the EPUB.
 	 * 
 	 * @param oebps
@@ -82,6 +91,27 @@ public class EPUB {
 		rootFile.setFullPath(rootFileName);
 		rootFile.setMediaType(MIMETYPE_OEBPS);
 		rootFile.setPublication(oebps);
+		rootFiles.getRootfiles().add(rootFile);
+	}
+
+	/**
+	 * Adds a new publication to the EPUB
+	 * 
+	 * @param file
+	 *            the publication to add
+	 * @param type
+	 *            the MIME type of the publication
+	 */
+	public void add(File file, String type) {
+		String name = type.substring(type.lastIndexOf('/') + 1, type.length()).toUpperCase();
+		RootFiles rootFiles = ocfContainer.getRootfiles();
+		int count = rootFiles.getRootfiles().size();
+		String rootFileName = count > 0 ? name + "_" + count : name;
+		rootFileName += File.separator + file.getName();
+		RootFile rootFile = OCFFactory.eINSTANCE.createRootFile();
+		rootFile.setFullPath(rootFileName);
+		rootFile.setMediaType(type);
+		rootFile.setPublication(file);
 		rootFiles.getRootfiles().add(rootFile);
 	}
 
@@ -102,20 +132,21 @@ public class EPUB {
 	}
 
 	/**
-	 * f Assembles the EPUB file using a temporary working folder. The folder
-	 * will be deleted as soon as the assembly has completed.
+	 * Assembles the EPUB file using a temporary working folder. The folder will
+	 * be deleted as soon as the assembly has completed.
 	 * 
 	 * @param epubFile
 	 *            the target EPUB file
 	 * 
 	 * @throws Exception
 	 */
-	public void pack(File epubFile) throws Exception {
+	public File pack(File epubFile) throws Exception {
 		File workingFolder = File.createTempFile("epub_", null);
 		if (workingFolder.delete() && workingFolder.mkdirs()) {
 			pack(epubFile, workingFolder);
 		}
 		deleteFolder(workingFolder);
+		return workingFolder;
 	}
 
 	/**
@@ -134,9 +165,15 @@ public class EPUB {
 			EList<RootFile> publications = ocfContainer.getRootfiles().getRootfiles();
 			for (RootFile rootFile : publications) {
 				Object publication = rootFile.getPublication();
+				File root = new File(workingFolder.getAbsolutePath() + File.separator + rootFile.getFullPath());
 				if (publication instanceof OPSPublication) {
-					File root = new File(workingFolder.getAbsolutePath() + File.separator + rootFile.getFullPath());
 					((OPSPublication) publication).pack(root);
+				} else {
+					if (rootFile.getPublication() instanceof File) {
+						EPUBFileUtil.copy((File) rootFile.getPublication(), root);
+					} else {
+						throw new IllegalAccessError("Unknown publication type");
+					}
 				}
 			}
 			EPUBFileUtil.zip(epubFile, workingFolder);
@@ -272,16 +309,13 @@ public class EPUB {
 	 *            the folder to delete
 	 * @return
 	 */
-	private boolean deleteFolder(File folder) {
+	private void deleteFolder(File folder) {
 		if (folder.isDirectory()) {
 			String[] children = folder.list();
 			for (int i = 0; i < children.length; i++) {
-				boolean ok = deleteFolder(new File(folder, children[i]));
-				if (!ok) {
-					return false;
-				}
+				deleteFolder(new File(folder, children[i]));
 			}
 		}
-		return folder.delete();
+		folder.delete();
 	}
 }
