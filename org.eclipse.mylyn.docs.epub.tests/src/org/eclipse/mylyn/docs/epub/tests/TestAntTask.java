@@ -44,8 +44,8 @@ public class TestAntTask extends BuildFileTest {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
 		EpubCheck checker = new EpubCheck(f, pw);
-		boolean ok = checker.validate();
-		Assert.assertTrue(sw.getBuffer().toString().trim(), ok);
+		checker.validate();
+		Assert.assertTrue(sw.getBuffer().toString().trim(), checker.errorCount == 0);
 	}
 
 	private File getFile(String file) {
@@ -75,6 +75,12 @@ public class TestAntTask extends BuildFileTest {
 	 * from Textile markup to HTML using WikiText.
 	 */
 	public void testDocumentationBook() {
-		assertEpub(DOC_FILE_PATH);
+		File file = getFile(DOC_FILE_PATH);
+		assertTrue("Missing publication " + file, file.exists());
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		EpubCheck checker = new EpubCheck(file, pw);
+		checker.validate();
+		Assert.assertTrue(sw.getBuffer().toString().trim(), checker.errorCount == 0);
 	}
 }
