@@ -45,8 +45,8 @@ import org.eclipse.mylyn.docs.epub.opf.OPFFactory;
 import org.eclipse.mylyn.docs.epub.opf.Spine;
 import org.eclipse.mylyn.internal.docs.epub.core.EPUBXMLHelperImp;
 import org.eclipse.mylyn.internal.docs.epub.core.OPS2Validator;
-import org.eclipse.mylyn.internal.docs.epub.core.TOCGenerator;
 import org.eclipse.mylyn.internal.docs.epub.core.OPS2Validator.Mode;
+import org.eclipse.mylyn.internal.docs.epub.core.TOCGenerator;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -237,8 +237,10 @@ public class OPS2Publication extends OPSPublication {
 	 */
 	@Override
 	protected void writeTableOfContents(File oepbsFolder) throws Exception {
-		File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator + TOCFILE_NAME);
+		// If a table of contents file has not been specified we must create
+		// one. If it has been specified it will be copied.
 		if (getItemById(opfPackage.getSpine().getToc()) == null) {
+			File ncxFile = new File(oepbsFolder.getAbsolutePath() + File.separator + TOCFILE_NAME);
 			ResourceSet resourceSet = new ResourceSetImpl();
 			// Register the packages to make it available during loading.
 			resourceSet.getPackageRegistry().put(NCXPackage.eNS_URI, NCXPackage.eINSTANCE);
@@ -255,12 +257,12 @@ public class OPS2Publication extends OPSPublication {
 			options.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
 			options.put(XMLResource.OPTION_EXTENDED_META_DATA, Boolean.TRUE);
 			resource.save(options);
+			// Make sure the table of contents file is in the manifest and
+			// referenced in the spine. We also want it to be the first element
+			// in the manifest.
+			Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, MIMETYPE_NCX, false, false, false);
+			opfPackage.getManifest().getItems().move(0, item);
 		}
-		// As we now have written the table of contents we must make sure it is
-		// in the manifest and referenced in the spine. We also want it to be
-		// the first element in the manifest.
-		Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, MIMETYPE_NCX, false, false, false);
-		opfPackage.getManifest().getItems().move(0, item);
 	}
 
 	@Override
