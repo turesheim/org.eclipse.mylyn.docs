@@ -895,7 +895,7 @@ public abstract class OPSPublication {
 
 	/**
 	 * Specifies whether or not to automatically generate table of contents from
-	 * the publication contents. The default is <code>false</code>
+	 * the publication contents. The default is <code>true</code>
 	 * 
 	 * @param generateToc
 	 *            whether or not to generate a table of contents
@@ -917,7 +917,7 @@ public abstract class OPSPublication {
 
 	/**
 	 * Specifies whether or not to automatically include resources (files) that
-	 * are referenced in the contents.
+	 * are referenced in the contents. The default is <code>false</code>.
 	 * 
 	 * @param include
 	 *            whether or not automatically include resources
