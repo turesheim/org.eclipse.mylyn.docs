@@ -13,7 +13,9 @@ package org.eclipse.mylyn.docs.epub.core;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -45,7 +47,6 @@ import org.eclipse.mylyn.docs.epub.opf.OPFFactory;
 import org.eclipse.mylyn.docs.epub.opf.Spine;
 import org.eclipse.mylyn.internal.docs.epub.core.EPUBXMLHelperImp;
 import org.eclipse.mylyn.internal.docs.epub.core.OPS2Validator;
-import org.eclipse.mylyn.internal.docs.epub.core.OPS2Validator.Mode;
 import org.eclipse.mylyn.internal.docs.epub.core.TOCGenerator;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -142,10 +143,15 @@ public class OPS2Publication extends OPSPublication {
 		}
 	}
 
+	/**
+	 * This method will only validate items that are in the spine, or in reading
+	 * order.
+	 */
 	@Override
-	protected void validateContents() throws Exception {
+	protected List<ValidationMessage> validateContents() throws Exception {
 		EList<Itemref> spineItems = getSpine().getSpineItems();
 		EList<Item> manifestItems = opfPackage.getManifest().getItems();
+		ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
 		for (Itemref itemref : spineItems) {
 			Item referencedItem = null;
 			String id = itemref.getIdref();
@@ -159,10 +165,10 @@ public class OPS2Publication extends OPSPublication {
 			if (referencedItem != null && !referencedItem.isNoToc()) {
 				File file = new File(referencedItem.getFile());
 				FileReader fr = new FileReader(file);
-				OPS2Validator.parse(new InputSource(fr), referencedItem.getHref(), Mode.WARN);
+				messages.addAll(OPS2Validator.validate(new InputSource(fr), referencedItem.getHref()));
 			}
 		}
-
+		return messages;
 	}
 
 	/** Identifier of the table of contents file */

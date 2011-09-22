@@ -18,7 +18,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import junit.framework.Assert;
 
 import org.eclipse.mylyn.internal.docs.epub.core.OPS2Validator;
-import org.eclipse.mylyn.internal.docs.epub.core.OPS2Validator.Mode;
 import org.junit.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -57,7 +56,7 @@ public class TestOPS2Validator {
 		for (String attr : illegalAttributes) {
 			String in = "<html><body><div " + attr + "=\"test\">content</div></body></html>";
 			String expected = "<html><body><div>content</div></body></html>";
-			String out = OPS2Validator.parse(new InputSource(new StringReader(in)), "test.html", Mode.REMOVE);
+			String out = OPS2Validator.clean(new InputSource(new StringReader(in)), "test.html");
 			Assert.assertEquals(expected, out);
 		}
 	}
@@ -67,7 +66,7 @@ public class TestOPS2Validator {
 		for (String element : illegalElements) {
 			String in = "<html><body><" + element + "></" + element + "></body></html>";
 			String result = "<html><body></body></html>";
-			String out = OPS2Validator.parse(new InputSource(new StringReader(in)), "test.html", Mode.REMOVE);
+			String out = OPS2Validator.clean(new InputSource(new StringReader(in)), "test.html");
 			Assert.assertEquals(result, out);
 
 		}
@@ -77,7 +76,7 @@ public class TestOPS2Validator {
 	public void testLegalAttributes() throws ParserConfigurationException, SAXException, IOException {
 		for (String attr : legalAttributes) {
 			String in = "<html><body><div " + attr + "=\"test\"></div></body></html>";
-			String out = OPS2Validator.parse(new InputSource(new StringReader(in)), "test.html", Mode.REMOVE);
+			String out = OPS2Validator.clean(new InputSource(new StringReader(in)), "test.html");
 			Assert.assertEquals(in, out);
 		}
 	}
@@ -86,7 +85,7 @@ public class TestOPS2Validator {
 	public void testLegalElements() throws ParserConfigurationException, SAXException, IOException {
 		for (String element : legalElements) {
 			String in = "<html><body><" + element + ">content</" + element + "></body></html>";
-			String out = OPS2Validator.parse(new InputSource(new StringReader(in)), "test.html", Mode.REMOVE);
+			String out = OPS2Validator.clean(new InputSource(new StringReader(in)), "test.html");
 			Assert.assertEquals(in, out);
 
 		}
@@ -95,7 +94,7 @@ public class TestOPS2Validator {
 	@Test
 	public void testNormal() throws ParserConfigurationException, SAXException, IOException {
 		String in = "<body><h1 id=\"h1-1\">test</h1></body>";
-		String out = OPS2Validator.parse(new InputSource(new StringReader(in)), "test.html", Mode.REMOVE);
+		String out = OPS2Validator.clean(new InputSource(new StringReader(in)), "test.html");
 		Assert.assertEquals(in, out);
 	}
 }

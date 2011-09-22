@@ -118,6 +118,8 @@ public abstract class OPSPublication {
 		return new OPS2Publication();
 	}
 
+	public List<ValidationMessage> messages;
+
 	/** The root model element */
 	protected Package opfPackage;
 
@@ -701,9 +703,19 @@ public abstract class OPSPublication {
 	 * Returns the table of contents for the publication. As the actual
 	 * implementation may vary depending on
 	 * 
-	 * @return
+	 * @return the table of contents
 	 */
 	public abstract Object getTableOfContents();
+
+	/**
+	 * Returns a list of validation messages. This list is only populated when
+	 * {@link #pack(File)} has taken place.
+	 * 
+	 * @return a list of validation messages
+	 */
+	public List<ValidationMessage> getValidationMessages() {
+		return messages;
+	}
 
 	/**
 	 * Iterates over all files in the manifest attempting to determine
@@ -760,7 +772,7 @@ public abstract class OPSPublication {
 				includeReferencedResources();
 			}
 			copyContent(rootFolder);
-			validateContents();
+			messages = validateContents();
 			writeTableOfContents(rootFolder);
 			writeOPF(rootFile);
 		} else {
@@ -954,6 +966,13 @@ public abstract class OPSPublication {
 	}
 
 	/**
+	 * Implement to validate contents.
+	 * 
+	 * @throws Exception
+	 */
+	protected abstract List<ValidationMessage> validateContents() throws Exception;
+
+	/**
 	 * Validates the data model contents.
 	 * 
 	 * @return a list of EMF diagnostics
@@ -967,13 +986,6 @@ public abstract class OPSPublication {
 		}
 		return diagnostics.getChildren();
 	}
-
-	/**
-	 * Implement to validate contents.
-	 * 
-	 * @throws Exception
-	 */
-	protected abstract void validateContents() throws Exception;
 
 	/**
 	 * Writes a XHTML-file for the cover image. This is added to the publication

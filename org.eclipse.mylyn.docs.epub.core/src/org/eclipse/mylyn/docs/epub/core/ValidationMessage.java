@@ -8,17 +8,29 @@
  * 
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
-package org.eclipse.mylyn.docs.epub.tests;
+package org.eclipse.mylyn.docs.epub.core;
 
-import org.eclipse.mylyn.docs.epub.tests.api.TestEPUB;
-import org.eclipse.mylyn.docs.epub.tests.api.TestOPS2Publication;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+public class ValidationMessage {
 
-@RunWith(Suite.class)
-@SuiteClasses({ TestAntTask.class, TestAPI.class, TestTOCGenerator.class, TestOPS2Validator.class, TestEPUB.class,
-		TestOPS2Publication.class })
-public class AllTests {
+	public enum Severity {
+		WARNING, ERROR
+	}
+
+	private final Severity severity;
+
+	private final String message;
+
+	public ValidationMessage(Severity severity, String message) {
+		this.severity = severity;
+		this.message = message;
+	}
+
+	public Severity getSeverity() {
+		return severity;
+	}
+
+	public String getMessage() {
+		return message;
+	}
 
 }

@@ -1,11 +1,15 @@
 package org.eclipse.mylyn.internal.docs.epub.core;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.eclipse.mylyn.docs.epub.core.ValidationMessage;
+import org.eclipse.mylyn.docs.epub.core.ValidationMessage.Severity;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -29,18 +33,29 @@ public class OPS2Validator extends DefaultHandler {
 		WARN
 	}
 
-	private static StringBuilder contents = null;
+	private StringBuilder contents = null;
 
-	public static String parse(InputSource file, String href, Mode mode) throws ParserConfigurationException,
+	private final ArrayList<ValidationMessage> messages;
+
+	public StringBuilder getContents() {
+		return contents;
+	}
+
+	public ArrayList<ValidationMessage> getMessages() {
+		return messages;
+	}
+
+	public static List<ValidationMessage> validate(InputSource file, String href)
+			throws ParserConfigurationException,
 			SAXException, IOException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setFeature("http://xml.org/sax/features/validation", false);
 		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 		SAXParser parser = factory.newSAXParser();
-		OPS2Validator tocGenerator = new OPS2Validator(href, mode);
+		OPS2Validator tocGenerator = new OPS2Validator(href, Mode.WARN);
 		try {
 			parser.parse(file, tocGenerator);
-			return contents.toString();
+			return tocGenerator.getMessages();
 		} catch (SAXException e) {
 			System.err.println("Could not parse " + href);
 			e.printStackTrace();
@@ -48,6 +63,22 @@ public class OPS2Validator extends DefaultHandler {
 		return null;
 	}
 
+	public static String clean(InputSource file, String href) throws ParserConfigurationException, SAXException,
+			IOException {
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		factory.setFeature("http://xml.org/sax/features/validation", false);
+		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+		SAXParser parser = factory.newSAXParser();
+		OPS2Validator tocGenerator = new OPS2Validator(href, Mode.REMOVE);
+		try {
+			parser.parse(file, tocGenerator);
+			return tocGenerator.getContents().toString();
+		} catch (SAXException e) {
+			System.err.println("Could not parse " + href);
+			e.printStackTrace();
+		}
+		return null;
+	}
 	private StringBuilder buffer = null;
 
 	private final String[] legalAttributes = new String[] { "accesskey", "charset", "class", "coords", "dir", "href",
@@ -81,6 +112,7 @@ public class OPS2Validator extends DefaultHandler {
 		super();
 		buffer = new StringBuilder();
 		contents = new StringBuilder();
+		messages = new ArrayList<ValidationMessage>();
 		this.mode = mode;
 	}
 
@@ -164,14 +196,16 @@ public class OPS2Validator extends DefaultHandler {
 					contents.append(attributes.getValue(i));
 					contents.append("\"");
 					if (!isLegalAttribute(name)) {
-						System.err.println("Attribute " + name + " is not in OPS Preferred Vocabularies.");
+						messages.add(new ValidationMessage(Severity.WARNING, "Attribute " + name
+								+ " is not in OPS Preferred Vocabularies."));
 					}
 				}
 			}
 			contents.append('>');
 			recording = true;
 			if (!isLegalElement(qName)) {
-				System.err.println("Element +" + qName + " is not in OPS Preferred Vocabularies.");
+				messages.add(new ValidationMessage(Severity.WARNING, "Element " + qName
+						+ " is not in OPS Preferred Vocabularies."));
 
 			}
 		}
