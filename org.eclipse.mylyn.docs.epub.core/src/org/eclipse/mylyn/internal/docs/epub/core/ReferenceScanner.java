@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Torkild U. Resheim
  */
-public class ImageScanner extends XHTMLScanner {
+public class ReferenceScanner extends XHTMLScanner {
 
 	public static List<File> parse(Item item) throws ParserConfigurationException, SAXException, IOException {
 		FileReader fr = new FileReader(item.getFile());
@@ -41,7 +41,7 @@ public class ImageScanner extends XHTMLScanner {
 		factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 		SAXParser parser = factory.newSAXParser();
 		String href = item.getHref();
-		ImageScanner scanner = new ImageScanner(item);
+		ReferenceScanner scanner = new ReferenceScanner(item);
 		try {
 			parser.parse(file, scanner);
 			return scanner.files;
@@ -56,7 +56,7 @@ public class ImageScanner extends XHTMLScanner {
 
 	ArrayList<File> files;
 
-	public ImageScanner(Item item) {
+	public ReferenceScanner(Item item) {
 		super();
 		files = new ArrayList<File>();
 		currentItem = item;

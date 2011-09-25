@@ -69,7 +69,7 @@ import org.eclipse.mylyn.docs.epub.opf.Type;
 import org.eclipse.mylyn.docs.epub.opf.util.OPFResourceImpl;
 import org.eclipse.mylyn.internal.docs.epub.core.EPUBFileUtil;
 import org.eclipse.mylyn.internal.docs.epub.core.EPUBXMLHelperImp;
-import org.eclipse.mylyn.internal.docs.epub.core.ImageScanner;
+import org.eclipse.mylyn.internal.docs.epub.core.ReferenceScanner;
 import org.xml.sax.SAXException;
 
 /**
@@ -800,10 +800,10 @@ public abstract class OPSPublication {
 			if (item.getMedia_type().equals(MIMETYPE_XHTML) && !item.isGenerated()) {
 				if (item.getSourcePath() != null) {
 					File source = new File(item.getSourcePath());
-					references.put(source, ImageScanner.parse(item));
+					references.put(source, ReferenceScanner.parse(item));
 				} else {
 					File source = new File(item.getFile());
-					references.put(source, ImageScanner.parse(item));
+					references.put(source, ReferenceScanner.parse(item));
 				}
 			}
 		}
