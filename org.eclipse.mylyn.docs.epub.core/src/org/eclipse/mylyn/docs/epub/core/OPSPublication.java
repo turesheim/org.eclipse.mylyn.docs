@@ -123,7 +123,7 @@ public abstract class OPSPublication {
 	/** The root model element */
 	protected Package opfPackage;
 
-	/** The root folder */
+	/** The root folder TODO: Move to opfPackage */
 	private File rootFolder;
 
 	protected OPSPublication() {
@@ -209,6 +209,9 @@ public abstract class OPSPublication {
 	 * @return the new coverage
 	 */
 	public Coverage addCoverage(String id, Locale lang, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
 		Coverage dc = DCFactory.eINSTANCE.createCoverage();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getCoverages().add(dc);
@@ -298,15 +301,20 @@ public abstract class OPSPublication {
 	/**
 	 * Adds a new description to the publication.
 	 * 
-	 * @param description
-	 *            the description text
+	 * @param id
+	 *            identifier or <code>null</code>
 	 * @param lang
 	 *            the language code or <code>null</code>
+	 * @param value
+	 *            the description text
 	 * @return the new description
 	 */
-	public Description addDescription(String id, Locale lang, String description) {
+	public Description addDescription(String id, Locale lang, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
 		Description dc = DCFactory.eINSTANCE.createDescription();
-		setDcLocalized(dc, id, lang, description);
+		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getDescriptions().add(dc);
 		return dc;
 	}
@@ -314,6 +322,8 @@ public abstract class OPSPublication {
 	/**
 	 * Adds an optional publication format.
 	 * 
+	 * @param id
+	 *            identifier or <code>null</code>
 	 * @param value
 	 *            the format to add
 	 * @return the new format
@@ -337,6 +347,9 @@ public abstract class OPSPublication {
 	 * @return the new identifier
 	 */
 	public Identifier addIdentifier(String id, String scheme, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
 		Identifier dc = DCFactory.eINSTANCE.createIdentifier();
 		dc.setId(id);
 		dc.setScheme(scheme);
@@ -436,13 +449,20 @@ public abstract class OPSPublication {
 	/**
 	 * Adds a new language specification to the publication.
 	 * 
+	 * @param id
+	 *            identifier or <code>null</code>
+	 * @param lang
+	 *            the language code or <code>null</code>
 	 * @param lang
 	 *            the RFC-3066 format of the language code
 	 * @return the language instance
 	 */
-	public Language addLanguage(String id, String lang) {
+	public Language addLanguage(String id, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
 		Language dc = DCFactory.eINSTANCE.createLanguage();
-		setDcCommon(dc, id, lang);
+		setDcCommon(dc, id, value);
 		opfPackage.getMetadata().getLanguages().add(dc);
 		return dc;
 	}
@@ -452,14 +472,17 @@ public abstract class OPSPublication {
 	 * 
 	 * @param name
 	 *            name of the item
-	 * @param content
+	 * @param value
 	 *            content of the item
 	 * @return the new meta
 	 */
-	public org.eclipse.mylyn.docs.epub.opf.Meta addMeta(String name, String content) {
+	public org.eclipse.mylyn.docs.epub.opf.Meta addMeta(String name, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
 		org.eclipse.mylyn.docs.epub.opf.Meta opf = OPFFactory.eINSTANCE.createMeta();
 		opf.setName(name);
-		opf.setContent(content);
+		opf.setContent(value);
 		opfPackage.getMetadata().getMetas().add(opf);
 		return opf;
 	}
@@ -467,15 +490,20 @@ public abstract class OPSPublication {
 	/**
 	 * Adds a new publisher to the publication.
 	 * 
-	 * @param publisher
-	 *            name of the publisher
+	 * @param id
+	 *            identifier or <code>null</code>
 	 * @param lang
 	 *            the language code or <code>null</code>
+	 * @param value
+	 *            name of the publisher
 	 * @return the new publisher
 	 */
-	public Publisher addPublisher(String id, Locale lang, String publisher) {
+	public Publisher addPublisher(String id, Locale lang, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
 		Publisher dc = DCFactory.eINSTANCE.createPublisher();
-		setDcLocalized(dc, id, lang, publisher);
+		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getPublishers().add(dc);
 		return dc;
 	}
@@ -491,15 +519,24 @@ public abstract class OPSPublication {
 	 *            the item referenced
 	 * @param title
 	 *            title of the reference
-	 * @param type
+	 * @param value
 	 *            type of the reference
 	 * @return the reference
 	 */
-	public Reference addReference(String href, String title, Type type) {
+	public Reference addReference(String href, String title, Type value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
+		if (href == null) {
+			throw new IllegalArgumentException("A href must be specified");
+		}
+		if (title == null) {
+			throw new IllegalArgumentException("A title must be specified");
+		}
 		Reference reference = OPFFactory.eINSTANCE.createReference();
 		reference.setHref(href);
 		reference.setTitle(title);
-		reference.setType(type);
+		reference.setType(value);
 		opfPackage.getGuide().getGuideItems().add(reference);
 		return reference;
 	}
@@ -508,14 +545,17 @@ public abstract class OPSPublication {
 	 * Adds a optional <i>relation</i> specification to the publication.
 	 * 
 	 * @param id
-	 *            an optional identifier
+	 *            identifier or <code>null</code>
 	 * @param lang
-	 *            an optional language
+	 *            the language code or <code>null</code>
 	 * @param value
 	 *            the value of the relation
 	 * @return the new relation
 	 */
 	public Relation addRelation(String id, Locale lang, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
 		Relation dc = DCFactory.eINSTANCE.createRelation();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getRelations().add(dc);
@@ -525,11 +565,18 @@ public abstract class OPSPublication {
 	/**
 	 * Adds a optional <i>rights</i> specification to the publication.
 	 * 
-	 * @param text
+	 * @param id
+	 *            identifier or <code>null</code>
+	 * @param lang
+	 *            the language code or <code>null</code>
+	 * @param value
 	 *            the rights text
 	 * @return the new rights element
 	 */
 	public Rights addRights(String id, Locale lang, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
 		Rights dc = DCFactory.eINSTANCE.createRights();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getRights().add(dc);
@@ -539,11 +586,18 @@ public abstract class OPSPublication {
 	/**
 	 * Adds a optional <i>source</i> specification to the publication.
 	 * 
-	 * @param text
+	 * @param id
+	 *            identifier or <code>null</code>
+	 * @param lang
+	 *            the language code or <code>null</code>
+	 * @param value
 	 *            the source text
 	 * @return the new source element
 	 */
 	public Source addSource(String id, Locale lang, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
 		Source dc = DCFactory.eINSTANCE.createSource();
 		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getSources().add(dc);
@@ -553,14 +607,19 @@ public abstract class OPSPublication {
 	/**
 	 * Adds a required <i>subject</i> specification to the publication.
 	 * 
-	 * @param subject
-	 *            the subject
+	 * @param id
+	 *            identifier or <code>null</code>
 	 * @param lang
 	 *            the language code or <code>null</code>
+	 * @param value
+	 *            the subject
 	 */
-	public Subject addSubject(String id, Locale lang, String subject) {
+	public Subject addSubject(String id, Locale lang, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
 		Subject dc = DCFactory.eINSTANCE.createSubject();
-		setDcLocalized(dc, id, lang, subject);
+		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getSubjects().add(dc);
 		return dc;
 	}
@@ -568,15 +627,20 @@ public abstract class OPSPublication {
 	/**
 	 * Adds a required <i>title</i> specification to the publication.
 	 * 
-	 * @param title
-	 *            the new title
+	 * @param id
+	 *            identifier or <code>null</code>
 	 * @param lang
 	 *            the language code or <code>null</code>
+	 * @param value
+	 *            the new title
 	 * @return the new title
 	 */
-	public Title addTitle(String id, Locale lang, String title) {
+	public Title addTitle(String id, Locale lang, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
 		Title dc = DCFactory.eINSTANCE.createTitle();
-		setDcLocalized(dc, id, lang, title);
+		setDcLocalized(dc, id, lang, value);
 		opfPackage.getMetadata().getTitles().add(dc);
 		return dc;
 	}
@@ -584,6 +648,8 @@ public abstract class OPSPublication {
 	/**
 	 * Adds a optional <i>type</i> specification to the publication.
 	 * 
+	 * @param id
+	 *            identifier or <code>null</code>
 	 * @param type
 	 *            the type to add
 	 * @return the new type
