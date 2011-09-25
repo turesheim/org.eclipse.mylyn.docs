@@ -92,8 +92,14 @@ public class ImageScanner extends XHTMLScanner {
 				if (t.startsWith("http://") || t.startsWith("https://")) {
 					return;
 				}
-				File source = new File(currentItem.getSourcePath());
-				File file = new File(source.getParentFile().getAbsolutePath() + File.separator + ref);
+				// If the item was generated for instance by WikiText we need to
+				// use the original path. Otherwise we use the item path.
+				String source = currentItem.getSourcePath();
+				if (source == null) {
+					source = currentItem.getFile();
+				}
+				File sourceFile = new File(source);
+				File file = new File(sourceFile.getParentFile().getAbsolutePath() + File.separator + ref);
 				files.add(file);
 			}
 		}
@@ -106,8 +112,14 @@ public class ImageScanner extends XHTMLScanner {
 				if (t.startsWith("#") || t.startsWith("http://") || t.startsWith("https://")) {
 					return;
 				}
-				File source = new File(currentItem.getSourcePath());
-				File file = new File(source.getParentFile().getAbsolutePath() + File.separator + ref);
+				// If the item was generated for instance by WikiText we need to
+				// use the original path. Otherwise we use the item path.
+				String source = currentItem.getSourcePath();
+				if (source == null) {
+					source = currentItem.getFile();
+				}
+				File sourceFile = new File(source);
+				File file = new File(sourceFile.getParentFile().getAbsolutePath() + File.separator + ref);
 				if (!file.isDirectory()) {
 					files.add(file);
 				}
