@@ -26,7 +26,6 @@ import org.eclipse.mylyn.docs.epub.ncx.Text;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This type is a SAX parser that will read a XHTML file, locate headers and
@@ -35,10 +34,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * 
  * @author Torkild U. Resheim
  */
-public class TOCGenerator extends DefaultHandler {
-	private StringBuilder buffer = null;
-
-	private String currentHref = null;
+public class TOCGenerator extends AbstractXHTMLScanner {
 
 	private String currentId = null;
 
@@ -52,8 +48,6 @@ public class TOCGenerator extends DefaultHandler {
 		return playOrder;
 	}
 
-	private boolean recording = false;
-
 	public TOCGenerator(String href, Ncx ncx, int playOrder) {
 		super();
 		buffer = new StringBuilder();
@@ -63,32 +57,6 @@ public class TOCGenerator extends DefaultHandler {
 		this.playOrder = playOrder;
 	}
 
-	@Override
-	public void characters(char[] ch, int start, int length) throws SAXException {
-		// Some titles actually contain newlines – so we need to remove them.
-		if (recording) {
-			String s = new String(ch, start, length);
-			buffer.append(s.replace("\n", ""));
-		}
-	}
-
-	private int isHeader(String qName) {
-		if (qName.startsWith("h") || qName.startsWith("H")) {
-			if (qName.length() == 2 && !qName.equalsIgnoreCase("hr")) {
-				String n = qName.substring(1);
-				try {
-					int i = Integer.parseInt(n);
-					// Levels must be between 1 and 6
-					if (i > 0 && i < 7) {
-						return i;
-					}
-				} catch (NumberFormatException e) {
-					System.err.println("Bad header in " + currentHref);
-				}
-			}
-		}
-		return 0;
-	}
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {

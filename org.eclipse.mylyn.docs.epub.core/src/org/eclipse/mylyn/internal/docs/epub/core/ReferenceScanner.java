@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Torkild U. Resheim
  */
-public class ReferenceScanner extends XHTMLScanner {
+public class ReferenceScanner extends AbstractXHTMLScanner {
 
 	public static List<File> parse(Item item) throws ParserConfigurationException, SAXException, IOException {
 		FileReader fr = new FileReader(item.getFile());
