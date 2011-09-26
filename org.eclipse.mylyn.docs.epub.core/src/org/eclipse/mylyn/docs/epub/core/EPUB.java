@@ -159,6 +159,9 @@ public class EPUB {
 	 * @throws Exception
 	 */
 	public void pack(File epubFile, File workingFolder) throws Exception {
+		if (ocfContainer.getRootfiles().getRootfiles().isEmpty()) {
+			throw new IllegalArgumentException("EPUB does not contain any publications");
+		}
 		workingFolder.mkdirs();
 		if (workingFolder.isDirectory() || workingFolder.mkdirs()) {
 			writeOCF(workingFolder);
