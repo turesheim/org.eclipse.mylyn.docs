@@ -825,6 +825,9 @@ public abstract class OPSPublication {
 	 * @throws Exception
 	 */
 	void pack(File rootFile) throws Exception {
+		if (opfPackage.getSpine().getSpineItems().isEmpty()) {
+			throw new IllegalArgumentException("Spine does not contain any items");
+		}
 		// Note that order is important here. Some of the steps for assembling
 		// the EPUB may insert data into the EPUB structure. Hence the OPF must
 		// be written last.
