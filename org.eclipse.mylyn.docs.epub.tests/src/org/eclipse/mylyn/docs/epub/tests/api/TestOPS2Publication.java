@@ -133,7 +133,7 @@ public class TestOPS2Publication {
 	
 		EPUB epub2 = new EPUB();
 		OPSPublication oebps2 = new OPS2Publication();
-		epub1.add(oebps2);
+		epub2.add(oebps2);
 		oebps2.addItem(new File("testdata/plain-page.xhtml"));
 		oebps2.setGenerateToc(false);
 		epub2.pack(epubFile);

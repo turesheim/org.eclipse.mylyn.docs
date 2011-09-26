@@ -201,6 +201,7 @@ public class TestAPI {
 		}
 		EPUB epub = new EPUB();
 		epub.add(ops);
+		ops.addItem(new File("testdata/plain-page.xhtml"));
 		epub.pack(epubfile, packingFolder);
 		Element doc = readOPF();
 		Node guide = doc.getElementsByTagName("opf:metadata").item(0);
@@ -250,6 +251,7 @@ public class TestAPI {
 		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
 		EPUB epub = new EPUB();
 		epub.add(ops);
+		ops.addItem(new File("testdata/plain-page.xhtml"));
 		epub.pack(epubfile, packingFolder);
 		Element doc = readOPF();
 		Assert.assertEquals("opf:package", doc.getNodeName());
@@ -296,6 +298,7 @@ public class TestAPI {
 					type);
 		}
 		EPUB epub = new EPUB();
+		ops.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(ops);
 		epub.pack(epubfile, packingFolder);
 		Element doc = readOPF();

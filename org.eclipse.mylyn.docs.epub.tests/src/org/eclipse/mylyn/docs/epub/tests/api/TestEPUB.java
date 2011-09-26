@@ -204,6 +204,7 @@ public class TestEPUB {
 	public final void testPackFile() throws Exception {
 		EPUB epub = new EPUB();
 		OPSPublication oebps = new OPS2Publication();
+		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
 		File drawing = new File("testdata/drawing-100x100.svg");
 		epub.add(drawing, "image/svg+xml");
@@ -227,6 +228,7 @@ public class TestEPUB {
 	public final void testPackFileFile() throws Exception {
 		EPUB epub = new EPUB();
 		OPSPublication oebps = new OPS2Publication();
+		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
 		epub.pack(epubFile, epubFolder);
 		// Make sure all required files are present
@@ -279,6 +281,8 @@ public class TestEPUB {
 		EPUB epub = new EPUB();
 		OPSPublication oebps1 = new OPS2Publication();
 		OPSPublication oebps2 = new OPS2Publication();
+		oebps1.addItem(new File("testdata/plain-page.xhtml"));
+		oebps2.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps1);
 		epub.add(oebps2);
 		epub.pack(epubFile, epubFolder);
@@ -299,6 +303,7 @@ public class TestEPUB {
 		// First pack the EPUB
 		EPUB epub = new EPUB();
 		OPSPublication oebps = new OPS2Publication();
+		oebps.addItem(new File("testdata/plain-page.xhtml"));
 		epub.add(oebps);
 		epub.pack(epubFile, epubFolder);
 		deleteFolder(epubFolder);

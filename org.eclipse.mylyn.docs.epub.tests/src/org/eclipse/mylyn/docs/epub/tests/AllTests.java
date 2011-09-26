@@ -12,13 +12,14 @@ package org.eclipse.mylyn.docs.epub.tests;
 
 import org.eclipse.mylyn.docs.epub.tests.api.TestEPUB;
 import org.eclipse.mylyn.docs.epub.tests.api.TestOPS2Publication;
+import org.eclipse.mylyn.docs.epub.tests.api.TestOPSPublication;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ TestAntTask.class, TestAPI.class, TestTOCGenerator.class, TestOPS2Validator.class, TestEPUB.class,
-		TestOPS2Publication.class })
+		TestOPS2Publication.class, TestOPSPublication.class })
 public class AllTests {
 
 }
