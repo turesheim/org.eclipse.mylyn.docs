@@ -655,6 +655,9 @@ public abstract class OPSPublication {
 	 * @return the new type
 	 */
 	public org.eclipse.mylyn.docs.epub.dc.Type addType(String id, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
 		org.eclipse.mylyn.docs.epub.dc.Type dc = DCFactory.eINSTANCE.createType();
 		setDcCommon(dc, id, value);
 		opfPackage.getMetadata().getTypes().add(dc);
