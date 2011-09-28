@@ -16,6 +16,8 @@ public class EPUBUIPlugin extends AbstractUIPlugin {
 
 	private static EPUBUIPlugin plugin;
 	
+	public static final String PLUGIN_ID = "org.eclipse.mylyn.docs.epub.ui";
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);

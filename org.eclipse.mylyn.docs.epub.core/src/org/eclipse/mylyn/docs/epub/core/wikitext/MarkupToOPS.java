@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
@@ -28,81 +27,27 @@ import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;
 import org.eclipse.mylyn.wikitext.core.util.XmlStreamWriter;
 
 /**
- * This type can be used to create an EBUB directly from WikiText markup.
+ * This type can be used to populate an OPS publication directly from WikiText
+ * markup.
  * 
  * @author Torkild U. Resheim
  * @since 1.0
  */
-public class MarkupToEPUB {
+public class MarkupToOPS {
 
 	private MarkupLanguage markupLanguage;
 
 	/**
-	 * Delete the folder recursively.
-	 * 
-	 * @param folder
-	 *            the folder to delete
-	 * @return <code>true</code> if the folder was deleted
-	 */
-	private boolean deleteFolder(File folder) {
-		if (folder.isDirectory()) {
-			String[] children = folder.list();
-			for (int i = 0; i < children.length; i++) {
-				boolean ok = deleteFolder(new File(folder, children[i]));
-				if (!ok) {
-					return false;
-				}
-			}
-		}
-		return folder.delete();
-	}
-
-	/**
-	 * Parses the markup file and populates the OPS dataâ but does not assemble
-	 * the resulting EPUB file. This is left to the consumer which may also do
-	 * further manipulation of the data.
-	 * 
-	 * @param markup
-	 *            the WikiText markup file
-	 * 
-	 * @return the EPUB instance
-	 * @throws Exception
-	 */
-	public OPSPublication generate(File markup) throws Exception {
-		OPSPublication epub = OPSPublication.getVersion2Instance();
-		parse(epub, markup);
-		return epub;
-
-	}
-
-	/**
-	 * Converts the markup code to HTML then places it with the EPUB and
-	 * assembles the publication.
-	 * 
-	 * @param markupFile
-	 *            the markup file
-	 * @param epubFile
-	 *            the new EPUB file
-	 * @return the EPUB file
-	 * @throws Exception
-	 */
-	public EPUB generate(File markupFile, File epubFile) throws Exception {
-		OPSPublication ops = generate(markupFile);
-		EPUB epub = new EPUB();
-		epub.add(ops);
-		epub.pack(epubFile);
-		return epub;
-	}
-
-	/**
 	 * Parses the markup file and populates the OPS data.
 	 * 
-	 * @param epub
-	 *            the new EPUB file
-	 * @param the
-	 *            WikiText markup file
+	 * @param ops
+	 *            the OPS publication the content will be added to
+	 * @param markupFile
+	 *            the WikiText markup file
+	 * 
+	 * @return the temporary folder used for generating the HTML from markup
 	 */
-	public void parse(OPSPublication epub, File markupFile) throws IOException, FileNotFoundException {
+	public File parse(OPSPublication ops, File markupFile) throws IOException, FileNotFoundException {
 		if (markupLanguage == null) {
 			throw new IllegalStateException("must set markupLanguage"); //$NON-NLS-1$
 		}
@@ -118,7 +63,7 @@ public class MarkupToEPUB {
 				}
 			};
 
-			List<Item> stylesheets = epub.getItemsByMIMEType(OPSPublication.MIMETYPE_CSS);
+			List<Item> stylesheets = ops.getItemsByMIMEType(OPSPublication.MIMETYPE_CSS);
 			for (Item item : stylesheets) {
 				File file = new File(item.getFile());
 				Stylesheet css = new Stylesheet(file);
@@ -133,12 +78,12 @@ public class MarkupToEPUB {
 			markupParser.setMarkupLanguage(markupLanguage);
 			markupParser.parse(new FileReader(markupFile));
 			// Convert the generated HTML to EPUB
-			epub.setGenerateToc(true);
-			epub.setIncludeReferencedResources(true);
-			Item item = epub.addItem(htmlFile);
+			ops.setGenerateToc(true);
+			ops.setIncludeReferencedResources(true);
+			Item item = ops.addItem(htmlFile);
 			item.setSourcePath(markupFile.getAbsolutePath());
 		}
-		deleteFolder(workingFolder);
+		return workingFolder;
 	}
 
 	/**
