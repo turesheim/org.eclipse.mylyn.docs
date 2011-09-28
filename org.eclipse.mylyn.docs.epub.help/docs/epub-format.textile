@@ -1,0 +1,17 @@
+h1. The EPUB file format
+
+p. The __EPUB file format__ is basically a ZIP-file with a defined set of contents. The first file in the container is a file by the ASCII name of "mimetype" which holds the MIME type for the ZIP container. This file must be treated a bit special as the contents are defined and the file must not be compressed, nor encrypted and there must be no extra fields in it's ZIP header. 
+
+p. The EPUB also have a META-INF folder that contains a file named __container.xml__. This declares the format of the publication and points to the main entry: __content.opf__. If there is a table of contents (__toc.ncx__) the main entry will point to it. The EPUB specification actually allows more than one publication. So you could for instance publish the same book in two languages within the same EPUB.
+
+p. The actual content of an EPUB version 2.0.1 formatted publication may be of the following OPS Core Media types:
+* XHTML (but only with a subset of the full HTML element types).
+* Cascading Style Sheets (CSS) for styling of the publication.
+* Graphics in the form of SVG, PNG, GIF and JPEG formatted files.
+* Fonts as TTF or OTF.
+
+Other types may be used, but then a __fallback__ item must be specified for reading systems that does not support the type. This tooling currently does not support the fallback mechanism.
+
+!Illustrations.002.jpg(Contents of a example EPUB container.)! 
+
+The illustration shows the contents of an example publication. The marked files and folders marked are ones created by the EPUB tooling.
