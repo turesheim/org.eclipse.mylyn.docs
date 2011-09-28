@@ -3,10 +3,7 @@
       id="org.eclipse.mylyn.docs.epub.ant"
       label="%featureName"
       version="0.8.0.qualifier"
-      provider-name="%providerName"
-      plugin="org.eclipse.mylyn"
-      license-feature="org.eclipse.mylyn_feature"
-      license-feature-version="3.6.0.v20110608-1400">
+      provider-name="%providerName">
 
    <description>
       %description
@@ -19,6 +16,11 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
+
+   <requires>
+      <import plugin="org.apache.ant" version="1.8.2" match="compatible"/>
+      <import plugin="org.eclipse.mylyn.docs.epub.core" version="0.8.0" match="compatible"/>
+   </requires>
 
    <plugin
          id="org.eclipse.mylyn.docs.epub.ant.core"
