@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests.api;
 
-import static org.junit.Assert.fail;
-
 import java.io.File;
 
 import junit.framework.Assert;
@@ -31,7 +29,7 @@ import org.junit.Test;
  * @author Torkild U. Resheim
  * 
  */
-public class TestEPUB {
+public class TestEPUB extends AbstractTest {
 
 	private final File epubFile = new File("test" + File.separator + "test.epub");
 
@@ -40,6 +38,7 @@ public class TestEPUB {
 	/**
 	 * @throws java.lang.Exception
 	 */
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		if (epubFile.exists()) {
@@ -67,6 +66,7 @@ public class TestEPUB {
 	/**
 	 * @throws java.lang.Exception
 	 */
+	@Override
 	@After
 	public void tearDown() throws Exception {
 		if (epubFolder.exists()) {
@@ -262,6 +262,25 @@ public class TestEPUB {
 		epub.add(oebps);
 		try {
 			epub.pack(epubFile, workingFolder);
+			fail();
+		} catch (Exception e) {
+		}
+	}
+
+	/**
+	 * Test method for
+	 * {@link org.eclipse.mylyn.docs.epub.core.EPUB#pack(java.io.File)} .
+	 * <ul>
+	 * <li>Exception shall be thrown if the EPUB is empty.</li>
+	 * </ul>
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testPackMissingPublication() throws Exception {
+		EPUB epub = new EPUB();
+		try {
+			epub.pack(epubFile);
 			fail();
 		} catch (Exception e) {
 		}

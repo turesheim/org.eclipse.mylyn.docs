@@ -10,16 +10,14 @@
         David Green - initial API and implementation
         Torkild U. Resheim - Adapted for building the EPUB user guide
  -->
+
+<!-- Will currently only work when called from Maven - see pom.xml -->
 <project name="org.eclipse.mylyn.docs.epub.ui.docs" default="all">
 
-	<property name="wikitext.ui.textile.bin" value="../org.eclipse.mylyn.wikitext.textile.core/.tmp.bin" />
 	<property name="wikitext.help" location="../org.eclipse.mylyn.wikitext.help.ui" />
 
 	<path id="wikitext.ant.classpath">
-		<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
-		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
-		<pathelement location="../org.eclipse.mylyn.wikitext.core/bin_ant"/>
-		<pathelement location="${wikitext.ui.textile.bin}"/>
+		<pathelement path="${compile_classpath}"/>
 	</path>
 
 	<target name="clean">
@@ -34,39 +32,31 @@
 	<target name="all" depends="plugin-docs">
 	</target>
 
-
-	<target name="plugin-docs" depends="compile-tasks" description="generate plugin help documentation">
+	<target name="plugin-docs" description="generate plugin help documentation">
 		<taskdef resource="org/eclipse/mylyn/wikitext/core/util/anttask/tasks.properties" classpathref="wikitext.ant.classpath"/>
-		
+
 		<mkdir dir="${basedir}/help"/>
 
-		<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" 
+		<wikitext-to-eclipse-help markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage"
+			overwrite="true" 
 			multipleOutputFiles="true"
 			navigationImages="true"
 			helpPrefix="help">
 			<fileset dir="docs">
-				<include name="introduction.textile"/>
-				<include name="generate-epub.textile"/>
-				<include name="epub-ant-task.textile"/>
-				<include name="examples.textile"/>
+				<include name="*.textile"/>
 			</fileset>
 			<stylesheet url="../../PRODUCT_PLUGIN/book.css"/>
 			<stylesheet file="${wikitext.help}/help/styles/main.css"/>
+			<stylesheet file="${basedir}/docs/style.css"/>
 		</wikitext-to-eclipse-help>
-		
+
 		<move todir="${basedir}/help">
 			<fileset dir="${basedir}/docs">
-				<include name="introduction.html" />
-				<include name="generate-epub.html" />
-				<include name="epub-ant-task.html" />
-				<include name="examples.html" />
-				<include name="introduction-toc.xml" />
-				<include name="generate-epub-toc.xml" />
-				<include name="epub-ant-task-toc.xml" />
-				<include name="examples-toc.xml" />
+				<include name="*.html" />
+				<include name="*-toc.xml" />
 			</fileset>
 		</move>
-		
+
 		<copy todir="${basedir}/help">
 			<fileset dir="${basedir}/docs">
 				<include name="*.gif" />
@@ -75,58 +65,6 @@
 			</fileset>
 		</copy>
 
-		<antcall target="test"/>
-	</target>
-
-	<target name="compile-tasks">
-		<!--
-		bug 269970 we can't rely on Textile being built first, so we compile here instead.
-		-->
-		<mkdir dir="${wikitext.ui.textile.bin}"/>
-		<javac destdir="${wikitext.ui.textile.bin}" srcdir="../org.eclipse.mylyn.wikitext.textile.core/src">
-			<classpath>
-				<pathelement location="../org.eclipse.mylyn.wikitext.core/@dot"/>
-				<pathelement location="../org.eclipse.mylyn.wikitext.core/bin"/>
-			</classpath>
-		</javac>
-		<copy todir="${wikitext.ui.textile.bin}" failonerror="true" overwrite="false">
-			<fileset dir="../org.eclipse.mylyn.wikitext.textile.core/src">
-				<exclude name="**/*.java"/>
-				<exclude name="**/package.htm*"/>
-			</fileset>
-		</copy>
-	</target>
-
-
-	<target name="test" description="verify that all of the HTML files are well-formed XML">
-		<echo level="info">
-Validating help content XML and HTML files: The Eclipse help system expects well-formed XML
-			
-If validation fails it is because either:
-			
-* the userguide source code is poorly formed, or
-* the WikiText MediaWiki parser has a bug
-			
-Problems with userguide source are usually caused by improper use of HTML markup in the MediaWiki source,
-or inadvertently starting a line with a space character (in MediaWiki this starts a preformatted block)
-		</echo>
-
-		<!-- 
-		Don't bother with DTD validation: we only care if the files are well-formed.
-		We therefore provide an empty DTD 
-		-->
-		<mkdir dir="__tmp"/>
-		<echo file="__tmp/__empty.dtd" message=""/>
-		<xmlvalidate lenient="true">
-			<fileset dir="help">
-				<include name="**/*.xml"/>
-			</fileset>
-			<fileset dir="help">
-				<include name="**/*.html"/>
-			</fileset>
-			<dtd publicid="-//W3C//DTD XHTML 1.0 Transitional//EN" location="${basedir}/__tmp/__empty.dtd"/>
-		</xmlvalidate>
-		<delete dir="__tmp"/>
 	</target>
 
 </project>

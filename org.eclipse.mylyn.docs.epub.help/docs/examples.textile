@@ -1,26 +1,28 @@
 h1. Practical examples
 
-h2. Basic example
+h2. Building the example book
 
-p. As mentioned in the introduction one does not need much code to create a valid publication. In this example we will explain how this book was constructed using the Ant task.
+The example below shows the how the example book is assembled. If you want to play around with it, you will find the examples project in the "org.eclipse.mylyn.docs":http://git.eclipse.org/c/mylyn/org.eclipse.mylyn.docs.git/ Git repository.
 
 bc.. 
-<epub identifierId="uuid" file="${epubfile}" workingFolder="${workdir}" >
+<epub identifierId="uuid" file="${epubfile}" workingFolder="${workdir}">
 	<language code="en" />
 	<identifier id="uuid" scheme="UUID">70ce7c20-8f9e-11e0-91e4-0800200c9a66</identifier>
 	<title>Building EPUBs</title>
 	<subject>Computing, Eclipse, Mylyn, EPUB</subject>
 	<publisher>Eclipse.Org</publisher>
 	<creator name="Torkild Ulvøy Resheim" fileAs="Resheim, Torkild Ulvøy" role="aut" />
-	<!-- The DejaVu Fonts - http://dejavu-fonts.org/wiki/License -->
-	<contributor name="Bitstream" fileAs="Bitstream" role="art" />
 	<rights>Copyright (c) 2011, Torkild Ulvøy Resheim. Licensed under the Eclipse Public License version 1.0</rights>
 	<type>Technical article.</type>
+	<!-- The DejaVu Fonts - http://dejavu-fonts.org/wiki/License -->
+	<contributor name="Bitstream" fileAs="Bitstream" role="art" />
 	<cover image="${srcdir}/epub/cover.jpg">Cover page</cover>
-	<item file="${srcdir}/title-page.html"/>
+	<item file="${srcdir}/title-page.html" />
 	<item file="${tempdir}/copyright.html" />
 	<item file="${tempdir}/introduction.html" />
 	<item file="${tempdir}/epub-format.html" />
+	<item file="${tempdir}/generate-ant.html" />
+	<item file="${tempdir}/generate-ui.html" />
 	<item file="${tempdir}/epub-ant-task.html" />
 	<item file="${tempdir}/examples.html" />
 	<item file="${srcdir}/epub/style.css" type="text/css" spine="false" />
@@ -36,7 +38,6 @@ bc..
 	</fileset>
 </epub>
 
-p. The first thing we do here is to add. 
 
 h2. Adding a cover
 
@@ -81,8 +82,8 @@ bc..
 <reference href="cover.xhtml" type="cover" title="Cover Page" />
 <meta name="cover" content="cover-image"/>
 
-p. This method will produce a cover page that will work with all the tested reading systems; including Calibre, iBooks, Adobe Digital Editions and Kindle (after converting to MOBI using Calibre).
+p. This method will produce a cover page that will work with all the tested reading systems; including Calibre, iBooks, Nook for Mac, Adobe Digital Editions and Kindle (after converting to MOBI using Calibre).
 
-!kindle-cover.jpg(The cover of this book as it is rendered on a Kindle 2.)!
+!nook-cover.png(The cover of this book as it is rendered on Nook for Mac.)!
 
-p. The end result can be something like the illustration above.
+p. The end result can be something like the illustration above - showing the cover of the example book as it is rendered on Nook for Mac.

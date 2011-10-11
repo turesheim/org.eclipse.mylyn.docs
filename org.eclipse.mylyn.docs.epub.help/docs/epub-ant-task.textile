@@ -16,7 +16,7 @@ bc..
           file CDATA #IMPLIED
           description CDATA #IMPLIED
           workingfolder CDATA #IMPLIED
-          automaticAdd %boolean; #IMPLIED>
+          includeReferenced %boolean; #IMPLIED>
 
 p. 
 * **id** - item identifier
@@ -25,7 +25,7 @@ p.
 * **file** - path to the resulting EPUB file.
 * **description** - description of the task.
 * **workingfolder** - optionally used to specify the folder used for assembling the EPUB. If not specified a temporary folder will be used and deleted when the processing has completed.
-* **automaticAdd** - optionally used to automatically include referenced items in the finished publication. When setting this to **true** there should be no need to explicitly add for instance referenced image files.
+* **includeReferenced** - optionally used to automatically include referenced items in the finished publication. When setting this to **true** there should be no need to explicitly add for instance referenced image files. This value is per default **false**.
 
 h2. Adding "header" information
 
@@ -269,7 +269,7 @@ p. No publication is complete without content. So you will have to add at a mini
 
 h3. Primary content files
 
-p. Content is added using the **item** element. At a minimum you will have to specify the **file** attribute. This points to the file that will be added. Per default this will set the MIME type of the item to "application/xhtml+xml" and add it to the __spine__. The __spine__ is a structure within the publication that defines the reading order. So the order you add items does matter. If you're adding other types of files such as cascading style sheets you will have to specify the type and whether or not to add it to the spine.
+p. Content is added using the **item** element. At a minimum you will have to specify the **file** attribute. This points to the file that will be added to the __spine__. The __spine__ is a structure within the publication that defines the reading order. So the order you add items does matter. If you're adding other types of files such as cascading style sheets you will have to specify the type and whether or not to add it to the spine.
 
 bc.. 
 <!ELEMENT item EMPTY>
@@ -282,7 +282,7 @@ bc..
 
 p. 
 * **file** - points to a file to include in the manifest
-* **type** - The MIME type of the file. If omitted it will be set to "application/xhtml+xml".
+* **type** - The MIME type of the file. If omitted it will be automatically detected if possible.
 * **spine** - Whether or not to include the file in the reading order of the publication.
 
 h3. Secondary content files

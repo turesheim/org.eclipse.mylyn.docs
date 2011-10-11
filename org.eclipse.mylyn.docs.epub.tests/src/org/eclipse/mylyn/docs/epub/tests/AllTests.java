@@ -10,16 +10,32 @@
  *******************************************************************************/
 package org.eclipse.mylyn.docs.epub.tests;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.eclipse.mylyn.docs.epub.tests.api.TestEPUB;
 import org.eclipse.mylyn.docs.epub.tests.api.TestOPS2Publication;
 import org.eclipse.mylyn.docs.epub.tests.api.TestOPSPublication;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
+import org.eclipse.mylyn.docs.epub.tests.core.TestOPS2Validator;
+import org.eclipse.mylyn.docs.epub.tests.core.TestTOCGenerator;
 
-@RunWith(Suite.class)
-@SuiteClasses({ TestAntTask.class, TestAPI.class, TestTOCGenerator.class, TestOPS2Validator.class, TestEPUB.class,
-		TestOPS2Publication.class, TestOPSPublication.class })
 public class AllTests {
+	public static Test suite() {
+		return suite(false);
+	}
 
+	public static Test suite(boolean defaultOnly) {
+		TestSuite suite = new TestSuite("Tests for org.eclipse.mylyn.docs.epub");
+		// API tests
+		suite.addTestSuite(TestEPUB.class);
+		suite.addTestSuite(TestOPS2Publication.class);
+		suite.addTestSuite(TestOPSPublication.class);
+		// Core tests
+		suite.addTestSuite(TestOPS2Validator.class);
+		suite.addTestSuite(TestTOCGenerator.class);
+		// Ant tests
+		// TODO: Also execute ANT tests.
+		// suite.addTestSuite(TestAntTask.class);
+		return suite;
+	}
 }

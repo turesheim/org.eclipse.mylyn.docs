@@ -80,14 +80,18 @@ public class EPUBFileUtil {
 	 * @return the MIME-type or <code>null</code>
 	 */
 	public static String getMimeType(File file) {
+		String name = file.getName().toLowerCase();
 		// These are not (correctly) detected by URLConnection
-		if (file.getName().endsWith(".otf")) {
+		if (name.endsWith("xhtml")) {
+			return "application/xhtml+xml";
+		}
+		if (name.endsWith(".otf")) {
 			return "font/opentype";
 		}
-		if (file.getName().endsWith(".svg")) {
+		if (name.endsWith(".svg")) {
 			return "image/svg+xml";
 		}
-		if (file.getName().endsWith(".css")) {
+		if (name.endsWith(".css")) {
 			return "text/css";
 		}
 		// Use URLConnection or content type detection

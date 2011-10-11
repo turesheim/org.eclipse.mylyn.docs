@@ -3,7 +3,8 @@
       id="org.eclipse.mylyn.docs.epub"
       label="%featureName"
       version="0.8.0.qualifier"
-      provider-name="%providerName">
+      provider-name="%providerName"
+      plugin="org.eclipse.mylyn">
 
    <description>
       %description
@@ -13,8 +14,8 @@
       %copyright
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="license.html">
+      %license
    </license>
 
    <requires>
@@ -57,6 +58,13 @@
 
    <plugin
          id="org.eclipse.mylyn.docs.epub.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.docs.epub.ant.core"
          download-size="0"
          install-size="0"
          version="0.0.0"

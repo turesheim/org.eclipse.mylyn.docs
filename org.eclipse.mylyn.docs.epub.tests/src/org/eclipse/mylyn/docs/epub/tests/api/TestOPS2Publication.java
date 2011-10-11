@@ -34,7 +34,7 @@ import org.junit.Test;
  * @author Torkild U. Resheim
  *
  */
-public class TestOPS2Publication {
+public class TestOPS2Publication extends AbstractTest {
 
 	private static final EStructuralFeature TEXT = XMLTypePackage.eINSTANCE.getXMLTypeDocumentRoot_Text();
 
@@ -78,6 +78,7 @@ public class TestOPS2Publication {
 	/**
 	 * @throws java.lang.Exception
 	 */
+	@Override
 	@Before
 	public void setUp() throws Exception {
 		if (epubFile.exists()) {
@@ -92,6 +93,7 @@ public class TestOPS2Publication {
 	/**
 	 * @throws java.lang.Exception
 	 */
+	@Override
 	@After
 	public void tearDown() throws Exception {
 		if (epubFolder.exists()) {

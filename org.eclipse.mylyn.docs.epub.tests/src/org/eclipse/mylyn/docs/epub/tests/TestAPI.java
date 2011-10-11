@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collections;
 import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -23,10 +22,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import junit.framework.Assert;
 
-import org.eclipse.emf.compare.diff.metamodel.DiffModel;
-import org.eclipse.emf.compare.diff.service.DiffService;
-import org.eclipse.emf.compare.match.metamodel.MatchModel;
-import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 import org.eclipse.mylyn.docs.epub.opf.Role;
@@ -52,8 +47,6 @@ public class TestAPI {
 	private File testRoot;
 
 	private File packingFolder;
-
-	private File unPackingFolder;
 
 	private void delete(File f) throws IOException {
 		if (f.isDirectory()) {
@@ -99,7 +92,6 @@ public class TestAPI {
 	@Before
 	public void setUp() throws Exception {
 		packingFolder = getFile("test/api/pack");
-		unPackingFolder = getFile("test/api/unpack");
 		testRoot = getFile("test/api/");
 		delete(testRoot);
 	}
@@ -164,20 +156,6 @@ public class TestAPI {
 		epub.add(ops);
 		epub.pack(epubfile, packingFolder);
 		return ops;
-	}
-
-	@Test
-	public void testUnpackSimpleEPUB() throws Exception {
-		File epubfile = new File(testRoot.getAbsolutePath() + File.separator + "simple.epub");
-		OPSPublication ops1 = createSimpleEPUB(epubfile);
-		EPUB epub = new EPUB();
-		OPSPublication epub2 = OPSPublication.getVersion2Instance();
-		epub.add(epub2);
-		epub.unpack(epubfile, unPackingFolder);
-		MatchModel match = MatchService.doMatch(ops1.getOpfPackage(), epub2.getOpfPackage(),
-				Collections.<String, Object> emptyMap());
-		// Something fishy going on here.
-		DiffModel diff = DiffService.doDiff(match, false);
 	}
 
 	/**

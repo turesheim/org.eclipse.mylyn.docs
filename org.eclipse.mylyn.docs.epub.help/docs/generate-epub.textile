@@ -1,6 +1,6 @@
-h1. Generate EPUB from markup
+h1. Generate EPUB directly from markup
 
-p. Lightweight wikitext markup can easily be converted into EPUBs. Right click on any supported markup file (ending in @*.textile@, @*.mediawiki@ etc), then select **Wikitext > Generate EPUB** from the context menu. This will bring up the dialog shown below.
+p. Lightweight wikitext markup can easily be converted into EPUBs. From within Eclipse right click on any supported markup file (ending in @*.textile@, @*.mediawiki@ etc), then select **Wikitext > Generate EPUB** from the context menu. This will bring up a wizard as illustrated below.
 
 !generate-epub.png! 
 

@@ -282,15 +282,18 @@ public abstract class OPSPublication {
 	 * optional 2-digit day of month. The event attribute is optional, possible
 	 * values may include: "creation", "publication", and "modification".
 	 * 
-	 * @param date
+	 * @param value
 	 *            the date string
 	 * @param event
 	 *            an optional event description
 	 * @return the new date
 	 */
-	public Date addDate(String id, String date, String event) {
+	public Date addDate(String id, String value, String event) {
+		if (value == null) {
+			throw new IllegalArgumentException("A value must be specified");
+		}
 		Date dc = DCFactory.eINSTANCE.createDate();
-		setDcCommon(dc, id, date);
+		setDcCommon(dc, id, value);
 		if (event != null) {
 			dc.setEvent(event);
 		}
@@ -408,14 +411,10 @@ public abstract class OPSPublication {
 		}
 		Item item = OPFFactory.eINSTANCE.createItem();
 		if (type == null) {
-			if (!spine) {
-				type = EPUBFileUtil.getMimeType(file);
-				if (type == null) {
-					throw new IllegalArgumentException("Could not automatically determine MIME type for file " + file
-							+ ". Please specify the correct value");
-				}
-			} else {
-				type = MIMETYPE_XHTML;
+			type = EPUBFileUtil.getMimeType(file);
+			if (type == null) {
+				throw new IllegalArgumentException("Could not automatically determine MIME type for file " + file
+						+ ". Please specify the correct value");
 			}
 		}
 		if (id == null) {
@@ -479,6 +478,9 @@ public abstract class OPSPublication {
 	public org.eclipse.mylyn.docs.epub.opf.Meta addMeta(String name, String value) {
 		if (value == null) {
 			throw new IllegalArgumentException("A value must be specified");
+		}
+		if (name == null) {
+			throw new IllegalArgumentException("A name must be specified");
 		}
 		org.eclipse.mylyn.docs.epub.opf.Meta opf = OPFFactory.eINSTANCE.createMeta();
 		opf.setName(name);

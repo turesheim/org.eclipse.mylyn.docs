@@ -3,9 +3,8 @@
  */
 package org.eclipse.mylyn.docs.epub.tests.api;
 
-import static org.junit.Assert.fail;
-
 import java.io.File;
+import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.emf.common.util.EList;
@@ -13,7 +12,9 @@ import org.eclipse.mylyn.docs.epub.core.EPUB;
 import org.eclipse.mylyn.docs.epub.core.OPS2Publication;
 import org.eclipse.mylyn.docs.epub.core.OPSPublication;
 import org.eclipse.mylyn.docs.epub.dc.Coverage;
+import org.eclipse.mylyn.docs.epub.dc.Date;
 import org.eclipse.mylyn.docs.epub.dc.Description;
+import org.eclipse.mylyn.docs.epub.dc.Identifier;
 import org.eclipse.mylyn.docs.epub.dc.Publisher;
 import org.eclipse.mylyn.docs.epub.dc.Relation;
 import org.eclipse.mylyn.docs.epub.dc.Rights;
@@ -21,6 +22,7 @@ import org.eclipse.mylyn.docs.epub.dc.Source;
 import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
 import org.eclipse.mylyn.docs.epub.dc.impl.DCTypeImpl;
+import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -120,7 +122,20 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void testAddDateStringStringString() {
-		// TODO
+		oebps.addDate(null, "1969", null);
+		oebps.addDate(null, "1969-03", null);
+		oebps.addDate(null, "1969-03-14", null);
+		oebps.addDate(null, "1969-03-14", "event");
+		EList<Date> dates = oebps.getOpfPackage().getMetadata().getDates();
+		assertEquals("1969", getText((DCTypeImpl) dates.get(0)));
+		assertEquals("1969-03", getText((DCTypeImpl) dates.get(1)));
+		assertEquals("1969-03-14", getText((DCTypeImpl) dates.get(2)));
+		assertEquals("event", dates.get(3).getEvent());
+		try {
+			oebps.addDate(null, (String) null, null);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
 	}
 
 	/**
@@ -184,7 +199,24 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void testAddIdentifier() {
-		// TODO
+		oebps.addIdentifier("Identifier", "ID", "My Identifier");
+		oebps.addIdentifier(null, "ID", "My Identifier");
+		oebps.addIdentifier(null, null, "My Identifier");
+		EList<Identifier> Identifiers = oebps.getOpfPackage().getMetadata().getIdentifiers();
+		Assert.assertEquals("Identifier", Identifiers.get(0).getId());
+		Assert.assertEquals("ID", Identifiers.get(0).getScheme());
+		Assert.assertEquals("My Identifier", getText(Identifiers.get(0)));
+		Assert.assertEquals(null, Identifiers.get(1).getId());
+		Assert.assertEquals("ID", Identifiers.get(1).getScheme());
+		Assert.assertEquals("My Identifier", getText(Identifiers.get(1)));
+		Assert.assertEquals(null, Identifiers.get(2).getId());
+		Assert.assertEquals(null, Identifiers.get(2).getScheme());
+		Assert.assertEquals("My Identifier", getText(Identifiers.get(2)));
+		try {
+			oebps.addIdentifier(null, null, null);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
 	}
 
 	/**
@@ -214,7 +246,15 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void testAddLanguage() {
-		// TODO
+		oebps.addLanguage(null, "no");
+		oebps.addLanguage("id", "no");
+		Assert.assertEquals("no", getText((DCTypeImpl) oebps.getOpfPackage().getMetadata().getLanguages().get(0)));
+		Assert.assertEquals("id", oebps.getOpfPackage().getMetadata().getLanguages().get(1).getId());
+		try {
+			oebps.addLanguage(null, null);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
 	}
 
 	/**
@@ -224,7 +264,19 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void testAddMeta() {
-		// TODO
+		oebps.addMeta("name", "value");
+		assertEquals("name", oebps.getOpfPackage().getMetadata().getMetas().get(0).getName());
+		assertEquals("value", oebps.getOpfPackage().getMetadata().getMetas().get(0).getContent());
+		try {
+			oebps.addMeta(null, "value");
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
+		try {
+			oebps.addMeta("name", null);
+			fail();
+		} catch (IllegalArgumentException e) {
+		}
 	}
 
 	/**
@@ -456,7 +508,14 @@ public class TestOPSPublication extends AbstractTest {
 	 */
 	@Test
 	public final void testGetItemsByMIMEType() {
-		// TODO
+		Item i_in_1 = oebps.addItem(new File("testdata/drawing-100x100.svg"));
+		Item i_in_2 = oebps.addItem(new File("testdata/plain-page.xhtml"));
+		List<Item> i_out_1 = oebps.getItemsByMIMEType("image/svg+xml");
+		assertEquals(1, i_out_1.size());
+		assertEquals(i_in_1, i_out_1.get(0));
+		List<Item> i_out_2 = oebps.getItemsByMIMEType("application/xhtml+xml");
+		assertEquals(1, i_out_2.size());
+		assertEquals(i_in_2, i_out_2.get(0));
 	}
 
 	/**
