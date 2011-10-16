@@ -168,18 +168,13 @@ public class EpubTask extends Task {
 
 	private void addFilesets() {
 		for (FileSetType fs : filesets) {
-			if (fs.getProject() == null) {
-				log("Deleting fileset with no project specified;" + " assuming executing project", Project.MSG_VERBOSE);
-				fs = (FileSetType) fs.clone();
-				fs.setProject(getProject());
-			}
-			final File fsDir = fs.getDir();
+			final File fsDir = fs.getDir(getProject());
 			if (fsDir == null) {
 				throw new BuildException("File or Resource without directory or file specified");
 			} else if (!fsDir.isDirectory()) {
 				throw new BuildException("Directory does not exist:" + fsDir);
 			}
-			DirectoryScanner ds = fs.getDirectoryScanner();
+			DirectoryScanner ds = fs.getDirectoryScanner(getProject());
 			String[] includedFiles = ds.getIncludedFiles();
 			for (int i = 0; i < includedFiles.length; i++) {
 				String filename = includedFiles[i].replace('\\', '/');
@@ -195,6 +190,13 @@ public class EpubTask extends Task {
 
 	@Override
 	public void execute() throws BuildException {
+
+		// When running from within Eclipse, the project may not have been set
+		if (getProject() == null) {
+			Project project = new Project();
+			setProject(project);
+		}
+
 		validate();
 		addFilesets();
 		if (toc != null) {
@@ -212,7 +214,6 @@ public class EpubTask extends Task {
 			} else {
 				epub.pack(epubFile, workingFolder);
 			}
-
 		} catch (Exception e) {
 			throw new BuildException(e);
 		}
