@@ -32,6 +32,7 @@ public abstract class AbstractTest extends TestCase {
 		return null;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public String getText(Identifier element) {
 		FeatureMap fm = element.getMixed();
 		Object o = fm.get(TEXT, false);
