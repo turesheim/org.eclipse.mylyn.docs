@@ -87,22 +87,10 @@ class EPUB2Bean {
 			epub.getOpfPackage().setUniqueIdentifier(id);
 			epub.addIdentifier(id, "UUID", UUID.randomUUID().toString());
 		}
-		// Keep the cover image reference
-		Item item = epub.getItemById(OPSPublication.COVER_IMAGE_ID);
 		// Clear everything except the metadata
 		epub.getOpfPackage().getManifest().getItems().clear();
 		epub.getOpfPackage().getGuide().getGuideItems().clear();
 		epub.getOpfPackage().getSpine().getSpineItems().clear();
-
-		// if (epubFile.exists()) {
-		// // Try to restore some information
-		// File rootFolder = new File(workingFolder.getAbsolutePath() +
-		// File.separator + epub.getRootFolder()[0]);
-		// if (item != null) {
-		// epub.setCover(new File(rootFolder.getAbsolutePath() + File.separator
-		// + item.getHref()), item.getTitle());
-		// }
-		// }
 
 		sorted_locales = new TreeMap<String, String>();
 		String[] iso639s = Locale.getISOLanguages();
