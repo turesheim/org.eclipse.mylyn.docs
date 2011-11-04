@@ -63,11 +63,11 @@ bc..
           id ID #IMPLIED
           scheme CDATA #IMPLIED>
 
-p. If an identifier is not specified, one will be generated based using a random "UUID":http://en.wikipedia.org/wiki/Universally_unique_identifier. However it is probably a good idea to specify an identifier. Reading systems may use this field as intended and replace older versions of the publication when a newer is added to the library.
+p. If an identifier is not specified, one will be generated based using a random "UUID":http://en.wikipedia.org/wiki/Universally_unique_identifier. However it is probably a good idea to specify an identifier. Reading systems may use this field as intended and replace older versions of the publication when a newer is added to the library. A new identifier will be generated for each run of the script unless specified.
 
 h3. Language specification
 
-p. The recommended best practice is to use RFC 3066 which, in conjunction with "ISO639":http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes , defines two- and three-letter primary language tags with optional subtags. Examples include "no" for Norwegian, "en" for English", and "en-GB" for English used in the United Kingdom.
+p. The recommended best practice is to use RFC 3066 which, in conjunction with "ISO639":http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes, defines two- and three-letter primary language tags with optional subtags. Examples include "no" for Norwegian, "en" for English", and "en-GB" for English used in the United Kingdom.
 
 bc.. 
 <!ELEMENT language EMPTY>
@@ -148,7 +148,6 @@ p. In **role** "MARC relator codes":http://www.loc.gov/marc/relators/ are used f
 |Author of introduction, etc.|aui|Use for a person or corporate body responsible for an introduction, preface, foreword, or other critical matter, but who is not the chief author.|
 |Collaborator|clb|Use for a person or corporate body that takes a limited part in the elaboration of a work of another author or that brings complements (e.g., appendices, notes) to the work of another author.|
 |Compiler|com|Use for a person who produces a work or publication by selecting and putting together material from the works of various persons or bodies.|
-|Designer|dsr|Use for a person or organization responsible for design if specific codes (e.g., [bkd], [tyd]) are not desired.|
 |Editor|edt|Use for a person who prepares for publication a work not primarily his/her own, such as by elucidating text, adding introductory or other critical matter, or technically directing an editorial staff.|
 |Illustrator|ill|Use for the person who conceives, and perhaps also implements, a design or illustration, usually to accompany a written text.|
 |Photographer|pht|Use for the person or organization responsible for taking photographs, whether they are used in their original form or as reproductions.|
@@ -177,9 +176,7 @@ p. The epub task will always add a "creation" date using the current date when a
 
 h3. Types
 
-p. type includes terms describing general categories, functions, genres, or aggregation levels for content. The advised best practice is to select a value from a controlled vocabulary.
-
-p. Type includes terms describing general categories, functions, genres, or aggregation levels for content. Recommended best practice is to select a value from a controlled vocabulary (for example, the DCMI Type Vocabulary [DCT1]). To describe the physical or digital manifestation of the resource, use the FORMAT element.
+p. Type includes terms describing general categories, functions, genres, or aggregation levels for content. The advised best practice is to select a value from a controlled vocabulary. To describe the physical or digital manifestation of the resource, use the "format":#Formats element. There should normally be no need to specify either.
 
 bc.. 
 <!ELEMENT type (#PCDATA)>
@@ -198,7 +195,7 @@ bc..
 
 h3. Source
 
-p. The publication may be derived from another resource in whole or part. Recommended best practice is to identify the referenced resource by means of a string or number conforming to a formal identification system. If the publication is built from a web site it would be a good idea to use the URL of the entry page. 
+p. The publication may be derived from another resource in whole or part. The referenced resource should be identified by means of a string or number conforming to a formal identification system. If the publication is built from a web site it would be a good idea to use the URL of the entry page. 
 
 bc.. 
 <!ELEMENT source (#PCDATA)>
@@ -221,9 +218,9 @@ bc..
           
 h3. Coverage
 
-p. The extent or scope of the publication’s content. The advised best practice is to select a value from a controlled vocabulary; see the Dublin Core Metadata Element Set (http://dublincore.org/documents/2004/12/20/dces/).
+p. The extent or scope of the publication's content. The advised best practice is to select a value from a controlled vocabulary; see the Dublin Core Metadata Element Set (http://dublincore.org/documents/2004/12/20/dces/).
 
-p. Typically, Coverage will include spatial location (a place name or geographic coordinates), temporal period (a period label, date, or date range) or jurisdiction (such as a named administrative entity). Recommended best practice is to select a value from a controlled vocabulary (for example, the Thesaurus of Geographic Names [TGN]) and to use, where appropriate, named places or time periods in preference to numeric identifiers such as sets of coordinates or date ranges.
+p. Typically, Coverage will include spatial location (a place name or geographic coordinates), temporal period (a period label, date, or date range) or jurisdiction (such as a named administrative entity).
 
 bc.. 
 <!ELEMENT coverage (#PCDATA)>
@@ -261,7 +258,7 @@ bc..
           image CDATA #IMPLIED
           title CDATA #IMPLIED>
 
-p. Adds a cover page using the supplied image file.
+p. Adds a cover page using the supplied image file. Use a PNG, SVG or JPEG formatted file. When supplying raster images a dimension of 760x1000 pixels is typical.
 
 h2. Adding content
 
@@ -323,26 +320,25 @@ bc..
 <reference href="title-page.html" type="title-page" title="Building EPUBs" />
 <reference href="introduction.html" type="preface" title="Introduction" />
 
-
 p. The following types are allowed:
 
 |_. Type |_. Description |
-|cover|The book cover(s), jacket information, etc.|
-|title-page|Page with possibly title, author, publisher, and other metadata|
-|toc|table of contents|
+|cover|The book cover.|
+|title-page|Page with title, author, publisher, and other metadata.|
+|toc|Table of contents.|
 |index|Back-of-book style index|
-|glossary|An alphabetical list of terms peculiar to the publication with definitions or explanations|
-|acknowledgements|Author’s statement acknowledging his use of the works of other authors|	
-|bibliography|A list of books or other material on a subject|	
-|colophon|A publisher's emblem on a book|
-|copyright-page|Subject to or controlled by copyright|	
-|dedication|To address or inscribe (a book, artistic performance, etc) to a person, cause, etc as a token of affection or respect.|
+|glossary|An alphabetical list of terms used in the publication with definitions or explanations.|
+|acknowledgements|Statement acknowledging use of works of other authors.|	
+|bibliography|A list of books or other material on a subject.|	
+|colophon|A publisher's emblem on a book.|
+|copyright-page|Subject to or controlled by copyright.|	
+|dedication|Address or inscription to a person, cause, etc as a token of affection or respect.|
 |epigraph|A quotation at the beginning of a book, chapter, etc, suggesting its theme.|
 |foreword|A phrase or passage from a book, poem, play, etc, remembered and spoken, esp to illustrate succinctly or support a point or an argument.|	
-|loi|A list of illustrations|
-|lot|A list of tables|
-|notes|A brief summary or record in writing, esp a jotting for future reference|	
-|preface|A statement written as an introduction to a literary or other work, typically explaining its scope, intention, method, etc; foreword.|	
+|loi|A list of illustrations.|
+|lot|A list of tables.|
+|notes|A brief summary or record in writing.|	
+|preface|A statement written as an introduction to the publication, typically explaining its scope, intention, method, etc; foreword.|	
 |text|First "real" page of content (e.g. "Chapter 1").|
 			
 h3. Table of contents
