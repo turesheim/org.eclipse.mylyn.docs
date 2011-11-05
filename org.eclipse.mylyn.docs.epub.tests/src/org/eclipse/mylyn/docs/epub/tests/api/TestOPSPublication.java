@@ -21,7 +21,6 @@ import org.eclipse.mylyn.docs.epub.dc.Rights;
 import org.eclipse.mylyn.docs.epub.dc.Source;
 import org.eclipse.mylyn.docs.epub.dc.Subject;
 import org.eclipse.mylyn.docs.epub.dc.Title;
-import org.eclipse.mylyn.docs.epub.dc.impl.DCTypeImpl;
 import org.eclipse.mylyn.docs.epub.opf.Item;
 import org.junit.After;
 import org.junit.Assert;
@@ -81,13 +80,13 @@ public class TestOPSPublication extends AbstractTest {
 		EList<Coverage> Coverages = oebps.getOpfPackage().getMetadata().getCoverages();
 		Assert.assertEquals("Coverage", Coverages.get(0).getId());
 		Assert.assertEquals("fr_CA", Coverages.get(0).getLang());
-		Assert.assertEquals("My Coverage", getText((DCTypeImpl) Coverages.get(0)));
+		Assert.assertEquals("My Coverage", getText(Coverages.get(0)));
 		Assert.assertEquals(null, Coverages.get(1).getId());
 		Assert.assertEquals("fr_CA", Coverages.get(1).getLang());
-		Assert.assertEquals("My Coverage", getText((DCTypeImpl) Coverages.get(1)));
+		Assert.assertEquals("My Coverage", getText(Coverages.get(1)));
 		Assert.assertEquals(null, Coverages.get(2).getId());
 		Assert.assertEquals(null, Coverages.get(2).getLang());
-		Assert.assertEquals("My Coverage", getText((DCTypeImpl) Coverages.get(2)));
+		Assert.assertEquals("My Coverage", getText(Coverages.get(2)));
 		try {
 			oebps.addCoverage(null, null, null);
 			fail();
@@ -127,9 +126,9 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.addDate(null, "1969-03-14", null);
 		oebps.addDate(null, "1969-03-14", "event");
 		EList<Date> dates = oebps.getOpfPackage().getMetadata().getDates();
-		assertEquals("1969", getText((DCTypeImpl) dates.get(0)));
-		assertEquals("1969-03", getText((DCTypeImpl) dates.get(1)));
-		assertEquals("1969-03-14", getText((DCTypeImpl) dates.get(2)));
+		assertEquals("1969", getText(dates.get(0)));
+		assertEquals("1969-03", getText(dates.get(1)));
+		assertEquals("1969-03-14", getText(dates.get(2)));
 		assertEquals("event", dates.get(3).getEvent());
 		try {
 			oebps.addDate(null, (String) null, null);
@@ -151,13 +150,13 @@ public class TestOPSPublication extends AbstractTest {
 		EList<Description> Descriptions = oebps.getOpfPackage().getMetadata().getDescriptions();
 		Assert.assertEquals("Description", Descriptions.get(0).getId());
 		Assert.assertEquals("fr_CA", Descriptions.get(0).getLang());
-		Assert.assertEquals("My Description", getText((DCTypeImpl) Descriptions.get(0)));
+		Assert.assertEquals("My Description", getText(Descriptions.get(0)));
 		Assert.assertEquals(null, Descriptions.get(1).getId());
 		Assert.assertEquals("fr_CA", Descriptions.get(1).getLang());
-		Assert.assertEquals("My Description", getText((DCTypeImpl) Descriptions.get(1)));
+		Assert.assertEquals("My Description", getText(Descriptions.get(1)));
 		Assert.assertEquals(null, Descriptions.get(2).getId());
 		Assert.assertEquals(null, Descriptions.get(2).getLang());
-		Assert.assertEquals("My Description", getText((DCTypeImpl) Descriptions.get(2)));
+		Assert.assertEquals("My Description", getText(Descriptions.get(2)));
 		try {
 			oebps.addDescription(null, null, null);
 			fail();
@@ -178,13 +177,13 @@ public class TestOPSPublication extends AbstractTest {
 		EList<Description> Descriptions = oebps.getOpfPackage().getMetadata().getDescriptions();
 		Assert.assertEquals("Description", Descriptions.get(0).getId());
 		Assert.assertEquals("fr_CA", Descriptions.get(0).getLang());
-		Assert.assertEquals("My Description", getText((DCTypeImpl) Descriptions.get(0)));
+		Assert.assertEquals("My Description", getText(Descriptions.get(0)));
 		Assert.assertEquals(null, Descriptions.get(1).getId());
 		Assert.assertEquals("fr_CA", Descriptions.get(1).getLang());
-		Assert.assertEquals("My Description", getText((DCTypeImpl) Descriptions.get(1)));
+		Assert.assertEquals("My Description", getText(Descriptions.get(1)));
 		Assert.assertEquals(null, Descriptions.get(2).getId());
 		Assert.assertEquals(null, Descriptions.get(2).getLang());
-		Assert.assertEquals("My Description", getText((DCTypeImpl) Descriptions.get(2)));
+		Assert.assertEquals("My Description", getText(Descriptions.get(2)));
 		try {
 			oebps.addDescription(null, null, null);
 			fail();
@@ -248,7 +247,7 @@ public class TestOPSPublication extends AbstractTest {
 	public final void testAddLanguage() {
 		oebps.addLanguage(null, "no");
 		oebps.addLanguage("id", "no");
-		Assert.assertEquals("no", getText((DCTypeImpl) oebps.getOpfPackage().getMetadata().getLanguages().get(0)));
+		Assert.assertEquals("no", getText(oebps.getOpfPackage().getMetadata().getLanguages().get(0)));
 		Assert.assertEquals("id", oebps.getOpfPackage().getMetadata().getLanguages().get(1).getId());
 		try {
 			oebps.addLanguage(null, null);
@@ -292,13 +291,13 @@ public class TestOPSPublication extends AbstractTest {
 		EList<Publisher> Publishers = oebps.getOpfPackage().getMetadata().getPublishers();
 		Assert.assertEquals("Publisher", Publishers.get(0).getId());
 		Assert.assertEquals("fr_CA", Publishers.get(0).getLang());
-		Assert.assertEquals("My Publisher", getText((DCTypeImpl) Publishers.get(0)));
+		Assert.assertEquals("My Publisher", getText(Publishers.get(0)));
 		Assert.assertEquals(null, Publishers.get(1).getId());
 		Assert.assertEquals("fr_CA", Publishers.get(1).getLang());
-		Assert.assertEquals("My Publisher", getText((DCTypeImpl) Publishers.get(1)));
+		Assert.assertEquals("My Publisher", getText(Publishers.get(1)));
 		Assert.assertEquals(null, Publishers.get(2).getId());
 		Assert.assertEquals(null, Publishers.get(2).getLang());
-		Assert.assertEquals("My Publisher", getText((DCTypeImpl) Publishers.get(2)));
+		Assert.assertEquals("My Publisher", getText(Publishers.get(2)));
 		try {
 			oebps.addPublisher(null, null, null);
 			fail();
@@ -329,13 +328,13 @@ public class TestOPSPublication extends AbstractTest {
 		EList<Relation> Relations = oebps.getOpfPackage().getMetadata().getRelations();
 		Assert.assertEquals("Relation", Relations.get(0).getId());
 		Assert.assertEquals("fr_CA", Relations.get(0).getLang());
-		Assert.assertEquals("My Relation", getText((DCTypeImpl) Relations.get(0)));
+		Assert.assertEquals("My Relation", getText(Relations.get(0)));
 		Assert.assertEquals(null, Relations.get(1).getId());
 		Assert.assertEquals("fr_CA", Relations.get(1).getLang());
-		Assert.assertEquals("My Relation", getText((DCTypeImpl) Relations.get(1)));
+		Assert.assertEquals("My Relation", getText(Relations.get(1)));
 		Assert.assertEquals(null, Relations.get(2).getId());
 		Assert.assertEquals(null, Relations.get(2).getLang());
-		Assert.assertEquals("My Relation", getText((DCTypeImpl) Relations.get(2)));
+		Assert.assertEquals("My Relation", getText(Relations.get(2)));
 		try {
 			oebps.addRelation(null, null, null);
 			fail();
@@ -356,13 +355,13 @@ public class TestOPSPublication extends AbstractTest {
 		EList<Rights> Rightss = oebps.getOpfPackage().getMetadata().getRights();
 		Assert.assertEquals("Rights", Rightss.get(0).getId());
 		Assert.assertEquals("fr_CA", Rightss.get(0).getLang());
-		Assert.assertEquals("My Rights", getText((DCTypeImpl) Rightss.get(0)));
+		Assert.assertEquals("My Rights", getText(Rightss.get(0)));
 		Assert.assertEquals(null, Rightss.get(1).getId());
 		Assert.assertEquals("fr_CA", Rightss.get(1).getLang());
-		Assert.assertEquals("My Rights", getText((DCTypeImpl) Rightss.get(1)));
+		Assert.assertEquals("My Rights", getText(Rightss.get(1)));
 		Assert.assertEquals(null, Rightss.get(2).getId());
 		Assert.assertEquals(null, Rightss.get(2).getLang());
-		Assert.assertEquals("My Rights", getText((DCTypeImpl) Rightss.get(2)));
+		Assert.assertEquals("My Rights", getText(Rightss.get(2)));
 		try {
 			oebps.addRights(null, null, null);
 			fail();
@@ -383,13 +382,13 @@ public class TestOPSPublication extends AbstractTest {
 		EList<Source> Sources = oebps.getOpfPackage().getMetadata().getSources();
 		Assert.assertEquals("Source", Sources.get(0).getId());
 		Assert.assertEquals("fr_CA", Sources.get(0).getLang());
-		Assert.assertEquals("My Source", getText((DCTypeImpl) Sources.get(0)));
+		Assert.assertEquals("My Source", getText(Sources.get(0)));
 		Assert.assertEquals(null, Sources.get(1).getId());
 		Assert.assertEquals("fr_CA", Sources.get(1).getLang());
-		Assert.assertEquals("My Source", getText((DCTypeImpl) Sources.get(1)));
+		Assert.assertEquals("My Source", getText(Sources.get(1)));
 		Assert.assertEquals(null, Sources.get(2).getId());
 		Assert.assertEquals(null, Sources.get(2).getLang());
-		Assert.assertEquals("My Source", getText((DCTypeImpl) Sources.get(2)));
+		Assert.assertEquals("My Source", getText(Sources.get(2)));
 		try {
 			oebps.addSource(null, null, null);
 			fail();
@@ -410,13 +409,13 @@ public class TestOPSPublication extends AbstractTest {
 		EList<Subject> subjects = oebps.getOpfPackage().getMetadata().getSubjects();
 		Assert.assertEquals("Subject", subjects.get(0).getId());
 		Assert.assertEquals("fr_CA", subjects.get(0).getLang());
-		Assert.assertEquals("My Subject", getText((DCTypeImpl) subjects.get(0)));
+		Assert.assertEquals("My Subject", getText(subjects.get(0)));
 		Assert.assertEquals(null, subjects.get(1).getId());
 		Assert.assertEquals("fr_CA", subjects.get(1).getLang());
-		Assert.assertEquals("My Subject", getText((DCTypeImpl) subjects.get(1)));
+		Assert.assertEquals("My Subject", getText(subjects.get(1)));
 		Assert.assertEquals(null, subjects.get(2).getId());
 		Assert.assertEquals(null, subjects.get(2).getLang());
-		Assert.assertEquals("My Subject", getText((DCTypeImpl) subjects.get(2)));
+		Assert.assertEquals("My Subject", getText(subjects.get(2)));
 		try {
 			oebps.addSubject(null, null, null);
 			fail();
@@ -437,13 +436,13 @@ public class TestOPSPublication extends AbstractTest {
 		EList<Title> titles = oebps.getOpfPackage().getMetadata().getTitles();
 		Assert.assertEquals("Title", titles.get(0).getId());
 		Assert.assertEquals("fr_CA", titles.get(0).getLang());
-		Assert.assertEquals("My Title", getText((DCTypeImpl) titles.get(0)));
+		Assert.assertEquals("My Title", getText(titles.get(0)));
 		Assert.assertEquals(null, titles.get(1).getId());
 		Assert.assertEquals("fr_CA", titles.get(1).getLang());
-		Assert.assertEquals("My Title", getText((DCTypeImpl) titles.get(1)));
+		Assert.assertEquals("My Title", getText(titles.get(1)));
 		Assert.assertEquals(null, titles.get(2).getId());
 		Assert.assertEquals(null, titles.get(2).getLang());
-		Assert.assertEquals("My Title", getText((DCTypeImpl) titles.get(2)));
+		Assert.assertEquals("My Title", getText(titles.get(2)));
 		try {
 			oebps.addTitle(null, null, null);
 			fail();
@@ -462,9 +461,9 @@ public class TestOPSPublication extends AbstractTest {
 		oebps.addType(null, "My Type");
 		EList<org.eclipse.mylyn.docs.epub.dc.Type> Types = oebps.getOpfPackage().getMetadata().getTypes();
 		Assert.assertEquals("Type", Types.get(0).getId());
-		Assert.assertEquals("My Type", getText((DCTypeImpl) Types.get(0)));
+		Assert.assertEquals("My Type", getText(Types.get(0)));
 		Assert.assertEquals(null, Types.get(1).getId());
-		Assert.assertEquals("My Type", getText((DCTypeImpl) Types.get(1)));
+		Assert.assertEquals("My Type", getText(Types.get(1)));
 		try {
 			oebps.addType(null, null);
 			fail();
@@ -678,7 +677,40 @@ public class TestOPSPublication extends AbstractTest {
 		File root = oebps.getRootFolder();
 		File svg = new File(root.getAbsolutePath() + File.separator + "drawing-100x100.svg");
 		Assert.assertTrue(svg.exists());
+		File svg2 = new File(root.getAbsolutePath() + File.separator + "images" + File.separator
+				+ "drawing-2-100x100.svg");
+		Assert.assertTrue(svg2.exists());
 		File html = new File(root.getAbsolutePath() + File.separator + "plain-page_no-header.xhtml");
+		Assert.assertTrue(html.exists());
+
+	}
+
+	/**
+	 * Test method for bug 360701: [epub] Automatic inclusion of referenced
+	 * resources don't work for WikiText generated HTML.
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=360701
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void test_Bug360701() throws Exception {
+		EPUB epub = new EPUB();
+		oebps.setIncludeReferencedResources(true);
+		oebps.addItem(new File("testdata/plain-page_link.html"));
+		epub.add(oebps);
+		// Included resources will only be added when we pack
+		epub.pack(epubFile);
+
+		EPUB epub2 = new EPUB();
+		epub2.unpack(epubFile, epubFolder);
+		oebps = epub2.getOPSPublications().get(0);
+		File root = oebps.getRootFolder();
+		File svg = new File(root.getAbsolutePath() + File.separator + "drawing-100x100.svg");
+		Assert.assertTrue(svg.exists());
+		File svg2 = new File(root.getAbsolutePath() + File.separator + "images" + File.separator
+				+ "drawing-2-100x100.svg");
+		Assert.assertTrue(svg2.exists());
+		File html = new File(root.getAbsolutePath() + File.separator + "plain-page_no-header.html");
 		Assert.assertTrue(html.exists());
 
 	}

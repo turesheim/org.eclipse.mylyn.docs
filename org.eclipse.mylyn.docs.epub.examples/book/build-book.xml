@@ -75,6 +75,7 @@
 				<include name="*.jpg" />
 			</fileset>
 		</epub>
+		<eclipse.refreshLocal resource="../" depth="infinite"/>
 	</target>
 
 </project>

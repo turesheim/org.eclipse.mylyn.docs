@@ -81,7 +81,7 @@ public class EPUBFileUtil {
 	 */
 	public static String getMimeType(File file) {
 		String name = file.getName().toLowerCase();
-		// These are not (correctly) detected by URLConnection
+		// These are not (correctly) detected by mechanism below
 		if (name.endsWith("xhtml")) {
 			return "application/xhtml+xml";
 		}
@@ -94,20 +94,29 @@ public class EPUBFileUtil {
 		if (name.endsWith(".css")) {
 			return "text/css";
 		}
-		// Use URLConnection or content type detection
-		String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-		if (mimeType == null) {
-			try {
-				InputStream is = new BufferedInputStream(new FileInputStream(file));
-				mimeType = URLConnection.guessContentTypeFromStream(is);
-				is.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+		try {
+			// Use URLConnection or content type detection
+			String mimeType_name = URLConnection.guessContentTypeFromName(file.getName());
+			InputStream is = new BufferedInputStream(new FileInputStream(file));
+			String mimeType_content = URLConnection.guessContentTypeFromStream(is);
+			is.close();
+			// Handle situations where we have file name that indicates we have
+			// plain HTML, but the contents say XML. Hence we are probably
+			// looking at XHTML (see bug 36071).
+			if (mimeType_name != null && mimeType_content != null) {
+				if (mimeType_name.equals("text/html") && mimeType_content.equals("application/xml")) {
+					return "application/xhtml+xml";
+				}
 			}
+			// We trust name over content
+			return mimeType_name == null ? mimeType_content : mimeType_name;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return mimeType;
+
+		return null;
 	}
 
 	/**
