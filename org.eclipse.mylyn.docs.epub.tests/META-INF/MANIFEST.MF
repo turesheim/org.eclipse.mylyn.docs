@@ -17,6 +17,6 @@ Require-Bundle: org.eclipse.emf.databinding.edit;bundle-version="1.2.0",
  org.eclipse.mylyn.docs.epub.core,
  org.apache.ant.source;bundle-version="1.8.2"
 Bundle-ClassPath: .,
- lib/saxon.jar,
- lib/jing.jar,
- lib/epubcheck-1.2.jar
+ epubcheck/epubcheck-1.2.jar,
+ epubcheck/lib/jing.jar,
+ epubcheck/lib/saxon.jar
