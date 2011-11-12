@@ -38,8 +38,8 @@ import org.eclipse.mylyn.internal.docs.epub.core.EPUBFileUtil;
  * specification</a> for definitions of words and terms.
  * 
  * @author Torkild U. Resheim
- * @see http://idpf.org/epub/20/spec/OPS_2.0.1_draft.html
- * @see http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm
+ * @see http://www.idpf.org/doc_library/epub/OPS_2.0.1_draft.htm
+ * @see http://www.idpf.org/doc_library/epub/OPF_2.0.1_draft.htm
  */
 public class EPUB {
 
@@ -52,6 +52,7 @@ public class EPUB {
 	/** The encoding to use for the OCF */
 	private static final String OCF_FILE_ENCODING = "UTF-8";
 
+	/** The container holding all the publications */
 	private Container ocfContainer;
 
 	/**
@@ -77,7 +78,7 @@ public class EPUB {
 	}
 
 	/**
-	 * Adds a new OPS publication to the EPUB.
+	 * Adds a new OEBPS publication to the EPUB.
 	 * 
 	 * @param oebps
 	 *            the publication to add.
@@ -95,12 +96,14 @@ public class EPUB {
 	}
 
 	/**
-	 * Adds a new publication to the EPUB
+	 * Adds a new publication (or root file) to the EPUB. Use {@link #add(OPSPublication)} 
+	 * when adding an OEBPS publication. 
 	 * 
 	 * @param file
 	 *            the publication to add
 	 * @param type
 	 *            the MIME type of the publication
+	 * @see #add(OPSPublication)           
 	 */
 	public void add(File file, String type) {
 		String name = type.substring(type.lastIndexOf('/') + 1, type.length()).toUpperCase();
@@ -151,6 +154,8 @@ public class EPUB {
 
 	/**
 	 * Assembles the EPUB file using the specified working folder.
+	 * The contents of the working folder will <b>not</b> be removed when the
+	 * operation has completed.
 	 * 
 	 * @param epubFile
 	 *            the target EPUB file
@@ -187,7 +192,8 @@ public class EPUB {
 
 	/**
 	 * Reads the <i>Open Container Format</i> formatted list of the contents of
-	 * this EPUB.
+	 * this EPUB. The result of this operation is placed in the {@link #ocfContainer}
+	 * instance.
 	 * 
 	 * @param workingFolder
 	 *            the folder where the EPUB was unpacked
@@ -287,7 +293,7 @@ public class EPUB {
 
 	/**
 	 * Creates a new folder named META-INF and writes the required
-	 * <b>container.xml</b> in that folder.
+	 * (as per the OPS specification) <b>container.xml</b> in that folder.
 	 * 
 	 * @param workingFolder
 	 *            the root folder
@@ -306,11 +312,10 @@ public class EPUB {
 	}
 
 	/**
-	 * Delete the folder recursively.
+	 * Delete a folder recursively.
 	 * 
 	 * @param folder
 	 *            the folder to delete
-	 * @return
 	 */
 	private void deleteFolder(File folder) {
 		if (folder.isDirectory()) {

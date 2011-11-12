@@ -85,8 +85,8 @@ import org.xml.sax.SAXException;
  */
 public abstract class OPSPublication {
 	// Rules of engagement:
-	// * Keep all data in the model, use "transient" for temporary variables
-	// * Do not create anything before the final assemble
+	// * Keep all data in the model, use "transient" for temporary properties
+	// * Do not actually do anything before the final assemble
 
 	/** Default identifier for the cover page */
 	private static final String COVER_ID = "cover";
@@ -118,6 +118,7 @@ public abstract class OPSPublication {
 		return new OPS2Publication();
 	}
 
+	/** List of validation messages */
 	public List<ValidationMessage> messages;
 
 	/** The root model element */
@@ -926,7 +927,7 @@ public abstract class OPSPublication {
 	/**
 	 * Convenience method for adding a cover to the publication. This method
 	 * will make sure the required actions are taken to provide a cover page for
-	 * all reading systems.
+	 * all reading systems. 
 	 * 
 	 * @param image
 	 *            the cover image (jpeg, png, svg or gif)

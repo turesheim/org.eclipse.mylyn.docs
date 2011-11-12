@@ -61,15 +61,22 @@ import org.xml.sax.SAXException;
  * </p>
  * 
  * @author Torkild U. Resheim
+ * @see http://www.niso.org/workrooms/daisy/Z39-86-2005.html
  */
 public class OPS2Publication extends OPSPublication {
-
-	/** Default name for the table of contents */
-	private static final String TOCFILE_NAME = "toc.ncx";
 
 	/** MIME type for NCX documents */
 	private static final String MIMETYPE_NCX = "application/x-dtbncx+xml";
 
+	private static final String NCX_FILE_SUFFIX = "ncx";
+
+	/** Identifier of the table of contents file */
+	private static final String TABLE_OF_CONTENTS_ID = "ncx";
+
+	/** Default name for the table of contents */
+	private static final String TOCFILE_NAME = "toc.ncx";
+
+	/** The table of contents */
 	private Ncx ncxTOC;
 
 	/**
@@ -143,38 +150,19 @@ public class OPS2Publication extends OPSPublication {
 		}
 	}
 
-	/**
-	 * This method will only validate items that are in the spine, or in reading
-	 * order.
-	 */
 	@Override
-	protected List<ValidationMessage> validateContents() throws Exception {
-		EList<Itemref> spineItems = getSpine().getSpineItems();
-		EList<Item> manifestItems = opfPackage.getManifest().getItems();
-		ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
-		for (Itemref itemref : spineItems) {
-			Item referencedItem = null;
-			String id = itemref.getIdref();
-			// Find the manifest item that is referenced
-			for (Item item : manifestItems) {
-				if (item.getId().equals(id)) {
-					referencedItem = item;
-					break;
-				}
-			}
-			if (referencedItem != null && !referencedItem.isNoToc()) {
-				File file = new File(referencedItem.getFile());
-				FileReader fr = new FileReader(file);
-				messages.addAll(OPS2Validator.validate(new InputSource(fr), referencedItem.getHref()));
-			}
-		}
-		return messages;
+	public Object getTableOfContents() {
+		return ncxTOC;
 	}
 
-	/** Identifier of the table of contents file */
-	protected static final String TABLE_OF_CONTENTS_ID = "ncx";
-
-	protected static final String NCX_FILE_SUFFIX = "ncx";
+	@Override
+	protected void readTableOfContents(File tocFile) throws IOException {
+		ResourceSet resourceSet = new ResourceSetImpl();
+		URI fileURI = URI.createFileURI(tocFile.getAbsolutePath());
+		Resource resource = resourceSet.createResource(fileURI);
+		resource.load(null);
+		ncxTOC = (Ncx) resource.getContents().get(0);
+	}
 
 	/**
 	 * Registers a new resource factory for NCX data structures. This is
@@ -228,6 +216,34 @@ public class OPS2Publication extends OPSPublication {
 	}
 
 	/**
+	 * This method will only validate items that are in the spine, or in reading
+	 * order.
+	 */
+	@Override
+	protected List<ValidationMessage> validateContents() throws Exception {
+		EList<Itemref> spineItems = getSpine().getSpineItems();
+		EList<Item> manifestItems = opfPackage.getManifest().getItems();
+		ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
+		for (Itemref itemref : spineItems) {
+			Item referencedItem = null;
+			String id = itemref.getIdref();
+			// Find the manifest item that is referenced
+			for (Item item : manifestItems) {
+				if (item.getId().equals(id)) {
+					referencedItem = item;
+					break;
+				}
+			}
+			if (referencedItem != null && !referencedItem.isNoToc()) {
+				File file = new File(referencedItem.getFile());
+				FileReader fr = new FileReader(file);
+				messages.addAll(OPS2Validator.validate(new InputSource(fr), referencedItem.getHref()));
+			}
+		}
+		return messages;
+	}
+
+	/**
 	 * Writes the table of contents file in the specified folder using the NCX
 	 * format. If a table of contents file has not been specified an empty one
 	 * will be created (since it is required to have one). If in addition it has
@@ -269,20 +285,6 @@ public class OPS2Publication extends OPSPublication {
 			Item item = addItem(opfPackage.getSpine().getToc(), null, ncxFile, null, MIMETYPE_NCX, false, false, false);
 			opfPackage.getManifest().getItems().move(0, item);
 		}
-	}
-
-	@Override
-	protected void readTableOfContents(File tocFile) throws IOException {
-		ResourceSet resourceSet = new ResourceSetImpl();
-		URI fileURI = URI.createFileURI(tocFile.getAbsolutePath());
-		Resource resource = resourceSet.createResource(fileURI);
-		resource.load(null);
-		ncxTOC = (Ncx) resource.getContents().get(0);
-	}
-
-	@Override
-	public Object getTableOfContents() {
-		return ncxTOC;
 	}
 
 }
