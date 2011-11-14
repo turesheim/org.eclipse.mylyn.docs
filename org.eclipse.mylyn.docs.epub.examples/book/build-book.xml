@@ -75,7 +75,23 @@
 				<include name="*.jpg" />
 			</fileset>
 		</epub>
-		<eclipse.refreshLocal resource="../" depth="infinite"/>
+		<!-- Delete generated files -->
+		<delete>
+			<fileset dir="${srcdir}" >
+				<include name="**/*.html"/>
+				<present targetdir="${srcdir}">
+					<mapper type="glob" from="*.html" to="*.textile" />
+				</present>
+			</fileset>
+			<fileset dir="${basedir}" >
+				<include name="**/*.html"/>
+				<present targetdir="${basedir}">
+					<mapper type="glob" from="*.html" to="*.textile" />
+				</present>
+			</fileset>
+		</delete>
+		<!-- Refresh project -->
+		<eclipse.refreshLocal resource="../" depth="infinite" />
 	</target>
 
 </project>
