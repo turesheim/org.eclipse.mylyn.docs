@@ -49,7 +49,7 @@
 		<epub identifierId="uuid" file="${epubfile}">
 			<language code="en" />
 			<identifier id="uuid" scheme="UUID">70ce7c20-8f9e-11e0-91e4-0800200c9a66</identifier>
-			<title>Building EPUBs</title>
+			<title>Building EPUBs with Eclipse</title>
 			<subject>Computing, Eclipse, Mylyn, EPUB</subject>
 			<publisher>Eclipse.Org</publisher>
 			<creator name="Torkild Ulvøy Resheim" fileAs="Resheim, Torkild Ulvøy" role="aut" />
