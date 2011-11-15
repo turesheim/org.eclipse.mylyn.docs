@@ -1,4 +1,3 @@
-/build
-/bin
-/Building_EPUBs.epub
-/help
+/org.eclipse*/bin
+/org.eclipse*/target
+

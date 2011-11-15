@@ -132,9 +132,9 @@ public class ConvertFromMarkupWizard extends Wizard {
 						epubFile.refreshLocal(IResource.DEPTH_ONE, monitor);
 						monitor.worked(1);
 					} catch (Exception e) {
-						e.printStackTrace();
-						ms.add(new Status(IStatus.ERROR, EPUBUIPlugin.PLUGIN_ID, "Could not convert to EPUB", e));
+						ms.add(new Status(IStatus.ERROR, EPUBUIPlugin.PLUGIN_ID, "An exception occured", e));
 						monitor.setCanceled(true);
+						StatusManager.getManager().handle(ms);
 						StatusManager.getManager().handle(ms, StatusManager.BLOCK);
 						return;
 					} finally {
