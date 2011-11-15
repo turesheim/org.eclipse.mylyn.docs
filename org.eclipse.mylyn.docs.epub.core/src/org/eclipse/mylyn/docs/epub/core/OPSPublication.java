@@ -814,10 +814,10 @@ public abstract class OPSPublication {
 			}
 		}
 		for (File root : references.keySet()) {
-			List<File> images = references.get(root);
-			for (File image : images) {
-				File relativePath = new File(EPUBFileUtil.getRelativePath(root, image));
-				addItem(null, null, image, relativePath.getParent(), null, false, false, false);
+			List<File> files = references.get(root);
+			for (File file : files) {
+				File relativePath = new File(EPUBFileUtil.getRelativePath(root, file));
+				addItem(null, null, file, relativePath.getParent(), null, false, false, false);
 			}
 		}
 
