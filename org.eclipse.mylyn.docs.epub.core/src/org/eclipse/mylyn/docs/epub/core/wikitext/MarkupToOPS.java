@@ -69,7 +69,9 @@ public class MarkupToOPS {
 				Stylesheet css = new Stylesheet(file);
 				builder.addCssStylesheet(css);
 			}
-
+			// Make sure we get the correct XHTML header
+			builder.setEmitDtd(true);
+			builder.setHtmlDtd("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">");
 			builder.setXhtmlStrict(true);
 
 			MarkupParser markupParser = new MarkupParser();
