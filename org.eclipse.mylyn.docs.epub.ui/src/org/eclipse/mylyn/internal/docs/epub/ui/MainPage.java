@@ -229,7 +229,7 @@ public class MainPage extends WizardPage {
 		bindingContext.bindValue(text_3ObserveTextObserveWidget, beanCreatorObserveValue, null, null);
 		//
 		IObservableValue schemeTextObserveTextObserveWidget = SWTObservables.observeText(schemeText);
-		IObservableValue beanIdSchemeObserveValue = PojoObservables.observeValue(bean, "idScheme");
+		IObservableValue beanIdSchemeObserveValue = PojoObservables.observeValue(bean, "scheme");
 		bindingContext.bindValue(schemeTextObserveTextObserveWidget, beanIdSchemeObserveValue, null, null);
 		//
 		IObservableValue comboObserveTextObserveWidget = SWTObservables.observeText(combo);

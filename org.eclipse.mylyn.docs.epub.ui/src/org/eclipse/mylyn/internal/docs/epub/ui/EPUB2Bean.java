@@ -81,11 +81,10 @@ class EPUB2Bean {
 	public EPUB2Bean(OPSPublication epub, File markupFile, File epubFile, File workingFolder) {
 		this.epub = epub;
 		this.markupFile = markupFile;
-		id = epub.getOpfPackage().getUniqueIdentifier();
+		String id = epub.getOpfPackage().getUniqueIdentifier();
 		if (id == null || id.trim().length() == 0) {
-			id = "id";
-			epub.getOpfPackage().setUniqueIdentifier(id);
-			epub.addIdentifier(id, "UUID", UUID.randomUUID().toString());
+			epub.getOpfPackage().setUniqueIdentifier(ID);
+			epub.addIdentifier(ID, "UUID", UUID.randomUUID().toString());
 		}
 		// Clear everything except the metadata
 		epub.getOpfPackage().getManifest().getItems().clear();
@@ -228,20 +227,23 @@ class EPUB2Bean {
 		epub.addCreator(null, null, creator, null, null);
 	}
 
-	private String id = "id";
+	private final static String ID = "epub-id";
 
 	public void setIdentifier(String identifier) {
+		String scheme = getScheme();
 		epub.getOpfPackage().getMetadata().getIdentifiers().clear();
-		epub.addIdentifier(id, getIdScheme(), identifier);
+		epub.addIdentifier(ID, scheme, identifier);
+		epub.getOpfPackage().setUniqueIdentifier(ID);
 	}
 
-	public void setIdScheme(String schemeName) {
+	public void setScheme(String schemeName) {
 		String identifier = getIdentifier();
 		epub.getOpfPackage().getMetadata().getIdentifiers().clear();
-		epub.addIdentifier(id, schemeName, identifier);
+		epub.getOpfPackage().setUniqueIdentifier(ID);
+		epub.addIdentifier(ID, schemeName, identifier);
 	}
 
-	public String getIdScheme() {
+	public String getScheme() {
 		Identifier ident = epub.getOpfPackage().getMetadata().getIdentifiers().get(0);
 		return ident.getScheme();
 	}
