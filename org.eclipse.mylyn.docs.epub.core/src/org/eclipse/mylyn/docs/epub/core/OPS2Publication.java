@@ -11,6 +11,7 @@
 package org.eclipse.mylyn.docs.epub.core;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -144,8 +145,8 @@ public class OPS2Publication extends OPSPublication {
 			}
 			if (referencedItem != null && !referencedItem.isNoToc()) {
 				File file = new File(referencedItem.getFile());
-				FileReader fr = new FileReader(file);
-				playOrder = TOCGenerator.parse(new InputSource(fr), referencedItem.getHref(), ncxTOC, playOrder);
+				FileInputStream fis = new FileInputStream(file);
+				playOrder = TOCGenerator.parse(new InputSource(fis), referencedItem.getHref(), ncxTOC, playOrder);
 			}
 		}
 	}
