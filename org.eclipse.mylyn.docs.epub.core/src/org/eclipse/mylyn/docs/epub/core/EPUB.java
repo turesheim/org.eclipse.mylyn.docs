@@ -32,16 +32,37 @@ import org.eclipse.mylyn.docs.epub.ocf.util.OCFResourceImpl;
 import org.eclipse.mylyn.internal.docs.epub.core.EPUBFileUtil;
 
 /**
- * Represents one EPUB file. One or more publications can be added and will be a
- * part of the distribution when packed. See the <a
+ * Represents one EPUB file. Currently <b>only</b> version 2.0.1 of the EPUB
+ * specification is supported. One or more publications can be added and will be
+ * a part of the distribution when packed. See the <a
  * href="http://idpf.org/epub/20/spec/OPS_2.0.1_draft.htm#Section1.2">OPS
  * specification</a> for definitions of words and terms.
+ * <p>
+ * The simplest usage of this API may look like the following:
+ * </p>
+ * 
+ * <pre>
+ * EPUB epub = new EPUB();
+ * OPSPublication oebps = new OPS2Publication();
+ * oebps.addItem(new File(&quot;chapter.xhtml&quot;));
+ * epub.add(oebps);
+ * epub.pack(new File(&quot;book.epub&quot;));
+ * </pre>
+ * <p>
+ * This will create a new EPUB instance and an OPS (which is the typical content
+ * of an EPUB) with one chapter. The OPS will have one chapter with contents
+ * from <b>chapter.xhtml</b> and the final result is an EPUB named
+ * <b>book.epub</b>.
+ * </p>
  * 
  * @author Torkild U. Resheim
  * @see http://www.idpf.org/doc_library/epub/OPS_2.0.1_draft.htm
  * @see http://www.idpf.org/doc_library/epub/OPF_2.0.1_draft.htm
  */
 public class EPUB {
+
+	/** Version of the OCF specification used */
+	private static final String OCF_VERSION = "2.0";
 
 	/** OEBPS (OPS+OPF) mimetype */
 	private static final String MIMETYPE_OEBPS = "application/oebps-package+xml";
@@ -64,7 +85,7 @@ public class EPUB {
 		ocfContainer = OCFFactory.eINSTANCE.createContainer();
 		RootFiles rootFiles = OCFFactory.eINSTANCE.createRootFiles();
 		ocfContainer.setRootfiles(rootFiles);
-		ocfContainer.setVersion("2.0");
+		ocfContainer.setVersion(OCF_VERSION);
 		registerOCFResourceFactory();
 	}
 
@@ -78,7 +99,8 @@ public class EPUB {
 	}
 
 	/**
-	 * Adds a new OEBPS publication to the EPUB.
+	 * Adds a new OEBPS publication to the EPUB. Use {@link #add(File, String)}
+	 * to add other types of content.
 	 * 
 	 * @param oebps
 	 *            the publication to add.
@@ -153,15 +175,17 @@ public class EPUB {
 	}
 
 	/**
-	 * Assembles the EPUB file using the specified working folder.
-	 * The contents of the working folder will <b>not</b> be removed when the
-	 * operation has completed.
+	 * Assembles the EPUB file using the specified working folder. The contents
+	 * of the working folder will <b>not</b> be removed when the operation has
+	 * completed. If the temporary data is not interesting, use
+	 * {@link #pack(File)} instead.
 	 * 
 	 * @param epubFile
 	 *            the target EPUB file
 	 * @param workingFolder
 	 *            the working folder
 	 * @throws Exception
+	 * @see {@link #pack(File)}
 	 */
 	public void pack(File epubFile, File workingFolder) throws Exception {
 		if (ocfContainer.getRootfiles().getRootfiles().isEmpty()) {
@@ -191,9 +215,9 @@ public class EPUB {
 	}
 
 	/**
-	 * Reads the <i>Open Container Format</i> formatted list of the contents of
-	 * this EPUB. The result of this operation is placed in the {@link #ocfContainer}
-	 * instance.
+	 * Reads the <i>Open Container Format (OCF)</i> formatted list of contents
+	 * of this EPUB. The result of this operation is placed in the
+	 * {@link #ocfContainer} instance.
 	 * 
 	 * @param workingFolder
 	 *            the folder where the EPUB was unpacked
@@ -256,6 +280,7 @@ public class EPUB {
 	 *            the EPUB file to unpack
 	 * @return the location when the EPUB is unpacked
 	 * @throws Exception
+	 * @see {@link #unpack(File, File)}
 	 */
 	public File unpack(File epubFile) throws Exception {
 		File workingFolder = File.createTempFile("epub_", null);
@@ -275,6 +300,7 @@ public class EPUB {
 	 * @param destination
 	 *            the destination folder
 	 * @throws Exception
+	 * @see {@link #unpack(File)} when destination is not interesting
 	 */
 	public void unpack(File epubFile, File destination) throws Exception {
 		EPUBFileUtil.unzip(epubFile, destination);
@@ -292,8 +318,9 @@ public class EPUB {
 	}
 
 	/**
-	 * Creates a new folder named META-INF and writes the required
-	 * (as per the OPS specification) <b>container.xml</b> in that folder.
+	 * Creates a new folder named META-INF and writes the required (as per the
+	 * OPS specification) <b>container.xml</b> in that folder. This is part of
+	 * the packing procedure.
 	 * 
 	 * @param workingFolder
 	 *            the root folder
@@ -312,7 +339,7 @@ public class EPUB {
 	}
 
 	/**
-	 * Delete a folder recursively.
+	 * Utility method for deleting a folder recursively.
 	 * 
 	 * @param folder
 	 *            the folder to delete
