@@ -32,8 +32,7 @@
 
 		<!-- Convert the Textile markup to HTML -->
 		<wikitext-to-html markupLanguage="org.eclipse.mylyn.wikitext.textile.core.TextileLanguage" 
-			emitdoctype="true" overwrite="true" xhtmlstrict="true" 
-			htmlDoctype="&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.1//EN&quot; &quot;http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd&quot;&gt;">
+			overwrite="true" xhtmlstrict="true" >
 			<fileset dir="${srcdir}">
 				<include name="*.textile" />
 			</fileset>
@@ -46,7 +45,7 @@
 
 	<!-- contributor, date -->
 	<target name="plugin-book" depends="init">
-		<epub identifierId="uuid" file="${epubfile}">
+		<epub identifierId="uuid" file="${epubfile}" workingfolder="${basedir}/build">
 			<language code="en" />
 			<identifier id="uuid" scheme="UUID">70ce7c20-8f9e-11e0-91e4-0800200c9a66</identifier>
 			<title>Building EPUBs with Eclipse</title>
