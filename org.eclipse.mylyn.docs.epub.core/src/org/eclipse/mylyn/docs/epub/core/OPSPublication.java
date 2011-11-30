@@ -145,7 +145,9 @@ public abstract class OPSPublication {
 	 * </ul>
 	 */
 	private void addCompulsoryData() {
+		// Creation date is always when we build
 		addDate(null, new java.util.Date(System.currentTimeMillis()), CREATION_DATE_ID);
+		// Make it clear where the tooling comes from
 		addContributor(null, null, "Eclipse Mylyn Docs project", Role.REDACTOR, null);
 		if (getIdentifier() == null) {
 			addIdentifier(UUID_SCHEME, "uuid", UUID.randomUUID().toString());
@@ -221,7 +223,6 @@ public abstract class OPSPublication {
 	/**
 	 * Specifies a new creator for the publication.
 	 * 
-	 * 
 	 * @param id
 	 *            a unique identifier or <code>null</code>
 	 * @param lang
@@ -275,12 +276,13 @@ public abstract class OPSPublication {
 	}
 
 	/**
-	 * Date of publication, in the format defined by "Date and Time Formats" at
-	 * http://www.w3.org/TR/NOTE-datetime and by ISO 8601. In particular, dates
-	 * without times must be represented in the form YYYY[-MM[-DD]]: a required
-	 * 4-digit year, an optional 2-digit month, and if the month is given, an
-	 * optional 2-digit day of month. The event attribute is optional, possible
-	 * values may include: "creation", "publication", and "modification".
+	 * Date of publication, in the format defined by the W3C specification
+	 * "<a href="http://www.w3.org/TR/NOTE-datetime">Date and Time Formats</a>"
+	 * and by ISO 8601. In particular, dates without times must be represented
+	 * in the form YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit
+	 * month, and if the month is given, an optional 2-digit day of month. The
+	 * event attribute is optional, possible values may include: "creation",
+	 * "publication", and "modification".
 	 * 
 	 * @param value
 	 *            the date string
