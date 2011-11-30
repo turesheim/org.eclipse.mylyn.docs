@@ -136,8 +136,7 @@ public abstract class OPSPublication {
 	 * Adds data to the publication that we always want to be present.
 	 * <ul>
 	 * <li>The creation date.</li>
-	 * <li><i>Eclipse committers and contributors</i> as contributor redactor
-	 * role.</li>
+	 * <li><i>Eclipse Mylyn Docs project</i> as contributor redactor role.</li>
 	 * <li>A unique identifier if none has been specified.</li>
 	 * <li>A empty description if none has been specified.</li>
 	 * <li>Language "English" if none has been specified.</li>
@@ -147,7 +146,7 @@ public abstract class OPSPublication {
 	 */
 	private void addCompulsoryData() {
 		addDate(null, new java.util.Date(System.currentTimeMillis()), CREATION_DATE_ID);
-		addContributor(null, null, "Eclipse Committers and Contributors", Role.REDACTOR, null);
+		addContributor(null, null, "Eclipse Mylyn Docs project", Role.REDACTOR, null);
 		if (getIdentifier() == null) {
 			addIdentifier(UUID_SCHEME, "uuid", UUID.randomUUID().toString());
 			setIdentifierId(UUID_SCHEME);
