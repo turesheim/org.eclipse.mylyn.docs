@@ -102,7 +102,7 @@ public class EPUBFileUtil {
 			is.close();
 			// Handle situations where we have file name that indicates we have
 			// plain HTML, but the contents say XML. Hence we are probably
-			// looking at XHTML (see bug 36071).
+			// looking at XHTML (see bug 360701).
 			if (mimeType_name != null && mimeType_content != null) {
 				if (mimeType_name.equals("text/html") && mimeType_content.equals("application/xml")) {
 					return "application/xhtml+xml";
