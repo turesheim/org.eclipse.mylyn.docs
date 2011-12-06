@@ -30,6 +30,10 @@ public abstract class AbstractXHTMLScanner extends DefaultHandler2 {
 
 	protected String currentHref = null;
 
+	/**
+	 * <code>true</code> indicates that the parser is within a &lt;head&gt; HTML
+	 * element
+	 */
 	protected boolean insideHead;
 
 	public AbstractXHTMLScanner() {
