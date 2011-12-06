@@ -13,6 +13,7 @@ package org.eclipse.mylyn.wikitext.core.parser.builder;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Stack;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
@@ -26,9 +27,9 @@ import org.eclipse.mylyn.wikitext.core.parser.DocumentBuilder;
 public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 	/**
-	 * a block or section
+	 * Represents a block or section of the document. By default blocks have no content.
 	 */
-	protected class Block {
+	protected abstract class Block {
 		private Block previousBlock;
 
 		private final BlockType blockType;
@@ -59,6 +60,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 		public BlockType getBlockType() {
 			return blockType;
 		}
+
 	}
 
 	/**
@@ -74,7 +76,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 		@Override
 		public void close() throws IOException {
-			out.write(suffix);
+			emitContent(suffix);
 			super.close();
 		}
 	}
@@ -94,19 +96,19 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 		@Override
 		public void write(int c) throws IOException {
 			hasContent = true;
-			out.write(normalizeWhitespace(c));
+			emitContent(normalizeWhitespace(c));
 		}
 
 		@Override
 		public void write(String s) throws IOException {
 			hasContent = true;
-			out.write(normalizeWhitespace(s));
+			emitContent(normalizeWhitespace(s));
 		}
 
 		@Override
 		public void close() throws IOException {
 			if (hasContent) {
-				out.write("\n\n"); //$NON-NLS-1$
+				emitContent("\n\n"); //$NON-NLS-1$
 			}
 			super.close();
 		}
@@ -114,10 +116,128 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 	protected Block currentBlock = new ImplicitParagraphBlock();
 
-	protected Writer out;
+	private Stack<MarkupWriter> writerState;
 
-	protected AbstractMarkupDocumentBuilder(Writer out) {
-		this.out = out;
+	private MarkupWriter writer;
+
+	private boolean adjacentSeparatorRequired = false;
+
+	private static class MarkupWriter extends Writer {
+
+		private final Writer delegate;
+
+		private char lastChar;
+
+		public MarkupWriter(Writer delegate) {
+			this.delegate = delegate;
+		}
+
+		@Override
+		public void write(char[] cbuf, int off, int len) throws IOException {
+			if (len <= 0) {
+				return;
+			}
+			delegate.write(cbuf, off, len);
+			int lastCharIndex = off + len - 1;
+			lastChar = cbuf[lastCharIndex];
+
+		}
+
+		/**
+		 * get the last character that was written to the writer, or 0 if no character has been written.
+		 */
+		public char getLastChar() {
+			return lastChar;
+		}
+
+		@Override
+		public void flush() throws IOException {
+			delegate.flush();
+		}
+
+		@Override
+		public void close() throws IOException {
+			delegate.close();
+		}
+
+		public Writer getDelegate() {
+			return delegate;
+		}
+
+	}
+
+	protected AbstractMarkupDocumentBuilder(final Writer out) {
+		this.writer = new MarkupWriter(out);
+	}
+
+	protected void emitContent(int c) throws IOException {
+		maybeInsertAdjacentWhitespace(c);
+		writer.write(c);
+	}
+
+	private void maybeInsertAdjacentWhitespace(int c) throws IOException {
+		if (adjacentSeparatorRequired) {
+			if (!isSeparator(c)) {
+				char lastChar = getLastChar();
+				if (lastChar != 0 && !isSeparator(lastChar)) {
+					writer.write(' ');
+				}
+			}
+			adjacentSeparatorRequired = false;
+		}
+	}
+
+	protected void emitContent(String str) throws IOException {
+		if (str.length() == 0) {
+			return;
+		}
+		maybeInsertAdjacentWhitespace(str.charAt(0));
+		writer.write(str);
+	}
+
+	/**
+	 * Indicate that the next content to be emitted requires adjacent {@link #isSeparator(char) separator}. When
+	 * invoked, the next call to {@link #emitContent(int)} or {@link #emitContent(String)} will test to see if the
+	 * {@link #getLastChar() last character} is a separator character, or if the content to be emitted starts with a
+	 * separator. If neither are true, then a single space character is inserted into the content stream. Subsequent
+	 * calls to <code>emitContent</code> are not affected.
+	 * 
+	 * @see #clearRequireAdjacentSeparator()
+	 */
+	protected void requireAdjacentSeparator() {
+		adjacentSeparatorRequired = true;
+	}
+
+	/**
+	 * @see #requireAdjacentSeparator()
+	 */
+	protected void clearRequireAdjacentSeparator() {
+		adjacentSeparatorRequired = false;
+	}
+
+	protected boolean isSeparator(int i) {
+		char c = (char) i;
+		boolean separator = Character.isWhitespace(c);
+		if (!separator) {
+			switch (c) {
+			case ',':
+			case '.':
+			case '!':
+			case '?':
+			case ':':
+			case ';':
+			case ')':
+			case '(':
+			case '}':
+			case '{':
+			case '[':
+			case ']':
+			case '|':
+			case '"':
+				separator = true;
+			}
+		}
+		return separator;
 	}
 
 	@Override
@@ -132,14 +252,53 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 		}
 	}
 
+	/**
+	 * Subclasses may push a writer in order to intercept emitted content. Calls to this method must be matched by
+	 * corresponding calls to {@link #popWriter()}.
+	 * 
+	 * @see #popWriter()
+	 */
+	protected void pushWriter(Writer writer) {
+		if (writerState == null) {
+			writerState = new Stack<MarkupWriter>();
+		}
+		writerState.push(this.writer);
+		this.writer = new MarkupWriter(writer);
+	}
+
+	/**
+	 * @see #pushWriter(Writer)
+	 */
+	protected Writer popWriter() {
+		if (writerState == null || writerState.isEmpty()) {
+			throw new IllegalStateException();
+		}
+		MarkupWriter markupWriter = writer;
+		writer = writerState.pop();
+		return markupWriter.getDelegate();
+	}
+
+	/**
+	 * get the last character that was emitted, or 0 if no character has been written.
+	 */
+	protected char getLastChar() {
+		char c = writer.getLastChar();
+		if (c == 0 && writerState != null) {
+			for (int x = writerState.size() - 1; c == 0 && x >= 0; --x) {
+				c = writerState.get(x).getLastChar();
+			}
+		}
+		return c;
+	}
+
 	@Override
 	public void beginBlock(BlockType type, Attributes attributes) {
-		Block block = computeBlock(type, attributes);
 		try {
 			if (currentBlock instanceof ImplicitParagraphBlock) {
 				currentBlock.close();
 				currentBlock = null;
 			}
+			Block block = computeBlock(type, attributes);
 			block.open();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -162,7 +321,7 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void endSpan() {
-		endBlock();
+		closeCurrentBlock();
 	}
 
 	protected String computePrefix(char c, int count) {
@@ -208,6 +367,10 @@ public abstract class AbstractMarkupDocumentBuilder extends DocumentBuilder {
 
 	@Override
 	public void endBlock() {
+		closeCurrentBlock();
+	}
+
+	private void closeCurrentBlock() {
 		if (currentBlock != null) {
 			try {
 				currentBlock.close();

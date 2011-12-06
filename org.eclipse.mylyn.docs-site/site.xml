@@ -18,7 +18,7 @@
    <feature url="features/org.eclipse.mylyn.wikitext.extras_0.0.0.qualifier.jar" id="org.eclipse.mylyn.wikitext.extras" version="0.0.0">
       <category name="Features"/>
    </feature>
-   <feature url="features/org.eclipse.mylyn.docs.epub_0.8.0.qualifier.jar" id="org.eclipse.mylyn.docs.epub" version="0.8.0.qualifier">
+   <feature url="features/org.eclipse.mylyn.docs.epub_0.0.0.qualifier.jar" id="org.eclipse.mylyn.docs.epub" version="0.8.0.qualifier">
       <category name="Features"/>
    </feature>
    <category-def name="Features" label="Mylyn Docs Features">

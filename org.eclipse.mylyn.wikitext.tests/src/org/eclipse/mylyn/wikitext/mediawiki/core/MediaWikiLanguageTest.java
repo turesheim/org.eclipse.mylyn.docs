@@ -154,6 +154,12 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("hr <hr/> foo"));
 	}
 
+	public void testHorizontalRule2() {
+		String html = parser.parseToHtml("Mediawiki should render:\n----\nAs a \"horizontal rule\".");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(Pattern.compile("render\\:\\s*<hr/>\\s*As a").matcher(html).find());
+	}
+
 	public void testListUnordered() throws IOException {
 		String html = parser.parseToHtml("* a list\n* with two lines");
 
@@ -610,6 +616,12 @@ public class MediaWikiLanguageTest extends TestCase {
 		assertTrue(html.contains("<table border=\"1\"><tr style=\"font-style:italic;color:green;\">"));
 		assertTrue(html.contains("<td colspan=\"2\">Orange</td>"));
 		assertTrue(html.contains("<td valign=\"top\">Apple</td>"));
+	}
+
+	public void testTableOptions_CssClass() {
+		String html = parser.parseToHtml("{|class=\"foo\"\n|Some text\n|}");
+		TestUtil.println("HTML: \n" + html);
+		assertTrue(html.contains("<table class=\"foo\"><tr><td>Some text</td></tr></table>"));
 	}
 
 	public void testEntityReference() {

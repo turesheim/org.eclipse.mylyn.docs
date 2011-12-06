@@ -9,7 +9,7 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.wikitext.confluence.core;
+package org.eclipse.mylyn.internal.wikitext.textile.core;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -17,24 +17,24 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.mylyn.wikitext.core.parser.Attributes;
 import org.eclipse.mylyn.wikitext.core.parser.HtmlParser;
 import org.eclipse.mylyn.wikitext.core.parser.LinkAttributes;
 import org.eclipse.mylyn.wikitext.core.parser.builder.AbstractMarkupDocumentBuilder;
+import org.eclipse.mylyn.wikitext.textile.core.TextileLanguage;
 
 /**
- * a document builder that emits Confluence markup
+ * a document builder that emits Textile markup
  * 
  * @see HtmlParser
  * @author David Green
  * @since 1.6
- * @see ConfluenceLanguage
- * @see ConfluenceLanguage#createDocumentBuilder(Writer)
+ * @see TextileLanguage
+ * @see TextileLanguage#createDocumentBuilder(Writer)
  */
-public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
+public class TextileDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	private static final Pattern PATTERN_MULTIPLE_NEWLINES = Pattern.compile("(\r\n|\r|\n){2,}"); //$NON-NLS-1$
 
@@ -54,24 +54,31 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		entityToLiteral.put("#37", "%"); //$NON-NLS-1$//$NON-NLS-2$
 	}
 
+	private boolean previousWasExtended;
+
+	private boolean emitAttributes = true;
+
 	private class ContentBlock extends Block {
 
-		private final String prefix;
+		protected final String prefix;
 
-		private final String suffix;
+		protected final String suffix;
 
-		private final StringWriter content = new StringWriter();
+		protected final boolean requireAdjacentSeparator;
 
-		private Writer previousWriter;
+		protected final boolean emitWhenEmpty;
 
-		ContentBlock(BlockType blockType, String prefix, String suffix) {
+		ContentBlock(BlockType blockType, String prefix, String suffix, boolean requireAdjacentSeparator,
+				boolean emitWhenEmpty) {
 			super(blockType);
 			this.prefix = prefix;
 			this.suffix = suffix;
+			this.requireAdjacentSeparator = requireAdjacentSeparator;
+			this.emitWhenEmpty = emitWhenEmpty;
 		}
 
-		ContentBlock(String prefix, String suffix) {
-			this(null, prefix, suffix);
+		ContentBlock(String prefix, String suffix, boolean requireAdjacentWhitespace, boolean emitWhenEmpty) {
+			this(null, prefix, suffix, requireAdjacentWhitespace, emitWhenEmpty);
 		}
 
 		@Override
@@ -79,7 +86,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (getBlockType() != BlockType.CODE && getBlockType() != BlockType.PREFORMATTED) {
 				c = normalizeWhitespace(c);
 			}
-			content.write(c);
+			TextileDocumentBuilder.this.emitContent(c);
 		}
 
 		@Override
@@ -87,34 +94,49 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			if (getBlockType() != BlockType.CODE && getBlockType() != BlockType.PREFORMATTED) {
 				s = normalizeWhitespace(s);
 			}
-			content.write(s);
+			TextileDocumentBuilder.this.emitContent(s);
 		}
 
 		@Override
 		public void open() throws IOException {
 			super.open();
-			previousWriter = out;
-			out = content;
+			pushWriter(new StringWriter());
+			if (requireAdjacentSeparator) {
+				clearRequireAdjacentSeparator();
+			}
 		}
 
 		@Override
 		public void close() throws IOException {
-			out = previousWriter;
+			Writer thisContent = popWriter();
 
-			final String content = this.content.toString();
-			final boolean extended = isExtended(content);
-			emitContent(content, extended);
+			final String content = thisContent.toString();
+			boolean extendedBlock = isExtended(content);
+
+			if (content.length() > 0 || emitWhenEmpty) {
+				if (requireAdjacentSeparator) {
+					requireAdjacentSeparator();
+				}
+
+				emitContent(content, extendedBlock);
+
+				if (requireAdjacentSeparator) {
+					requireAdjacentSeparator();
+				}
+			}
 
 			super.close();
-
+			if (getBlockType() != null) {
+				previousWasExtended = extendedBlock;
+			}
 		}
 
 		protected void emitContent(final String content, final boolean extended) throws IOException {
 			final String prefix = extended ? this.prefix.replace(".", "..") : this.prefix; //$NON-NLS-1$//$NON-NLS-2$
 			final String suffix = extended ? this.suffix + "\n" : this.suffix; //$NON-NLS-1$
-			out.write(prefix);
-			out.write(content);
-			out.write(suffix);
+			TextileDocumentBuilder.this.emitContent(prefix);
+			TextileDocumentBuilder.this.emitContent(content);
+			TextileDocumentBuilder.this.emitContent(suffix);
 		}
 
 		private boolean isExtended(String content) {
@@ -131,32 +153,67 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 
 	}
 
+	private class SpanBlock extends ContentBlock {
+
+		public SpanBlock(String spanAttributes, boolean requireAdjacentWhitespace, boolean emitWhenEmpty) {
+			super(null, "%" + spanAttributes, "%", requireAdjacentWhitespace, emitWhenEmpty); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+
+		@Override
+		protected void emitContent(final String content, final boolean extended) throws IOException {
+			boolean nestedSpan = computeNestedSpan();
+
+			if (!nestedSpan) {
+				final String prefix = extended ? this.prefix.replace(".", "..") : this.prefix; //$NON-NLS-1$//$NON-NLS-2$
+				TextileDocumentBuilder.this.emitContent(prefix);
+			}
+			TextileDocumentBuilder.this.emitContent(content);
+			if (!nestedSpan) {
+				final String suffix = extended ? this.suffix + "\n" : this.suffix; //$NON-NLS-1$
+				TextileDocumentBuilder.this.emitContent(suffix);
+			}
+		}
+
+		private boolean computeNestedSpan() {
+			Block block = getPreviousBlock();
+			while (block != null) {
+
+				if (block instanceof SpanBlock) {
+					return true;
+				}
+
+				block = block.getPreviousBlock();
+			}
+			return false;
+		}
+	}
+
 	private class LinkBlock extends ContentBlock {
 
 		private final LinkAttributes attributes;
 
 		private LinkBlock(LinkAttributes attributes) {
-			super(null, "", ""); //$NON-NLS-1$//$NON-NLS-2$
+			super(null, "", "", true, true); //$NON-NLS-1$//$NON-NLS-2$
 			this.attributes = attributes;
 		}
 
 		@Override
 		protected void emitContent(String content, boolean extended) throws IOException {
 			if (content.matches("!.*?!")) { //$NON-NLS-1$
-				out.write(content);
+				TextileDocumentBuilder.this.emitContent(content);
 			} else {
-				out.write('"');
-				out.write(content);
-				out.write('"');
+				TextileDocumentBuilder.this.emitContent('"');
+				TextileDocumentBuilder.this.emitContent(content);
+				TextileDocumentBuilder.this.emitContent('"');
 			}
-			out.write(':');
-			out.write(attributes.getHref());
+			TextileDocumentBuilder.this.emitContent(':');
+			TextileDocumentBuilder.this.emitContent(attributes.getHref());
 		}
 	}
 
 	private class TableCellBlock extends ContentBlock {
 		public TableCellBlock(BlockType blockType) {
-			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "||", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			super(blockType, blockType == BlockType.TABLE_CELL_NORMAL ? "|" : "|_.", "", false, true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		@Override
@@ -168,7 +225,7 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		}
 	}
 
-	public ConfluenceDocumentBuilder(Writer out) {
+	public TextileDocumentBuilder(Writer out) {
 		super(out);
 	}
 
@@ -180,20 +237,20 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case NUMERIC_LIST:
 			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
 		case CODE:
-			return new ContentBlock(type, "{code}", "{code}\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "bc. ", "\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$
 		case DEFINITION_ITEM:
 		case DEFINITION_TERM:
 		case LIST_ITEM:
 			char prefixChar = computeCurrentListType() == BlockType.NUMERIC_LIST ? '#' : '*';
-			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, computePrefix(prefixChar, computeListLevel()) + " ", "\n", false, true); //$NON-NLS-1$ //$NON-NLS-2$
 		case DIV:
 			if (currentBlock == null) {
-				return new ContentBlock(type, "", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+				return new ContentBlock(type, "", "\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				return new ContentBlock(type, "", ""); //$NON-NLS-1$//$NON-NLS-2$
+				return new ContentBlock(type, "", "", false, false); //$NON-NLS-1$//$NON-NLS-2$
 			}
 		case FOOTNOTE:
-			return new ContentBlock(type, "fn1. ", "\n\n"); // FIXME: footnote number?? //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "fn1. ", "\n\n", false, false); // FIXME: footnote number?? //$NON-NLS-1$ //$NON-NLS-2$
 		case INFORMATION:
 		case NOTE:
 		case PANEL:
@@ -203,11 +260,13 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 		case PARAGRAPH:
 			String attributesMarkup = computeAttributes(attributes);
 
-			return new ContentBlock(type, attributesMarkup, "\n\n"); //$NON-NLS-1$
+			return new ContentBlock(type, attributesMarkup.length() > 0 || previousWasExtended
+					? "p" + attributesMarkup + ". " //$NON-NLS-1$ //$NON-NLS-2$
+					: attributesMarkup, "\n\n", false, false); //$NON-NLS-1$
 		case PREFORMATTED:
-			return new ContentBlock(type, "{noformat}" + computeAttributes(attributes) + ". ", "{noformat}\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return new ContentBlock(type, "pre" + computeAttributes(attributes) + ". ", "\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		case QUOTE:
-			return new ContentBlock(type, "bq" + computeAttributes(attributes) + ". ", "\n\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return new ContentBlock(type, "bq" + computeAttributes(attributes) + ". ", "\n\n", false, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		case TABLE:
 			return new SuffixBlock(type, "\n"); //$NON-NLS-1$
 		case TABLE_CELL_HEADER:
@@ -217,88 +276,107 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 			return new SuffixBlock(type, "|\n"); //$NON-NLS-1$
 		default:
 			Logger.getLogger(getClass().getName()).warning("Unexpected block type: " + type); //$NON-NLS-1$
-			return new ContentBlock(type, "", ""); //$NON-NLS-1$ //$NON-NLS-2$
+			return new ContentBlock(type, "", "", false, false); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	@Override
 	protected Block computeSpan(SpanType type, Attributes attributes) {
+		String appendStyle = null;
+		switch (type) {
+		case UNDERLINED:
+			appendStyle = "text-decoration:underline;";//$NON-NLS-1$
+			break;
+		case MONOSPACE:
+			appendStyle = "text-decoration:underline;";//$NON-NLS-1$
+			break;
+		}
+		if (appendStyle != null) {
+			attributes = new Attributes(attributes.getId(), attributes.getCssClass(), attributes.getCssStyle(),
+					attributes.getLanguage());
+			attributes.appendCssStyle(appendStyle);
+		}
 		Block block;
 		String spanAttributes = computeAttributes(attributes);
 		switch (type) {
 		case BOLD:
-			block = new ContentBlock("*" + spanAttributes, "*"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("*" + spanAttributes, "*", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case CITATION:
-			block = new ContentBlock("??" + spanAttributes, "??"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("??" + spanAttributes, "??", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case DELETED:
-			block = new ContentBlock("-" + spanAttributes, "-"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("-" + spanAttributes, "-", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case EMPHASIS:
-		case ITALIC:
-			block = new ContentBlock("_" + spanAttributes, "_"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("_" + spanAttributes, "_", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case INSERTED:
-			block = new ContentBlock("+" + spanAttributes, "+"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("+" + spanAttributes, "+", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case CODE:
-			block = new ContentBlock("@" + spanAttributes, "@"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("@" + spanAttributes, "@", true, false); //$NON-NLS-1$//$NON-NLS-2$
+			break;
+		case ITALIC:
+			block = new ContentBlock("__" + spanAttributes, "__", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case LINK:
 			if (attributes instanceof LinkAttributes) {
 				block = new LinkBlock((LinkAttributes) attributes);
 			} else {
-				block = new ContentBlock("%" + spanAttributes, "%"); //$NON-NLS-1$//$NON-NLS-2$
+				block = new SpanBlock(spanAttributes, true, false);
 			}
 			break;
 		case MONOSPACE:
-			block = new ContentBlock("{{", "}}"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new SpanBlock(spanAttributes, true, false);
+
 		case STRONG:
-			block = new ContentBlock("*" + spanAttributes, "*"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("*" + spanAttributes, "*", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case SUBSCRIPT:
-			block = new ContentBlock("^" + spanAttributes, "^"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("^" + spanAttributes, "^", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
 		case SUPERSCRIPT:
-			block = new ContentBlock("~" + spanAttributes, "~"); //$NON-NLS-1$//$NON-NLS-2$
+			block = new ContentBlock("~" + spanAttributes, "~", true, false); //$NON-NLS-1$//$NON-NLS-2$
 			break;
-		case UNDERLINED:
-			block = new ContentBlock("+", "+"); //$NON-NLS-1$//$NON-NLS-2$
-			break;
-//			case QUOTE: not supported		
 
+//			case QUOTE: not supported by Textile		
+		case UNDERLINED:
 		case SPAN:
 		default:
-			block = null;
-			if (attributes.getCssStyle() != null) {
-				Matcher colorMatcher = Pattern.compile("color:\\s*([^; \t]+)").matcher(attributes.getCssStyle()); //$NON-NLS-1$
-				if (colorMatcher.find()) {
-					String color = colorMatcher.group(1);
-					if (color.equalsIgnoreCase("black") || color.equals("#010101")) { //$NON-NLS-1$ //$NON-NLS-2$
-						color = null;
-					}
-					if (color != null) {
-						block = new ContentBlock("{color:" + color + "}", "{color}"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					}
-				}
+			if (spanAttributes.length() == 0) {
+				block = new SpanBlock("", false, false); //$NON-NLS-1$ 
+			} else {
+				block = new SpanBlock(spanAttributes, true, false);
 			}
-			if (block == null) {
-				block = new ContentBlock("", ""); //$NON-NLS-1$//$NON-NLS-2$
-			}
+			break;
 		}
 		return block;
 	}
 
 	private String computeAttributes(Attributes attributes) {
 		String attributeMarkup = ""; //$NON-NLS-1$
-
+		if (emitAttributes) {
+			String classId = ""; //$NON-NLS-1$
+			if (attributes.getCssClass() != null) {
+				classId = attributes.getCssClass();
+			}
+			if (attributes.getId() != null) {
+				classId += "#" + attributes.getId(); //$NON-NLS-1$
+			}
+			if (classId.length() > 0) {
+				attributeMarkup += "(" + classId + ")"; //$NON-NLS-1$//$NON-NLS-2$
+			}
+			if (attributes.getCssStyle() != null) {
+				attributeMarkup += "{" + attributes.getCssStyle() + "}"; //$NON-NLS-1$//$NON-NLS-2$
+			}
+		}
 		return attributeMarkup;
 	}
 
 	@Override
 	protected ContentBlock computeHeading(int level, Attributes attributes) {
-		return new ContentBlock("h" + level + ". ", "\n\n"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		return new ContentBlock("h" + level + ". ", "\n\n", false, false); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override
@@ -406,12 +484,30 @@ public class ConfluenceDocumentBuilder extends AbstractMarkupDocumentBuilder {
 	}
 
 	private void writeAttributes(Attributes attributes) {
-
+		if (!emitAttributes) {
+			return;
+		}
 		try {
 			currentBlock.write(computeAttributes(attributes));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * indicate if attributes (such as CSS styles, CSS class, id) should be emitted in the generated Textile markup.
+	 * Defaults to true.
+	 */
+	public boolean isEmitAttributes() {
+		return emitAttributes;
+	}
+
+	/**
+	 * indicate if attributes (such as CSS styles, CSS class, id) should be emitted in the generated Textile markup.
+	 * Defaults to true.
+	 */
+	public void setEmitAttributes(boolean emitAttributes) {
+		this.emitAttributes = emitAttributes;
 	}
 
 }
