@@ -8,6 +8,7 @@
     
     Contributors:
         Tasktop Techonologies - initial API and implementation
+        Torkild U. Resheim - added EPUB source bundles
  -->
 <feature
       id="org.eclipse.mylyn.docs.sdk"
@@ -38,6 +39,27 @@
 
    <plugin
          id="org.eclipse.mylyn.htmltext.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.docs.epub.core.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.docs.epub.ui.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.mylyn.docs.epub.ant.core.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
