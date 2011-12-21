@@ -200,6 +200,12 @@ public class OPS2Publication extends OPSPublication {
 						loadOptions.put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE, Boolean.TRUE);
 						// UTF-8 encoding is required per specification
 						saveOptions.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
+						// Do not download any external DTDs.
+						Map<String, Object> parserFeatures = new HashMap<String, Object>();
+						parserFeatures.put("http://xml.org/sax/features/validation", Boolean.FALSE);
+						parserFeatures.put("http://apache.org/xml/features/nonvalidating/load-external-dtd",
+								Boolean.FALSE);
+						loadOptions.put(XMLResource.OPTION_PARSER_FEATURES, parserFeatures);
 						return xmiResource;
 					}
 

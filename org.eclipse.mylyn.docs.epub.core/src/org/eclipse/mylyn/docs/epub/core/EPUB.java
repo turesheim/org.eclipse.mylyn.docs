@@ -13,6 +13,7 @@ package org.eclipse.mylyn.docs.epub.core;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -118,14 +119,14 @@ public class EPUB {
 	}
 
 	/**
-	 * Adds a new publication (or root file) to the EPUB. Use {@link #add(OPSPublication)} 
-	 * when adding an OEBPS publication. 
+	 * Adds a new publication (or root file) to the EPUB. Use
+	 * {@link #add(OPSPublication)} when adding an OEBPS publication.
 	 * 
 	 * @param file
 	 *            the publication to add
 	 * @param type
 	 *            the MIME type of the publication
-	 * @see #add(OPSPublication)           
+	 * @see #add(OPSPublication)
 	 */
 	public void add(File file, String type) {
 		String name = type.substring(type.lastIndexOf('/') + 1, type.length()).toUpperCase();
@@ -225,7 +226,7 @@ public class EPUB {
 	 * @see {@link #unpack(File)}
 	 * @see {@link #unpack(File, File)}
 	 */
-	private void readOCF(File workingFolder) throws IOException {
+	protected void readOCF(File workingFolder) throws IOException {
 		// These file names are listed in the OCF specification and must not be
 		// changed.
 		File metaFolder = new File(workingFolder.getAbsolutePath() + File.separator + "META-INF");
@@ -266,6 +267,12 @@ public class EPUB {
 						loadOptions.put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE, Boolean.TRUE);
 						// UTF-8 encoding is required per specification
 						saveOptions.put(XMLResource.OPTION_ENCODING, OCF_FILE_ENCODING);
+						// Do not download any external DTDs.
+						Map<String, Object> parserFeatures = new HashMap<String, Object>();
+						parserFeatures.put("http://xml.org/sax/features/validation", Boolean.FALSE);
+						parserFeatures.put("http://apache.org/xml/features/nonvalidating/load-external-dtd",
+								Boolean.FALSE);
+						loadOptions.put(XMLResource.OPTION_PARSER_FEATURES, parserFeatures);
 						return xmiResource;
 					}
 

@@ -864,7 +864,7 @@ public abstract class OPSPublication {
 	 *            the file to read
 	 * @throws IOException
 	 */
-	private void readOPF(File rootFile) throws IOException {
+	protected void readOPF(File rootFile) throws IOException {
 		ResourceSet resourceSet = new ResourceSetImpl();
 		URI fileURI = URI.createFileURI(rootFile.getAbsolutePath());
 		Resource resource = resourceSet.createResource(fileURI);
@@ -919,6 +919,12 @@ public abstract class OPSPublication {
 						loadOptions.put(XMLResource.OPTION_USE_ENCODED_ATTRIBUTE_STYLE, Boolean.TRUE);
 						// UTF-8 encoding is required per specification
 						saveOptions.put(XMLResource.OPTION_ENCODING, XML_ENCODING);
+						// Do not download any external DTDs.
+						Map<String, Object> parserFeatures = new HashMap<String, Object>();
+						parserFeatures.put("http://xml.org/sax/features/validation", Boolean.FALSE);
+						parserFeatures.put("http://apache.org/xml/features/nonvalidating/load-external-dtd",
+								Boolean.FALSE);
+						loadOptions.put(XMLResource.OPTION_PARSER_FEATURES, parserFeatures);
 						return xmiResource;
 					}
 
