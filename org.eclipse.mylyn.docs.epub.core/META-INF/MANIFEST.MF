@@ -50,6 +50,8 @@ Export-Package: org.eclipse.mylyn.docs.epub.core;uses:="org.eclipse.mylyn.docs.e
    org.eclipse.emf.ecore,
    org.eclipse.emf.common.notify.impl",
  org.eclipse.mylyn.docs.epub.ocf,
+ org.eclipse.mylyn.docs.epub.ocf.impl,
+ org.eclipse.mylyn.docs.epub.ocf.util,
  org.eclipse.mylyn.docs.epub.opf;uses:="org.eclipse.emf.ecore,org.eclipse.emf.common.util,org.eclipse.mylyn.docs.epub.dc",
  org.eclipse.mylyn.docs.epub.opf.impl;
   uses:="org.eclipse.emf.ecore,
