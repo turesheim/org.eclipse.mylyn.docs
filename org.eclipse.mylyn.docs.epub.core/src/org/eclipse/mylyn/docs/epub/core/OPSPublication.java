@@ -701,7 +701,7 @@ public abstract class OPSPublication {
 	 * 
 	 * @return the main identifier or <code>null</code>
 	 */
-	protected Identifier getIdentifier() {
+	public Identifier getIdentifier() {
 		EList<Identifier> identifiers = opfPackage.getMetadata().getIdentifiers();
 		for (Identifier identifier : identifiers) {
 			if (identifier.getId().equals(opfPackage.getUniqueIdentifier())) {
