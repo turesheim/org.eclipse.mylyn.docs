@@ -149,8 +149,9 @@ public abstract class OPSPublication {
 		addDate(null, new java.util.Date(System.currentTimeMillis()), CREATION_DATE_ID);
 		// Make it clear where the tooling comes from
 		addContributor(null, null, "Eclipse Mylyn Docs project", Role.REDACTOR, null);
+		// Generate an unique identifier
 		if (getIdentifier() == null) {
-			addIdentifier(UUID_SCHEME, "uuid", UUID.randomUUID().toString());
+			addIdentifier(UUID_SCHEME, "uuid", "urn:uuid" + UUID.randomUUID().toString());
 			setIdentifierId(UUID_SCHEME);
 		}
 		// Add empty subject
