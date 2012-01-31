@@ -273,8 +273,7 @@ public class TestOPS2Publication extends AbstractTest {
 	 * declared as XHTML (which it of course is not). This is probably due to an
 	 * issue in DocBook XSL 1.76.1
 	 * 
-	 * @see http://sourceforge.net/tracker/index.php?func=detail&aid=3353537
-	 *      &group_id=21935&atid=373747.
+	 * @see http://sourceforge.net/tracker/index.php?func=detail&aid=3353537&group_id=21935&atid=373747.
 	 * 
 	 * @throws Exception
 	 */
