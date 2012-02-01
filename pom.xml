@@ -68,7 +68,6 @@
 	</profile>
   </profiles>
   <modules>
-    <!-- EPUB support -->
     <module>org.eclipse.mylyn.docs.epub.core</module> 
     <module>org.eclipse.mylyn.docs.epub.ant.core</module>
     <module>org.eclipse.mylyn.docs.epub.ui</module>

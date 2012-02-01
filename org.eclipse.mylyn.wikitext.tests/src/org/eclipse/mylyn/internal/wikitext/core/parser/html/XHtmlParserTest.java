@@ -9,10 +9,10 @@
  *     David Green - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.mylyn.internal.wikitext.core.util;
+package org.eclipse.mylyn.internal.wikitext.core.parser.html;
 
-import org.eclipse.mylyn.internal.wikitext.core.parser.builder.AbstractSaxHtmlParser;
-import org.eclipse.mylyn.internal.wikitext.core.parser.builder.XHtmlParser;
+import org.eclipse.mylyn.internal.wikitext.core.parser.html.AbstractSaxHtmlParser;
+import org.eclipse.mylyn.internal.wikitext.core.parser.html.XHtmlParser;
 
 /**
  * @author David Green
