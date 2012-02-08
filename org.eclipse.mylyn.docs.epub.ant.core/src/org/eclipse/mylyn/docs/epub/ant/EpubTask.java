@@ -215,7 +215,7 @@ public class EpubTask extends Task {
 	/**
 	 * @ant.not-required Automatically add referenced resources.
 	 */
-	public void setAutomaticAdd(boolean automatic) {
+	public void setIncludeReferenced(boolean automatic) {
 		ops.setIncludeReferencedResources(automatic);
 	}
 
