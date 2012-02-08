@@ -64,7 +64,7 @@
 			<item file="${srcdir}/epub-ant-task.html" />
 			<item file="${srcdir}/examples.html" />
 			<item file="${basedir}/style.css" type="text/css" spine="false" />
-			<reference href="title-page.html" type="title-page" title="Building EPUBs" />
+			<reference href="title-page.html" type="title-page" title="Building EPUBs with Eclipse" />
 			<reference href="introduction.html" type="preface" title="Introduction" />
 			<reference href="copyright.html" type="copyright-page" title="Copyright" />
 			<toc generate="true" />
