@@ -1,6 +1,6 @@
 h1. Copyrights
 
-p. This book is Copyright &copy; 2011 by Torkild U. Resheim
+p. This book is Copyright &copy; 2011, 2012 by Torkild U. Resheim
 
 p. The EPUB 2.0.1 Specification  referenced to in this publication is Copyright &copy; 2007 by International Digital Publishing Forum(tm).
 
