@@ -20,3 +20,4 @@ Bundle-ClassPath: .,
  epubcheck/epubcheck-1.2.jar,
  epubcheck/lib/jing.jar,
  epubcheck/lib/saxon.jar
+Import-Package: org.junit
