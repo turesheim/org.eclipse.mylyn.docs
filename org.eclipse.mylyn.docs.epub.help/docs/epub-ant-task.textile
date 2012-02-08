@@ -6,8 +6,9 @@ The following is an approximate DTD for the task:
 
 bc.. 
 
-<!ELEMENT epub (identifier | type | subject | reference | creator | meta | 
-	publisher | source | language | rights | contributor | format | cover | 
+<!ELEMENT epub (identifier | type | subject | reference 
+  | creator | meta | publisher | source | language 
+  | rights | contributor | format | cover | 
 	toc | item | date | title | fileset)*>
 <!ATTLIST epub
           id ID #IMPLIED
@@ -134,7 +135,8 @@ p.
 Optionally one can specify **fileas** to indicate a formal way of filing the entry. For instance "Last name, first name".
 
 bc.. 
-<creator name="Nomen Nescio" file-as="Nescio, Nomen" role="aut/>
+<creator name="Nomen Nescio" file-as="Nescio, Nomen" 
+  role="aut/>
 
 p. This tooling will automatically add "Eclipse Committers and Contributors" in the redactor role.
 
@@ -316,9 +318,12 @@ p.
 * **title** - title of the reference.          
 
 bc.. 
-<reference href="cover.html" type="cover" title="Cover Page" />
-<reference href="title-page.html" type="title-page" title="Building EPUBs" />
-<reference href="introduction.html" type="preface" title="Introduction" />
+<reference href="cover.html"
+  type="cover" title="Cover Page" />
+<reference href="title-page.html" 
+  type="title-page" title="Building EPUBs" />
+<reference href="introduction.html"
+  type="preface" title="Introduction" />
 
 p. The following types are allowed:
 

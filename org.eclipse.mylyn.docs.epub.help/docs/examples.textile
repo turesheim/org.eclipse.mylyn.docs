@@ -62,11 +62,14 @@ p. Next we add a XHTML file (named __cover.html__) to the publication. This will
 
 bc.. 
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>Cover Page</title>
-    <style type="text/css"> img { max-width: 100%; }</style>
+    <style type="text/css">
+      img { max-width: 100%; }
+    </style>
   </head>
   <body>
     <div id="cover-image">
@@ -79,7 +82,8 @@ p. Then some more Ant code:
 
 bc.. 
 <item file="cover.xhtml"/>
-<reference href="cover.xhtml" type="cover" title="Cover Page" />
+<reference href="cover.xhtml" 
+  type="cover" title="Cover Page" />
 <meta name="cover" content="cover-image"/>
 
 p. This method will produce a cover page that will work with all the tested reading systems; including Calibre, iBooks, Nook for Mac, Adobe Digital Editions and Kindle (after converting to MOBI using Calibre).
