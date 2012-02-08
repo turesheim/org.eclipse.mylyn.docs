@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Torkild U. Resheim.
+ * Copyright (c) 2011, 2012 Torkild U. Resheim.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -26,28 +26,28 @@ code strong em, code em strong, pre strong em, pre em strong, tt strong em, tt e
   font-weight: bold;
   font-style: italic;
   font-family: monospace;
-  color: #3a587a;
-  font-size: 1.0em;
+  color: #0000aa;
+  font-size: 0.9em;
 }
 
 code em, em code, pre em, em pre, tt em, em tt {
   font-style: italic;
   font-family: monospace;
-  color: #3a587a;
-  font-size: 1.0em;
+  color: #0000aa;
+  font-size: 0.9em;
 }
 
 code strong, strong code, pre strong, strong pre, tt strong, strong tt {
   font-weight: bold;
   font-family: monospace;
-  color: #3a587a;
-  font-size: 1.0em;
+  color: #0000aa;
+  font-size: 0.9em;
 }
 
 code, pre, tt { 
   font-family: monospace;
-  color: #3a587a;
-  font-size: 1.0em;
+  color: #0000aa;
+  font-size: 0.9em;
 }
 
 /*
@@ -70,17 +70,16 @@ td, th {
   padding: 4px; 
   border-width: 1px 1px 0 0; 
   font-size: 0.9em;
+  font-family: "Helvetica", sans-serif;
 }
 
 th {
   background-color: #e4e3bd;
-  font-family: "Helvetica", sans-serif;
   font-weight: bold;
 }
 
 td {
   background-color: #f3f2e1;
-  font-family: "Helvetica", sans-serif;
 }
 
 .logo {
@@ -92,13 +91,11 @@ td {
   font-size: 2em; 
   text-align: center;
   border-bottom: 1px black solid; 
-  font-family: "Palatino", serif;
   font-weight: bold;
 }
 
 .author, .copyright {
   font-size: 1em; color: #000000;
-  font-family: "Palatino", serif;
   font-weight: bold;
   text-align: center;
 }
@@ -122,39 +119,33 @@ h1 {
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   margin-bottom: 1.5em;
-  font-family: "Palatino", serif;
   font-weight: bold;
 }
 
 h2 {
   font-size: 1.5em;
-  font-family: "Palatino", serif;
   font-weight: bold;
 }
 
 h3 {
   font-size: 1.3em;
-  font-family: "Palatino", serif;
   font-weight: bold;
 }
 
 h4 {
   font-size: 1.2em;
   font-style: italic;
-  font-family: "Palatino", serif;
   font-weight: bold;
 }
 
 h5 {
   font-size: 1em;
   font-style: italic;
-  font-family: "Palatino", serif;
 }
 
 h6 {
   font-size: 1em;
   font-style: italic;
-  font-family: "Palatino", serif;
 }
 
 hr {
@@ -164,7 +155,8 @@ hr {
 }
 
 body {
-  font-size: 1em;
+  font-size: 1em; color: #000000;
+  font-family: "Palatino", "Palatino nova",  serif;
   margin: 0;
   padding: 0;
   text-align: left;
