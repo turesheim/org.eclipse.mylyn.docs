@@ -19,40 +19,38 @@ p {
   line-height: 1.5em;
 }
 
-/*
- * PREFORMATTED TEXT
- */
+/* Preformatted text */
+
 code strong em, code em strong, pre strong em, pre em strong, tt strong em, tt em strong {
   font-weight: bold;
   font-style: italic;
-  font-family: monospace;
+  font-family: "Liberation Mono BoldItal", monospace;
   color: #0000aa;
   font-size: 0.9em;
 }
 
 code em, em code, pre em, em pre, tt em, em tt {
   font-style: italic;
-  font-family: monospace;
+  font-family: "Liberation Mono Ital", monospace;
   color: #0000aa;
   font-size: 0.9em;
 }
 
 code strong, strong code, pre strong, strong pre, tt strong, strong tt {
   font-weight: bold;
-  font-family: monospace;
+  font-family: "Liberation Mono Bold", monospace;
   color: #0000aa;
   font-size: 0.9em;
 }
 
 code, pre, tt { 
-  font-family: monospace;
+  font-family: "Liberation Mono", monospace;
   color: #0000aa;
   font-size: 0.9em;
 }
 
-/*
- * TABLES
- */
+/* Tables */
+
 table, td, th {
   border-color: #d5d399; 
   border-style: solid;
@@ -70,7 +68,6 @@ td, th {
   padding: 4px; 
   border-width: 1px 1px 0 0; 
   font-size: 0.9em;
-  font-family: "Helvetica", sans-serif;
 }
 
 th {
@@ -100,9 +97,8 @@ td {
   text-align: center;
 }
 
-/*
- * HEADERS
- */
+/* Headers */
+
 h1, h2, h3, h4, h5, h6 {
   text-align: left;
   page-break-inside: avoid;
@@ -154,10 +150,54 @@ hr {
   height: 1px;
 }
 
+/* images  */
+
+img {
+   max-width: 95%;
+   margin-left: auto;
+   margin-right: auto;
+   padding: 5px 0;
+}
+
+/* fonts (keep at bottom); using Liberation as a fallback for its rich set of 
+   glyphs and permissive license */
+
+@font-face {
+  font-family: "Liberation Serif";
+  font-style: normal;
+  font-weight: normal;
+  src: url(LiberationSerif.otf) format('opentype');
+}
+
+@font-face {
+  font-family: "Liberation Mono";
+  font-weight: normal;
+  font-style: normal;
+  src: url(LiberationMono.otf) format('opentype');
+}
+
+@font-face {
+  font-family: "Liberation Mono Bold";
+  font-style: normal;
+  font-weight: bold;
+  src: url(LiberationMono-Bold.otf) format('opentype');
+}
+
+@font-face {
+  font-family: "Liberation Mono BoldItal";
+  font-weight: bold;
+  font-style: italic;
+  src: url(LiberationMono-BoldItalic.otf) format('opentype');
+}
+
+@font-face {
+  font-family: "Liberation Mono Ital";
+  font-weight: normal;
+  font-style: italic;
+  src: url(LiberationMono-Italic.otf) format('opentype');
+}
+
 body {
+  font-family: "Liberation Serif", serif;
   font-size: 1em; color: #000000;
-  font-family: "Palatino", "Palatino nova",  serif;
-  margin: 0;
-  padding: 0;
-  text-align: left;
 }

@@ -72,6 +72,7 @@
 				<include name="*.gif" />
 				<include name="*.png" />
 				<include name="*.jpg" />
+				<include name="*.otf" />
 			</fileset>
 		</epub>
 		<!-- Delete generated files -->
