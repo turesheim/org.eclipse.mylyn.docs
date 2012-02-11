@@ -88,6 +88,9 @@ public class EPUBFileUtil {
 		if (name.endsWith(".otf")) {
 			return "font/opentype";
 		}
+		if (name.endsWith(".ttf")) {
+			return "font/truetype";
+		}
 		if (name.endsWith(".svg")) {
 			return "image/svg+xml";
 		}
