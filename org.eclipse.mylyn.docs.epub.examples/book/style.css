@@ -9,50 +9,71 @@
  * Contributors: Torkild U. Resheim - initial API and implementation
  *******************************************************************************/
 
+/* Reset */
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6,
+p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del,
+dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub,
+sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form,
+label, legend, table, caption, tbody, tfoot, thead, tr, th, td { 
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent; }
+
 @page {
-  margin-left: 0px;
-  margin-right: 0px;
+  margin: 5px !important;
 }
 
-p {
-  text-align: justify; 
-  line-height: 1.5em;
+/* Paragraph */
+
+p { 
+  margin: 8px 0 0;
 }
 
 /* Preformatted text */
 
-code strong em, code em strong, pre strong em, pre em strong, tt strong em, tt em strong {
+pre {
+  white-space: pre-wrap;
+  font-family: "Ubuntu Mono", monospace;
+  margin: 10px 10px 10px 10px;
+  padding: 5px 5px 5px 5px;
+  font-size: 85%;
+  display: block;
+  -webkit-hyphens: none;
+  hyphens: none;
+  adobe-hyphenate: none;
+  border: 1px solid #eee;
+}
+
+code {
+  font-family: "Ubuntu Mono", monospace;
+}
+
+code strong em, code em strong, pre em strong, pre strong em,
+strong code em code, em code strong code, span.bolditalic code {
   font-weight: bold;
   font-style: italic;
-  font-family: "Liberation Mono BoldItal", monospace;
-  color: #0000aa;
-  font-size: 0.9em;
+  font-family: "Ubuntu Mono BoldItal", monospace;
 }
 
-code em, em code, pre em, em pre, tt em, em tt {
+code em, em code, pre em, em.replaceable {
+  font-family: "Ubuntu Mono Ital", monospace;
   font-style: italic;
-  font-family: "Liberation Mono Ital", monospace;
-  color: #0000aa;
-  font-size: 0.9em;
 }
 
-code strong, strong code, pre strong, strong pre, tt strong, strong tt {
+code strong, strong code, pre strong, strong.userinput {
+  font-family: "Ubuntu Mono Bold", monospace;
   font-weight: bold;
-  font-family: "Liberation Mono Bold", monospace;
-  color: #0000aa;
-  font-size: 0.9em;
-}
-
-code, pre, tt { 
-  font-family: "Liberation Mono", monospace;
-  color: #0000aa;
-  font-size: 0.9em;
 }
 
 /* Tables */
 
 table, td, th {
-  border-color: #d5d399; 
+  border-color: #a8cef0; 
   border-style: solid;
 }
 
@@ -71,77 +92,60 @@ td, th {
 }
 
 th {
-  background-color: #e4e3bd;
+  background-color: #d4e7f8;
   font-weight: bold;
 }
 
 td {
-  background-color: #f3f2e1;
-}
-
-.logo {
-  display: block; margin-left: auto; margin-right: auto;
+  background-color: #e9f3fb;
 }
 
 .title {
   color: #000000;
-  font-size: 2em; 
+  font-size: 3em; 
   text-align: center;
-  border-bottom: 1px black solid; 
   font-weight: bold;
+  padding-top: 3em;
 }
 
-.author, .copyright {
-  font-size: 1em; color: #000000;
+.author {
+  font-size: 2em; color: #000000;
   font-weight: bold;
   text-align: center;
+  padding-top: 1em;
 }
+
 
 /* Headers */
 
-h1, h2, h3, h4, h5, h6 {
-  text-align: left;
-  page-break-inside: avoid;
-  page-break-after: avoid;
-  font-weight: bold;
-  display: block;
-}
-
 h1 {
-  font-size: 1.7em;
-  text-align: center;
-  border-top: 1px #000000 solid;
-  border-bottom: 1px #000000 solid;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  margin-bottom: 1.5em;
-  font-weight: bold;
-}
-
-h2 {
   font-size: 1.5em;
   font-weight: bold;
+  font-family: "Free Sans Bold", sans-serif;
+  margin-top: 20px !important;
+}
+
+h2 { 
+  font-size: 1.3em;
+  font-weight: bold;
+  font-family: "Free Sans Bold", sans-serif;
+  color: #7db6e9;
+  margin: 15px 0 8px 0 !important;
 }
 
 h3 {
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: bold;
+  font-family: "Free Sans Bold", sans-serif;
+  margin: 10px 0 8px 0 !important;
 }
 
 h4 {
-  font-size: 1.2em;
-  font-style: italic;
-  font-weight: bold;
-}
-
-h5 {
-  font-size: 1em;
-  font-style: italic;
-}
-
-h6 {
-  font-size: 1em;
-  font-style: italic;
+  font-size: bold;
+  font-weight: 1em;
+  font-family: "Free Sans Bold", sans-serif;
+  color: #666;
+  margin: 9px 0 !important;
 }
 
 hr {
@@ -153,51 +157,104 @@ hr {
 /* images  */
 
 img {
-   max-width: 95%;
-   margin-left: auto;
-   margin-right: auto;
-   padding: 5px 0;
+  max-width: 95%;
+  margin: 10px 0 !important;
+  text-align: center;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: transparent;
+  padding: 5px !important;
+  page-break-inside: avoid;
 }
 
-/* fonts (keep at bottom); using Liberation as a fallback for its rich set of 
-   glyphs and permissive license */
+
+/* Lists */
+
+dt {
+  font-weight: bold;
+  padding-top: 10px !important;
+  padding-bottom: 0 !important;
+}
+
+dd {
+  margin-left: 1.5em !important;
+}
+
+ol {
+  list-style-type: decimal;
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+  margin-left: 20px !important;
+  padding-left: 25px !important;
+}
+
+ol ol {
+  list-style-type: lower-alpha;
+}
+
+ol ol ol {
+  list-style-type: lower-roman;
+}
+
+ul { 
+  list-style-type: square;
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+  margin-left: 5px !important;
+  padding-left: 20px !important;
+}
+
+ul ul { 
+  list-style-type: none;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+ul ul li p:before { 
+  content: "\2014 \0020";
+}
+
+ul ul ul li p:before { 
+  content: "";
+}
+
+ul ul ul { 
+  list-style-type: square;
+  margin-left: 20px !important;
+  padding-left: 30px !important;
+}
+
+/* Fonts */
 
 @font-face {
-  font-family: "Liberation Serif";
-  font-style: normal;
+  font-family: "Ubuntu Mono";
   font-weight: normal;
-  src: url(LiberationSerif.otf) format('opentype');
-}
-
-@font-face {
-  font-family: "Liberation Mono";
-  font-weight: normal;
   font-style: normal;
-  src: url(LiberationMono.otf) format('opentype');
+  src: url(UbuntuMono-R.ttf) format('truetype');
 }
 
 @font-face {
-  font-family: "Liberation Mono Bold";
+  font-family: "Ubuntu Mono Bold";
   font-style: normal;
   font-weight: bold;
-  src: url(LiberationMono-Bold.otf) format('opentype');
+  src: url(UbuntuMono-B.ttf) format('truetype');
 }
 
 @font-face {
-  font-family: "Liberation Mono BoldItal";
+  font-family: "Ubuntu Mono BoldItal";
   font-weight: bold;
   font-style: italic;
-  src: url(LiberationMono-BoldItalic.otf) format('opentype');
+  src: url(UbuntuMono-BI.ttf) format('truetype');
 }
 
 @font-face {
-  font-family: "Liberation Mono Ital";
+  font-family: "Ubuntu Mono Ital";
   font-weight: normal;
   font-style: italic;
-  src: url(LiberationMono-Italic.otf) format('opentype');
+  src: url(UbuntuMono-RI.ttf) format('truetype');
 }
 
 body {
-  font-family: "Liberation Serif", serif;
   font-size: 1em; color: #000000;
 }
