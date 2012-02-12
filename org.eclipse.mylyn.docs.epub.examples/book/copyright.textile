@@ -6,4 +6,4 @@ p. The EPUB 2.0.1 Specification  referenced to in this publication is Copyright 
 
 p. The Dublin Core Specification referenced to in this publication is Copyright &copy; 1995-2011 DCMI. All Rights Reserved. Licensed under a Creative Commons Attribution 3.0 Unported License.
 
-p. The Liberation fonts used in this publication are Copyright &copy; 2007 Red Hat, Inc.
+p. The Ubuntu fonts used in this publication are Copyright &copy; 2010 Canonical Ltd.
