@@ -1,4 +1,3 @@
 /org.eclipse*/bin
 /org.eclipse*/target
-/org.eclipse*/.DS_Store
-/org.eclipse.mylyn.docs.epub.examples/book/build/
+*.DS_Store
