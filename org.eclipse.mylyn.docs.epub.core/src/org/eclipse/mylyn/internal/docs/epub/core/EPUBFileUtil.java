@@ -92,7 +92,7 @@ public class EPUBFileUtil {
 	 *
 	 * @param file
 	 *            the file to determine MIME-type for
-	 * @return the MIME-type or <code>application/octet-stream</code>
+	 * @return the MIME-type or <code>application/octet-stream</code> if the type could not be detected
 	 */
 	public static String getMimeType(File file) {
 		try {
@@ -169,7 +169,10 @@ public class EPUBFileUtil {
 	 * If the destination folder does not already exist it will be created. Additionally the modification time stamp of
 	 * this folder will be set to the same as the originating EPUB file.
 	 * </p>
-	 * TODO: Actually validate the mimetype file
+	 * <p>
+	 * {@link #getMimeType(File)} may be used prior to calling this method to verify that the file is an actual
+	 * EPUB-file.
+	 * </p>
 	 *
 	 * @param epubfile
 	 *            the EPUB file

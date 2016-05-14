@@ -29,6 +29,24 @@ public class EPUBPublication extends OPSPublication {
 	}
 
 	/**
+	 * Creates a new EPUB 3.0 formatted publication.
+	 *
+	 * @since 2.0
+	 */
+	public EPUBPublication() {
+		super();
+	}
+
+	/**
+	 * Creates a new EPUB 2.0 formatted publication, logging all events to the specified logger.
+	 *
+	 * @since 3.3
+	 */
+	public EPUBPublication(ILogger logger) {
+		super(logger);
+	}
+
+	/**
 	 * Adds a new EPUB 3 meta item to the publication.
 	 *
 	 * @param id
@@ -41,6 +59,7 @@ public class EPUBPublication extends OPSPublication {
 	 *            the optional property data type
 	 * @return the new meta
 	 * @see http://www.idpf.org/epub/30/spec/epub30-publications.html#sec-meta-elem
+	 * @see OPSPublication#addMeta(String, String)
 	 * @since 3.0
 	 */
 	public org.eclipse.mylyn.docs.epub.opf.Meta addMeta(String id, String property, String refines, String scheme) {

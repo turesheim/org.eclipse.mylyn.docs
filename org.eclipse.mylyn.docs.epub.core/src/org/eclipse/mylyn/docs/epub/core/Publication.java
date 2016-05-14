@@ -120,7 +120,7 @@ public abstract class Publication {
 	protected static final String XML_ENCODING = "UTF-8"; //$NON-NLS-1$
 
 	/**
-	 * Returns an <i>EPUB version 2.0.1</i> instance.
+	 * Returns an <i>EPUB version 2.0.1</i> formatted instance.
 	 *
 	 * @return an EPUB instance
 	 */
@@ -129,8 +129,10 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Returns an <i>EPUB version 2.0.1</i> instance.
+	 * Returns an <i>EPUB version 2.0.1</i> formatted instance.
 	 *
+	 * @param logger
+	 *            an event logger
 	 * @return an EPUB instance
 	 * @since 3.1
 	 */
@@ -139,7 +141,7 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Returns an <i>EPUB version 3.0</i> instance.
+	 * Returns an <i>EPUB version 3.0</i> formatted instance.
 	 *
 	 * @return an EPUB instance
 	 * @since 3.0
@@ -148,9 +150,22 @@ public abstract class Publication {
 		return new EPUBPublication();
 	}
 
+	/**
+	 * Returns an <i>EPUB version 3.0</i> formatted instance.
+	 *
+	 * @param logger
+	 *            an event logger
+	 * @return an EPUB instance
+	 * @since 3.3
+	 */
+	public static Publication getVersion3Instance(ILogger logger) {
+		return new EPUBPublication(logger);
+	}
+
 	/** Indentation level used when logging */
 	protected int indent = 0;
 
+	/** The logging instance, may be <code>null</code> */
 	protected ILogger logger;
 
 	/** List of validation messages */
@@ -185,7 +200,7 @@ public abstract class Publication {
 	 */
 	private void addCompulsoryData() {
 		log(Messages.getString("OPSPublication.1"), Severity.VERBOSE, indent++); //$NON-NLS-1$
-		//addDefaultRedactor();
+		//addDefaultRedactor(); XXX: messes up when doing repeated unpack/pack
 		// Generate an unique identifier
 		if (getIdentifier() == null) {
 			addIdentifier(UUID_SCHEME, "uuid", "urn:uuid" + UUID.randomUUID().toString()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -342,8 +357,8 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Adds a new date to the publication. The given instance will be represented in a format defined by
-	 * "Date and Time Formats" at http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
+	 * Adds a new date to the publication. The given instance will be represented in a format defined by "Date and Time
+	 * Formats" at http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
 	 *
 	 * @param date
 	 *            the date
@@ -355,10 +370,10 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Date of publication, in the format defined by the W3C specification "<a href="http://www.w3.org/TR/NOTE-datetime
-	 * ">Date and Time Formats</a>" and by ISO 8601. In particular, dates without times must be represented in the form
-	 * YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month, and if the month is given, an optional
-	 * 2-digit day of month.
+	 * Date of publication, in the format defined by the W3C specification
+	 * "<a href="http://www.w3.org/TR/NOTE-datetime ">Date and Time Formats</a>" and by ISO 8601. In particular, dates
+	 * without times must be represented in the form YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month,
+	 * and if the month is given, an optional 2-digit day of month.
 	 *
 	 * @param value
 	 *            the date string
@@ -369,8 +384,8 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Adds a new date to the publication. The given instance will be represented in a format defined by
-	 * "Date and Time Formats" at http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
+	 * Adds a new date to the publication. The given instance will be represented in a format defined by "Date and Time
+	 * Formats" at http://www.w3.org/TR/NOTE-datetime and by ISO 8601 on which it is based.
 	 *
 	 * @param id
 	 *            optional identifier
@@ -395,11 +410,11 @@ public abstract class Publication {
 	}
 
 	/**
-	 * Date of publication, in the format defined by the W3C specification "<a href="http://www.w3.org/TR/NOTE-datetime
-	 * ">Date and Time Formats</a>" and by ISO 8601. In particular, dates without times must be represented in the form
-	 * YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month, and if the month is given, an optional
-	 * 2-digit day of month. The event attribute is optional, possible values may include: "creation", "publication",
-	 * and "modification".
+	 * Date of publication, in the format defined by the W3C specification
+	 * "<a href="http://www.w3.org/TR/NOTE-datetime ">Date and Time Formats</a>" and by ISO 8601. In particular, dates
+	 * without times must be represented in the form YYYY[-MM[-DD]]: a required 4-digit year, an optional 2-digit month,
+	 * and if the month is given, an optional 2-digit day of month. The event attribute is optional, possible values may
+	 * include: "creation", "publication", and "modification".
 	 *
 	 * @param id
 	 *            optional identifier

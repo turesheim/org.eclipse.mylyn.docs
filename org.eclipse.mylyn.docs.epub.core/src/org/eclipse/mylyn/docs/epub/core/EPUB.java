@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,19 +51,20 @@ import org.xml.sax.ext.DefaultHandler2;
 /**
  * Represents one EPUB file. One or more publications can be added and will be a part of the distribution when packed.
  * <p>
- * The simplest usage of this API may look like the following:
+ * The simplest possible use of this API may look like the following:
  * </p>
  *
  * <pre>
  * EPUB epub = new EPUB();
- * OPSPublication oebps = new OPSPublication();
+ * Publication oebps = Publication.getVersion2Instance();
  * oebps.addItem(new File(&quot;chapter.xhtml&quot;));
  * epub.add(oebps);
  * epub.pack(new File(&quot;book.epub&quot;));
  * </pre>
  * <p>
  * This will create a new EPUB instance and an OPS (which is the typical content of an EPUB) with one chapter. The OPS
- * will have one chapter with contents from <b>chapter.xhtml</b> and the final result is an EPUB named <b>book.epub</b>.
+ * will have one chapter with contents from <b>chapter.xhtml</b> and the final result is an EPUB-file named
+ * <b>book.epub</b>.
  * </p>
  *
  * @author Torkild U. Resheim
@@ -263,9 +266,9 @@ public class EPUB {
 	private static final int BUFFERSIZE = 2048;
 
 	/**
-	 * Used to verify that the given {@link InputStream} contents is an EPUB. As per specification the first entry in
-	 * the file must be named "mimetype" and contain the string <i>application/epub+zip</i>. Further verification is not
-	 * done at this stage.
+	 * Used to verify that the given {@link InputStream} contents is an EPUB-file. As per specification the first entry
+	 * in the file must be named "mimetype" and contain the string <i>application/epub+zip</i>. Verification of the
+	 * actual content is not done in this method.
 	 *
 	 * @param inputStream
 	 *            the EPUB input stream
@@ -313,6 +316,7 @@ public class EPUB {
 			if (vd.versionString == null) {
 				return PublicationVersion.UNKNOWN;
 			}
+			// we support 2.0.x and 3.0.x
 			String[] segments = vd.versionString.split("\\."); //$NON-NLS-1$
 			if (segments[0].equals("2") && segments[1].equals("0")) { //$NON-NLS-1$ //$NON-NLS-2$
 				return PublicationVersion.V2;
@@ -465,11 +469,11 @@ public class EPUB {
 	 * @see {@link #unpack(File, File)}
 	 */
 	public File unpack(File epubFile) throws Exception {
-		File workingFolder = File.createTempFile("epub_", null); //$NON-NLS-1$
-		workingFolder.deleteOnExit(); // XXX: Avoid using deleteOnExit()
-		if (workingFolder.delete() && workingFolder.mkdirs()) {
-			unpack(epubFile, workingFolder);
-		}
+		Path tempDirectory = Files.createTempDirectory("epub_"); //$NON-NLS-1$
+		File workingFolder = tempDirectory.toFile();
+		// we need this folder as long as the process is running
+		workingFolder.deleteOnExit();
+		unpack(epubFile, workingFolder);
 		return workingFolder;
 	}
 
@@ -485,7 +489,7 @@ public class EPUB {
 	 * <p>
 	 * Multiple OPS root files in the publication will populate the OCF container instance with one {@link Publication}
 	 * for each as expected. The contents of the data model starting with the OCF container will be replaced. If the
-	 * publication is in an unsupported version it will not be added to the data model.
+	 * publication is in an unsupported version it will not be added to the data model but a warning will be logged.
 	 * </p>
 	 *
 	 * @param epubFile
